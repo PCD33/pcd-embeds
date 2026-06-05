@@ -12,6 +12,11 @@ ses images dans `assets/`.
 | Création   | URL à coller dans Notion (`/embed`)                          |
 |------------|--------------------------------------------------------------|
 | Fiche livre — *Le Guide de la Permaculture* | https://pcd33.github.io/pcd-embeds/fiche-livre.html |
+| Contributeur | https://pcd33.github.io/pcd-embeds/contributeur.html |
+| Contributeur — version impression | https://pcd33.github.io/pcd-embeds/contributeur-print.html |
+
+> Les images de chaque création sont rangées dans `assets/<création>/` pour
+> éviter toute collision de noms entre fiches.
 
 > 🔗 **Ces URLs sont définitives** : une mise à jour du contenu ne change PAS
 > l'URL. Notion affiche automatiquement la nouvelle version.
