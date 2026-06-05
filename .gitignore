@@ -1,0 +1,5 @@
+# Boîte de réception des exports Claude (zips lourds) — ne pas publier
+_inbox/
+
+# macOS
+.DS_Store
