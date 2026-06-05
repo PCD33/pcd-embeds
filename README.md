@@ -1,59 +1,54 @@
-# Créations HTML pour Notion
+# pcd-embeds — Créations HTML pour Notion
 
-Pages HTML autonomes hébergées sur **GitHub Pages**, à intégrer dans Notion
-(lien direct ou bloc `/embed`).
+Pages HTML autonomes hébergées sur **GitHub Pages**, intégrées dans Notion via
+des blocs `/embed`. Chaque création (issue de Claude design) = un fichier HTML +
+ses images dans `assets/`.
 
-## Principe (fichiers à plat)
+- **Dépôt :** https://github.com/PCD33/pcd-embeds
+- **Site :** https://pcd33.github.io/pcd-embeds/
 
-Chaque création = **un fichier HTML** déposé à la racine du repo.
+## Créations en ligne
 
-```
-/fiche-livre.html   →  https://TON-PSEUDO.github.io/TON-REPO/fiche-livre.html
-/plante.html        →  https://TON-PSEUDO.github.io/TON-REPO/plante.html
-.nojekyll           →  (laisser, sert les fichiers tels quels)
-```
+| Création   | URL à coller dans Notion (`/embed`)                          |
+|------------|--------------------------------------------------------------|
+| Fiche livre — *Le Guide de la Permaculture* | https://pcd33.github.io/pcd-embeds/fiche-livre.html |
 
-> 💡 Nomme les fichiers sans espaces ni accents (`fiche-livre.html`, pas
-> `Fiche Livre.html`) pour des URLs sans surprise.
-
----
-
-## 1. Créer le repo (interface web, sans ligne de commande)
-
-1. [github.com](https://github.com) → **+** (haut droite) → **New repository**.
-2. **Repository name** : ex. `creations-html`. **Public**. → **Create repository**.
-
-## 2. Déposer les fichiers HTML
-
-1. **Add file** → **Upload files**.
-2. Glisse-dépose tes `.html` (et le fichier `.nojekyll`).
-3. **Commit changes**.
-
-## 3. Activer GitHub Pages (une seule fois)
-
-1. **Settings** → **Pages**.
-2. **Source** : *Deploy from a branch* → **Branch** `main`, **Folder** `/ (root)` → **Save**.
-3. ~1 min plus tard, le site est en ligne à `https://TON-PSEUDO.github.io/TON-REPO/`.
-
-## 4. Lien d'une création
-
-`https://TON-PSEUDO.github.io/TON-REPO/nom-du-fichier.html`
-
-## 5. Intégrer dans Notion
-
-- **Embed** : taper `/embed` → coller l'URL → *Embed link* → ajuster la hauteur.
-- **Lien simple** : coller l'URL, choisir *Dismiss*/*Lien* (ouvre la page en plein écran).
-
-## 6. Mettre à jour une création
-
-1. Ouvre le fichier sur GitHub → icône **crayon** ✏️.
-2. Modifie / colle le nouveau HTML → **Commit changes**.
-3. En ligne en ~30 s–1 min (force le rechargement dans Notion si besoin).
+> 🔗 **Ces URLs sont définitives** : une mise à jour du contenu ne change PAS
+> l'URL. Notion affiche automatiquement la nouvelle version.
 
 ---
 
-## Notes
+## 🔁 Mettre à jour une création (workflow automatique)
 
-- Repo **public** = GitHub Pages gratuit (le contenu est de toute façon public via l'URL).
-- Délai de mise à jour : 30 s à 2 min après chaque commit.
-- Aucune dépendance : tout est inline dans chaque fichier.
+1. Dans **Claude design** : modifie la création, puis **Share → Export →
+   Project archive (.zip) → Download**.
+2. Dépose le `.zip` dans le dossier Dropbox :
+   `09. Site, contenus & RAG / 01. Contenus / pcd-embeds / _inbox/`
+3. Demande à Claude Code : **« mets à jour <nom de la création> »**.
+
+Claude se charge alors de : dézipper → garder le HTML + `assets/` (compresser
+les images lourdes) → committer → pousser sur GitHub. En ligne ~1 min plus tard,
+**même URL**.
+
+## ➕ Ajouter une nouvelle création
+
+Même principe : dépose le `.zip` dans `_inbox/` et dis à Claude
+« publie la nouvelle création <nom> ». Claude crée le fichier `<nom>.html` +
+ses assets et te donne la nouvelle URL d'embed (à coller une fois dans Notion).
+
+## ✏️ Modifier directement sur GitHub (option ponctuelle)
+
+Pour une petite retouche texte sans repasser par Claude design :
+ouvre le fichier `.html` sur GitHub → icône **crayon** ✏️ → modifie →
+**Commit changes**. En ligne en ~1 min.
+
+---
+
+## Notes techniques
+
+- `.nojekyll` : sert les fichiers tels quels (pas de traitement Jekyll).
+- `_inbox/` : boîte de réception des exports `.zip` — **exclue du dépôt**
+  (voir `.gitignore`), ne sera jamais publiée.
+- Les images sont dans `assets/` et référencées en chemins relatifs.
+- Dépôt **public** = GitHub Pages gratuit.
+- Outil de publication : `gh` (GitHub CLI), authentifié sur le compte **PCD33**.
