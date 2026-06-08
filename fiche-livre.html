@@ -49,7 +49,7 @@
     margin: 0;
     font-family: var(--sans);
     color: var(--ink);
-    background: var(--beige-50);
+    background: #ffffff;
     font-size: 17px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -104,7 +104,7 @@
   .hero-bg { position: absolute; inset: 0; z-index: 0; background: var(--green-950); }
   .hero-bg .layer {
     position: absolute; inset: 0;
-    background-image: url('assets/hero-bg.jpg');
+    background-image: url('assets/livre/hero-bg.jpg');
     background-size: cover; background-position: center;
   }
   .hero-bg .veil {
@@ -279,31 +279,38 @@
   .divider::before, .divider::after { content: ""; height: 1px; background: var(--line); flex: 1; }
   .divider span { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 
-  .lock-card {
-    text-align: center; max-width: 620px; margin: 0 auto; padding: 40px 36px;
-    background: linear-gradient(170deg, #fbf8f0, #f3eddd);
-    border: 1px solid var(--beige-300); border-radius: 18px; box-shadow: var(--shadow-md);
-    position: relative; overflow: hidden;
+  /* member gate (paywall) : contenu verrouillé en fondu derrière une carte CTA */
+  .member-gate { position: relative; max-width: 760px; margin-top: 14px; }
+  /* Les dernières lignes du contenu disparaissent progressivement vers le fond de page (blanc),
+     effet 100% CSS via un masque dégradé : opaque en haut → transparent en bas. */
+  .gate-fade {
+    position: relative; pointer-events: none; user-select: none;
+    max-height: 230px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0,0,0,.4) 74%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0,0,0,.4) 74%, transparent 100%);
   }
-  .lock-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--green-600), var(--gold), var(--green-600)); }
+  .lock-card {
+    text-align: center; max-width: 600px; margin: 0 auto; padding: 42px 40px 38px;
+    background: linear-gradient(170deg, #fbf8f0, #f2ecda);
+    border: 1px solid var(--beige-300); border-radius: 18px;
+    box-shadow: var(--shadow-lg);
+    position: relative; z-index: 3; overflow: hidden;
+  }
+  .lock-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--green-600), var(--green-500), var(--green-600)); }
   .lock-icon {
-    width: 58px; height: 58px; border-radius: 50%; margin: 0 auto 18px;
+    width: 62px; height: 62px; border-radius: 50%; margin: 0 auto 16px;
     background: var(--green-700); color: #f0f6ee; display: grid; place-items: center;
     box-shadow: 0 8px 22px rgba(40,90,52,.3);
   }
-  .lock-icon svg { width: 26px; height: 26px; }
-  .lock-card h3 { font-size: 23px; color: var(--green-900); }
-  .lock-card p { color: var(--ink-soft); font-size: 16.5px; margin-top: 10px; }
-  .lock-btns { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+  .lock-icon svg { width: 31px; height: 31px; }
+  .lock-kicker { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--green-600); margin-bottom: 9px; }
+  .lock-card h3 { font-size: 26px; color: var(--green-900); }
+  .lock-card p { color: var(--ink-soft); font-size: 16.5px; margin: 12px auto 0; max-width: 50ch; }
+  .lock-btns { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 26px; }
   .btn-green { background: var(--green-700); color: #f1f6ef; }
   .btn-green:hover { background: var(--green-800); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-  .btn-outline { border-color: var(--green-600); color: var(--green-800); }
-  .btn-outline:hover { background: #eef5ec; transform: translateY(-2px); }
-
-  .blurred { position: relative; margin-top: 36px; max-width: 760px; }
-  .blurred .veil-fade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.65) 78%, #ffffff 100%); z-index: 2; pointer-events: none; }
-  .blurred .masked { filter: blur(4.5px); pointer-events: none; user-select: none; }
-  .blurred h2 { filter: blur(4.5px); }
+  .lock-login { font-size: 14.5px; font-weight: 600; color: var(--green-800); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  .lock-login:hover { color: var(--green-900); }
   ul.keys { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 14px; }
   ul.keys li { position: relative; padding-left: 30px; color: var(--ink-soft); }
   ul.keys li::before { content: ""; position: absolute; left: 0; top: 9px; width: 9px; height: 9px; border-radius: 50%; background: var(--gold); }
@@ -323,6 +330,33 @@
   }
   .tag:hover { background: var(--green-700); color: #f1f6ef; border-color: var(--green-700); transform: translateY(-1px); }
   .yes { display: inline-flex; align-items: center; gap: 7px; color: var(--green-700); font-weight: 700; }
+  /* tech: select fields, ebook link, audience badge */
+  .field-select {
+    font-family: var(--sans); font-size: 16px; font-weight: 600; color: var(--ink);
+    background: #fff; border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 38px 8px 13px; cursor: pointer; line-height: 1.2;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23436b4f' stroke-width='2.4'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat: no-repeat; background-position: right 10px center;
+    transition: border-color .16s, box-shadow .16s;
+  }
+  .field-select:hover { border-color: #cfd9c8; }
+  .field-select:focus { outline: none; border-color: var(--green-600); box-shadow: 0 0 0 3px rgba(67,107,79,.14); }
+  .ebook-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--sans); font-size: 15px; font-weight: 700; color: var(--green-700);
+    background: #eaf2e7; border: 1px solid #d2e3cd; border-radius: 9px;
+    padding: 9px 16px; text-decoration: none; transition: all .16s;
+  }
+  .ebook-link svg { width: 17px; height: 17px; transition: transform .16s; }
+  .ebook-link:hover { background: var(--green-700); color: #f1f6ef; border-color: var(--green-700); transform: translateY(-1px); }
+  .ebook-link:hover svg { transform: translateX(3px); }
+  .audience-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 14px; font-weight: 700; padding: 6px 14px; border-radius: 999px;
+    background: #eaf2e7; color: var(--green-700); border: 1px solid #d2e3cd; line-height: 1.2;
+  }
+  .audience-badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green-600); }
 
   /* ---------- Reviews ---------- */
   .reviews { max-width: 760px; }
@@ -402,26 +436,68 @@
 
   /* ---------- Author ---------- */
   .author-card {
-    display: grid; grid-template-columns: 150px 1fr; gap: 32px; align-items: start;
-    max-width: 760px; background: var(--white); border: 1px solid var(--line);
+    max-width: 100%; background: var(--white); border: 1px solid var(--line);
     border-radius: 18px; padding: 32px; box-shadow: var(--shadow-sm);
   }
+  .author-plain { max-width: 100%; }
+  .author-head { display: flex; gap: 22px; align-items: center; }
   .author-photo {
-    width: 150px; height: 150px; border-radius: 50%; overflow: hidden; position: relative;
+    width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; overflow: hidden; position: relative;
     background: radial-gradient(60% 60% at 40% 35%, #d8c8a4, #9b8a63);
-    box-shadow: var(--shadow-md); border: 4px solid #fff;
+    box-shadow: var(--shadow-sm); border: 3px solid #fff;
   }
   .author-photo svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .author-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .author-info h3 { font-size: 24px; color: var(--green-900); }
-  .author-info .role { font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 16px; margin: 4px 0 14px; }
-  .author-info p { color: var(--ink-soft); font-size: 16.5px; }
-  .author-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-weight: 700; color: var(--green-700); }
-  .author-link:hover { gap: 12px; color: var(--green-900); }
-  .author-link svg { transition: transform .18s; }
+  .author-head h3 { font-size: 24px; color: var(--green-900); line-height: 1.15; }
+  .author-count { font-size: 14px; color: var(--ink-faint); margin: 3px 0 5px; }
+  .author-head .role { font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 16px; }
+  .author-specialties { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0; }
+  .spec-pill { font-size: 13.5px; font-weight: 700; padding: 6px 14px; border-radius: 999px; background: #eaf2e7; color: var(--green-800); border: 1px solid #d7e6d1; }
+  .author-card .author-bio { color: var(--ink-soft); font-size: 16.5px; margin: 0 0 18px; }
+  .author-links { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .author-link { display: inline-flex; align-items: center; gap: 7px; font-weight: 700; color: var(--green-700); transition: gap .18s, color .18s; }
+  .author-link:hover { gap: 11px; color: var(--green-900); }
+  .author-links .lsep { color: var(--ink-faint); font-weight: 700; }
+
+  /* ---------- Contributeur (crédits de la fiche) ---------- */
+  .contributors { background: var(--beige-50); border-top: 1px solid var(--line); padding: 56px 0; }
+  .contributors .sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+  .contributors .sec-head .bar { width: 4px; height: 26px; border-radius: 3px; background: var(--gold); flex: none; }
+  .contributors .sec-head h2 { font-size: 26px; color: var(--green-900); }
+  .credit { max-width: 820px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(170deg, #fff, #fbf8f1 72%); overflow: hidden; box-shadow: var(--shadow-sm); }
+  .credit-main { display: flex; gap: 22px; padding: 28px; align-items: flex-start; }
+  .credit-photo { width: 84px; height: 84px; border-radius: 50%; flex: none; overflow: hidden; border: 3px solid #fff; box-shadow: var(--shadow-sm); background: var(--green-800); }
+  .credit-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .credit-by { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
+  .credit h3 { font-size: 23px; color: var(--green-900); margin-top: 4px; }
+  .credit .crole { font-family: var(--serif); font-style: italic; color: var(--green-600); font-size: 15.5px; margin-top: 3px; }
+  .credit .cbio { font-size: 15.5px; color: var(--ink-soft); line-height: 1.62; margin-top: 13px; max-width: 60ch; }
+  .credit-links { display: flex; gap: 10px; margin-top: 17px; flex-wrap: wrap; }
+  .clink { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: 14px; padding: 10px 17px; border-radius: 999px; font-family: var(--sans); white-space: nowrap; transition: background .16s, color .16s, transform .16s; }
+  .clink svg { width: 16px; height: 16px; }
+  .clink.primary { background: var(--green-700); color: #f1f6ef; }
+  .clink.primary:hover { background: var(--green-800); transform: translateY(-1px); }
+  .clink.ghost { background: #fff; color: var(--green-800); border: 1.5px solid var(--green-600); }
+  .clink.ghost:hover { background: #eef5ec; transform: translateY(-1px); }
+  .credit-foot { border-top: 1px solid var(--line); padding: 18px 28px; display: flex; flex-direction: column; gap: 11px; background: rgba(255,255,255,.55); }
+  .foot-line { display: flex; align-items: center; gap: 11px; font-size: 14.5px; color: var(--ink-soft); }
+  .foot-line svg { width: 18px; height: 18px; color: var(--green-600); flex: none; }
+  .foot-line b { color: var(--ink); font-weight: 800; }
+  .foot-line .ferr { color: var(--ink-soft); }
+  .foot-partner { font-size: 13px; color: var(--ink-faint); }
+  .foot-partner .ferr { color: var(--ink-faint); }
+  .foot-line .partner-ico { width: 20px; height: 20px; color: #2D4A2D; flex: none; }
+  .foot-link { color: inherit; border-bottom: 1.5px solid var(--green-600); padding-bottom: 1px; transition: color .15s, border-color .15s; }
+  .foot-link:hover { color: var(--green-800); border-color: var(--green-800); }
+  body.acf-on .credit [data-acf] { outline-offset: 3px; }
+  body.acf-on .credit [data-acf]::after { top: -10px; left: 0; }
+  body.acf-on .credit-main { padding-top: 42px; }
+  body.acf-on .credit .cbio { margin-top: 22px; }
+  body.acf-on .credit-links { margin-top: 28px; }
+  body.acf-on .credit-foot { padding-top: 28px; }
 
   /* ---------- Maillage interne ---------- */
-  .related { background: var(--beige-100); border-top: 1px solid var(--line); padding: 64px 0; }
+  .related { background: #ffffff; border-top: 1px solid var(--line); padding: 64px 0; }
   .related .head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 30px; gap: 16px; flex-wrap: wrap; }
   .related h2 { font-size: 30px; color: var(--green-900); }
   .related .head .all { font-weight: 700; color: var(--green-700); font-size: 15px; }
@@ -493,6 +569,29 @@
   footer.site .legal a:not(:last-child)::after { content: ""; position: absolute; right: -1px; top: 50%; width: 22px; height: 1px; background: var(--gold-bright); opacity: .5; transform: translateX(50%); }
   footer.site .legal a:hover { color: #fff; }
 
+  /* ---------- ACF debug overlay ---------- */
+  .acf-toggle {
+    position: fixed; top: 92px; right: 16px; z-index: 200;
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--sans); font-size: 12.5px; font-weight: 600;
+    background: #ececec; color: #3a3a3a; border: 1px solid #d6d6d6;
+    padding: 7px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12); transition: background .16s, transform .14s;
+  }
+  .acf-toggle:hover { background: #e0e0e0; transform: translateY(-1px); }
+  .acf-toggle.on { background: #fff4c2; border-color: #e8d680; color: #5a4a00; }
+  body.acf-on [data-acf] { position: relative; outline: 1px dashed rgba(120,110,40,.45); outline-offset: 1px; }
+  body.acf-on [data-acf]::after {
+    content: attr(data-acf);
+    position: absolute; top: 0; left: 0; z-index: 90;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 11px; line-height: 1.3; white-space: nowrap;
+    background: #FFF9C4; color: #000; border-radius: 4px; padding: 2px 6px;
+    pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,.25);
+  }
+  body.acf-on .author-card [data-acf] { outline-offset: 3px; }
+  body.acf-on .author-card [data-acf]::after { top: -10px; left: 0; }
+
   /* ---------- Responsive ---------- */
   @media (max-width: 1300px) {
     header.site .wrap { padding: 0 28px; }
@@ -532,8 +631,8 @@
     .buy-row .btn-primary { flex-basis: 100%; }
     .content h2 { font-size: 24px; }
     .book-grid { grid-template-columns: 1fr; }
-    .author-card { grid-template-columns: 1fr; text-align: center; }
-    .author-photo { margin: 0 auto; }
+    .author-card { padding: 24px; }
+    .credit-main { flex-direction: column; gap: 16px; }
     .engage .wrap { height: auto; padding-top: 12px; padding-bottom: 12px; flex-wrap: wrap; }
     footer.site .cols { grid-template-columns: 1fr; }
     footer.site .legal { gap: 6px 0; }
@@ -543,11 +642,13 @@
 </head>
 <body>
 
+<button class="acf-toggle" id="acfToggle" aria-pressed="false">⚙️ <span class="acf-label">Afficher les champs ACF</span></button>
+
 <!-- ============ HEADER ============ -->
 <header class="site">
   <div class="wrap nav">
     <a href="#" class="brand">
-      <img class="brand-logo" src="assets/logo-pcd.png" alt="Permaculture Design" />
+      <img class="brand-logo" src="assets/livre/logo-pcd.png" alt="Permaculture Design" />
     </a>
     <nav class="links" id="navLinks">
       <a href="#" class="navlink">Découvrir</a>
@@ -595,8 +696,8 @@
     <div class="hero-grid">
       <!-- cover -->
       <div class="cover-wrap">
-        <div class="cover">
-          <img class="cover-img" src="assets/cover.png" alt="Le Guide de la permaculture au jardin — pour une abondance naturelle, Carine Mayo (Terre Vivante)" />
+        <div class="cover" data-acf="couverture">
+          <img class="cover-img" src="assets/livre/cover.png" alt="Le Guide de la permaculture au jardin — pour une abondance naturelle, Carine Mayo (Terre Vivante)" />
           <div class="spine"></div>
           <div class="sheen"></div>
         </div>
@@ -604,31 +705,31 @@
 
       <!-- detail -->
       <div class="hero-detail">
-        <div class="badges">
+        <div class="badges" data-acf="badges (repeater)">
           <span class="badge badge--new">Nouveauté</span>
           <span class="badge badge--love">Coup de cœur</span>
         </div>
         <p class="badge-legend-removed" hidden></p>
-        <h1>Le Guide de la Permaculture</h1>
-        <p class="subtitle">Concevoir, cultiver et vivre avec un jardin nourricier et résilient.</p>
+        <h1 data-acf="titre">Le Guide de la Permaculture</h1>
+        <p class="subtitle" data-acf="sous_titre">Concevoir, cultiver et vivre avec un jardin nourricier et résilient.</p>
 
         <div class="meta-line">
-          <span>par <a href="#" class="author">Carine Mayo</a></span>
+          <span>par <a href="#" class="author" data-acf="auteur_livre">Carine Mayo</a></span>
           <span class="msep">·</span>
-          <span>Éditions <strong style="color:#eef3ea">Ulmer</strong></span>
+          <span data-acf="editeur · annee · pages">Éditions <strong style="color:#eef3ea">Ulmer</strong></span>
           <span class="msep">·</span>
-          <span class="stars">
+          <span class="stars" data-acf="note_pcd">
             <span class="rv">Avis de notre communauté</span>
             <span class="s">★★★★<span class="empty">★</span></span>
           </span>
         </div>
 
         <div class="price-row">
-          <span class="price">24,00 €</span>
+          <span class="price" data-acf="prix">24,00 €</span>
         </div>
 
-        <div class="buy-row">
-          <button class="btn btn-primary">🌿 Librairie Permaculturelle</button>
+        <div class="buy-row" data-acf="lien_librairie_perma · lien_amazon · lien_fnac">
+          <button class="btn btn-primary">🌿 Librairie PermaCulturelle</button>
           <button class="btn btn-ghost">Amazon</button>
           <button class="btn btn-ghost">Fnac</button>
           <button class="btn btn-ghost">Ulmer</button>
@@ -673,7 +774,7 @@
     <div class="panel active" id="panel-fiche">
       <div class="content">
         <h2>De quoi parle ce livre ?</h2>
-        <p class="lead">Ce guide accompagne pas à pas la conception d'un lieu nourricier inspiré du vivant. Il traduit les grands principes de la permaculture en gestes concrets, du dessin du terrain au choix des plantes. Une porte d'entrée claire pour qui veut cultiver autrement, sans expérience préalable.</p>
+        <p class="lead" data-acf="resume">Ce guide accompagne pas à pas la conception d'un lieu nourricier inspiré du vivant. Il traduit les grands principes de la permaculture en gestes concrets, du dessin du terrain au choix des plantes. Une porte d'entrée claire pour qui veut cultiver autrement, sans expérience préalable.</p>
 
         <figure class="figure">
           <div class="ph">
@@ -707,24 +808,10 @@
         <p>Pour les jardiniers débutants, les futurs porteurs de projet et toute personne curieuse de concevoir un espace plus autonome — du balcon au grand terrain.</p>
       </div>
 
-      <!-- MEMBER LOCK -->
-      <div class="divider"><span>Réservé aux membres</span></div>
-      <div class="lock-card">
-        <div class="lock-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/><circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none"/></svg>
-        </div>
-        <h3>Les points clés et l'avis de l'équipe PCD</h3>
-        <p>Cette synthèse est réservée aux membres. Rejoignez la communauté pour accéder à nos notes de lecture, nos points clés et l'avis détaillé de l'équipe Permaculture Design.</p>
-        <div class="lock-btns">
-          <button class="btn btn-green">Devenir membre</button>
-          <button class="btn btn-outline">Se connecter</button>
-        </div>
-      </div>
-
-      <!-- BLURRED PREVIEW -->
-      <div class="blurred" aria-hidden="true">
-        <div class="veil-fade"></div>
-        <div class="masked">
+      <!-- MEMBER GATE -->
+      <div class="member-gate">
+        <!-- Contenu verrouillé : flouté et en fondu progressif, pour suggérer que le texte continue derrière la carte -->
+        <div class="gate-fade" aria-hidden="true">
           <h2 style="font-family:var(--serif);font-size:28px;color:var(--green-900);margin:0 0 14px;">Les points clés à retenir</h2>
           <ul class="keys">
             <li>La conception en zones et secteurs permet d'optimiser les déplacements et l'énergie dépensée sur le terrain au quotidien.</li>
@@ -734,6 +821,22 @@
           </ul>
           <h2 style="font-family:var(--serif);font-size:28px;color:var(--green-900);margin:34px 0 14px;">L'avis de l'équipe PCD</h2>
           <p style="color:var(--ink-soft);">Un ouvrage de référence que nous recommandons sans hésiter aux débutants. Carine Mayo réussit le pari de rendre accessibles des concepts parfois techniques, sans jamais sacrifier la rigueur de la démarche. Les exemples concrets et les schémas de conception en font un compagnon précieux pour passer de la théorie au terrain, saison après saison.</p>
+        </div>
+
+        <!-- Carte CTA membres -->
+        <div class="lock-card" data-acf="points_cles · avis (membres)">
+          <div class="lock-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.2" r="3"/><path d="M3.4 19.2a5.6 5.6 0 0 1 11.2 0"/><circle cx="17" cy="9.4" r="2.3"/><path d="M16.2 14.1a4.9 4.9 0 0 1 4.4 5.1"/></svg>
+          </div>
+          <span class="lock-kicker">Contenu réservé aux membres</span>
+          <h3>Continuez votre lecture gratuitement</h3>
+          <p>L'intégralité de nos contenus &amp; formations est mise à la disposition des membres de L'Atelier — notre espace d'apprentissage et d'entraide en permaculture.<br />
+<strong>Inscrivez-vous gratuitement en moins d'une minute.</strong>
+</p>
+          <div class="lock-btns">
+            <a class="btn btn-green" href="https://www.permaculturedesign.fr/devenir-membre-gratuit/">Rejoindre L'Atelier gratuitement</a>
+            <a class="lock-login" href="https://www.permaculturedesign.fr/connexion/">Déjà membre ? Se connecter</a>
+          </div>
         </div>
       </div>
     </div>
@@ -746,9 +849,15 @@
           <tr><th>Éditeur</th><td>Ulmer</td></tr>
           <tr><th>Année de parution</th><td>2024</td></tr>
           <tr><th>Nombre de pages</th><td>224 pages</td></tr>
-          <tr><th>Format</th><td>19 × 24 cm · Broché</td></tr>
-          <tr><th>Ebook disponible</th><td><span class="yes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Oui — formats EPUB & PDF</span></td></tr>
-          <tr><th>Public cible</th><td>Débutants · Jardiniers amateurs · Porteurs de projet</td></tr>
+          <tr><th>Dimensions</th><td data-acf="dimensions">19 × 24 cm</td></tr>
+          <tr><th>Reliure</th><td data-acf="reliure">Broché</td></tr>
+          <tr><th>Ebook disponible</th><td data-acf="existe_ebook"><span class="yes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg> Oui</span></td></tr>
+          <tr id="row-lien-ebook"><th>Lien ebook</th><td data-acf="lien_ebook">
+            <a href="#" class="ebook-link">Accéder à l'ebook
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </td></tr>
+          <tr><th>Public cible</th><td data-acf="public_cible"><span class="audience-badge">Débutant</span></td></tr>
           <tr><th>Thèmes</th><td>
             <div class="tags">
               <span class="tag">Permaculture</span>
@@ -862,15 +971,55 @@
 
     <!-- PANEL: AUTEUR -->
     <div class="panel" id="panel-auteur">
-      <div class="author-card">
-        <div class="author-photo">
-          <img src="assets/carine-mayo.webp" alt="Portrait de Carine Mayo" />
+      <div class="author-plain">
+        <div class="author-head">
+          <div class="author-photo" data-acf="photo">
+            <img src="assets/livre/carine-mayo.webp" alt="Portrait de Carine Mayo" />
+          </div>
+          <div class="author-head-text">
+            <h3 data-acf="nom_complet">Carine Mayo</h3>
+            <div class="role" data-acf="titre_fonction">Journaliste & autrice naturaliste</div>
+          </div>
         </div>
-        <div class="author-info">
-          <h3>Carine Mayo</h3>
-          <div class="role">Journaliste & autrice naturaliste</div>
-          <p>Journaliste spécialisée en environnement, Carine Mayo écrit depuis plus de vingt ans sur le jardinage naturel, la biodiversité et les modes de vie durables. Membre d'associations de protection de la nature, elle met un soin particulier à rendre la permaculture accessible au plus grand nombre, à travers un langage clair et des exemples concrets.</p>
-          <a href="#" class="author-link">Voir tous ses livres <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <div class="author-specialties" data-acf="specialites">
+          <span class="spec-pill">Jardinage naturel</span>
+          <span class="spec-pill">Biodiversité</span>
+          <span class="spec-pill">Permaculture</span>
+        </div>
+        <p class="author-bio" data-acf="bio_courte">Journaliste spécialisée en environnement, Carine Mayo écrit depuis plus de vingt ans sur le jardinage naturel, la biodiversité et les modes de vie durables. Membre d'associations de protection de la nature, elle met un soin particulier à rendre la permaculture accessible au plus grand nombre, à travers un langage clair et des exemples concrets.</p>
+        <div class="author-links" data-acf="lien_fiche_auteur">
+          <a href="livre-auteur.html" class="author-link">La fiche auteur complète →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTRIBUTEUR (crédits de la fiche) ============ -->
+<section class="contributors">
+  <div class="wrap">
+    <div class="credit">
+      <div class="credit-main">
+        <div class="credit-photo" data-acf="auteur_fiche → photo">
+          <img src="assets/livre/avatar-team.png" alt="Permaculture Design" />
+        </div>
+        <div>
+          <span class="credit-by" data-acf="auteur_fiche (relation contributeur)">Rédigée par</span>
+          <h3>Permaculture Design</h3>
+          <p class="crole" data-acf="→ titre_fonction">Bureau d'études, formation &amp; communauté en permaculture</p>
+          <p class="cbio" data-acf="→ bio_courte">Référence francophone en permaculture depuis 2012 : articles, guides gratuits, formations et communauté d'entraide pour concevoir votre jardin naturel.</p>
+          <div class="credit-links">
+            <a class="clink primary" href="/contributeur/permaculture-design/" data-acf="lien fiche contributeur">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="#fff" stroke-width="1.6"/><circle cx="16.5" cy="9.5" r="2.3" stroke="#fff" stroke-width="1.6"/><path d="M4 19c0-2.8 2.2-5 5-5s5 2.2 5 5M15 19c0-1.9 1-3.6 2.5-4.3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Voir la fiche complète
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="credit-foot">
+        <div class="foot-line foot-partner" data-acf="partenaire (relation)">
+          <svg class="partner-ico" viewBox="0 0 24 24" fill="none" stroke="#2D4A2D" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.3 5.2 8 4.6 4.5 4.5 3.7 4.5 3 5.1 3 5.9v11.3c0 .8.7 1.4 1.5 1.4 3.5.1 5.8.7 7.5 2 1.7-1.3 4-1.9 7.5-2 .8 0 1.5-.6 1.5-1.4V5.9c0-.8-.7-1.4-1.5-1.4-3.5.1-5.8.7-7.5 2z"/><path d="M12 6.5v12.1"/></svg>
+          <span class="ferr">En partenariat avec <a class="foot-link" href="https://www.librairie-permaculturelle.fr" target="_blank" rel="noopener">La Librairie PermaCulturelle</a></span>
         </div>
       </div>
     </div>
@@ -940,7 +1089,7 @@
   <div class="wrap">
     <div class="f-top">
       <a href="#" class="brand">
-        <img class="brand-logo" src="assets/logo-pcd.png" alt="Permaculture Design" />
+        <img class="brand-logo" src="assets/livre/logo-pcd.png" alt="Permaculture Design" />
       </a>
       <div class="follow">
         <h4>Nous suivre</h4>
@@ -1042,6 +1191,17 @@
   const navLinks = document.getElementById('navLinks');
   if (menuToggle && navLinks) {
     menuToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  }
+
+  // ---- ACF fields debug overlay ----
+  const acfBtn = document.getElementById('acfToggle');
+  if (acfBtn) {
+    acfBtn.addEventListener('click', () => {
+      const on = document.body.classList.toggle('acf-on');
+      acfBtn.classList.toggle('on', on);
+      acfBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      acfBtn.querySelector('.acf-label').textContent = on ? 'Masquer les champs ACF' : 'Afficher les champs ACF';
+    });
   }
 
   // ---- Review star picker ----
