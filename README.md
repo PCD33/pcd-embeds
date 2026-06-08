@@ -12,6 +12,7 @@ ses images dans `assets/`.
 | Création   | URL à coller dans Notion (`/embed`)                          |
 |------------|--------------------------------------------------------------|
 | Fiche livre — *Le Guide de la Permaculture* | https://pcd33.github.io/pcd-embeds/fiche-livre.html |
+| Page auteur du livre | https://pcd33.github.io/pcd-embeds/livre-auteur.html |
 | Contributeur | https://pcd33.github.io/pcd-embeds/contributeur.html |
 | Contributeur — version impression | https://pcd33.github.io/pcd-embeds/contributeur-print.html |
 
