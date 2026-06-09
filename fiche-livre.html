@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Le Guide de la Permaculture — Permaculture Design</title>
+<title>Le Guide de la permaculture au jardin — Permaculture Design</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Mulish:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -60,9 +60,27 @@
   img { display: block; max-width: 100%; }
   .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
 
+  /* ---------- Barre de navigation maquette (sticky) ---------- */
+  .pagenav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251,247,239,.92);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .pagenav .wrap { display: flex; align-items: center; gap: 16px; height: 46px; }
+  .pagenav .pn-label { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); white-space: nowrap; }
+  .pagenav .pn-tabs { display: flex; gap: 4px; margin-left: auto; }
+  .pagenav .pn-tab {
+    font-family: var(--sans); font-size: 13.5px; font-weight: 700; color: var(--ink-soft);
+    padding: 6px 15px; border-radius: 8px; white-space: nowrap;
+    transition: background .15s, color .15s;
+  }
+  .pagenav .pn-tab:hover { background: var(--beige-100); color: var(--green-800); }
+  .pagenav .pn-tab[aria-current="page"] { background: var(--green-700); color: #fff; }
+
   /* ---------- Header ---------- */
   header.site {
-    position: sticky; top: 0; z-index: 50;
+    position: sticky; top: 46px; z-index: 50;
     background: #ffffff;
     border-bottom: 1px solid #eceadf;
   }
@@ -592,6 +610,84 @@
   body.acf-on .author-card [data-acf] { outline-offset: 3px; }
   body.acf-on .author-card [data-acf]::after { top: -10px; left: 0; }
 
+  /* ---------- Aperçu visiteur (barre du haut, hors maquette) ---------- */
+  body { padding-top: 48px; }
+  .viewer-bar {
+    position: fixed; top: 0; left: 0; right: 0; height: 48px; z-index: 99999;
+    background: #1a1a2e; color: #e9e9f2;
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 18px; box-shadow: 0 2px 12px rgba(0,0,0,.3);
+  }
+  .viewer-bar .vb-label {
+    font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: .14em;
+    text-transform: uppercase; color: #8a8ab4; white-space: nowrap;
+  }
+  .vb-pills { display: flex; gap: 6px; margin-left: auto; }
+  .vb-pill {
+    font-family: var(--sans); font-size: 13.5px; font-weight: 700; color: #c7c7e0;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.13);
+    border-radius: 999px; padding: 7px 16px; cursor: pointer; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 7px;
+    transition: background .3s ease, color .3s ease, border-color .3s ease, transform .15s ease;
+  }
+  .vb-pill:hover { background: rgba(255,255,255,.12); color: #fff; }
+  .vb-pill:active { transform: translateY(1px); }
+  .vb-pill.active { background: #fff; color: #1a1a2e; border-color: #fff; }
+  .vb-pill[data-state="free"].active { background: #438e52; color: #fff; border-color: #438e52; }
+  .vb-pill[data-state="premium"].active { background: var(--btn-yellow); color: #3a2f10; border-color: var(--btn-yellow); }
+
+  /* décalage des barres collantes existantes sous la barre d'aperçu */
+  .pagenav { top: 48px; }
+  header.site { top: 94px; }
+  .acf-toggle { top: 140px; }
+
+  /* ---------- Contenu premium : verrou (public/gratuit) → révélation (premium) ---------- */
+  .gate-content { position: relative; transition: max-height .3s ease, opacity .3s ease; }
+  body[data-viewer="public"] .gate-content {
+    pointer-events: none; user-select: none; max-height: 230px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0,0,0,.4) 74%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0,0,0,.4) 74%, transparent 100%);
+  }
+  body[data-viewer="free"] .gate-content,
+  body[data-viewer="premium"] .gate-content {
+    max-height: 2600px; overflow: visible;
+    -webkit-mask-image: none; mask-image: none;
+  }
+  .lock-card { transition: opacity .3s ease, max-height .3s ease, transform .3s ease, margin .3s ease, padding .3s ease, border-color .3s ease; max-height: 660px; }
+  body[data-viewer="free"] .lock-card,
+  body[data-viewer="premium"] .lock-card {
+    opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; margin: 0;
+    transform: translateY(10px); pointer-events: none; overflow: hidden;
+    border-color: transparent; box-shadow: none;
+  }
+  .unlocked-badge {
+    display: inline-flex; align-items: center;
+    font-family: var(--sans); font-size: 15px;
+    background: var(--green-700); color: #f1f6ef;
+    padding: 11px 20px; border-radius: 999px; box-shadow: 0 6px 18px rgba(40,90,52,.28);
+    opacity: 0; max-height: 0; overflow: hidden; transform: translateY(-6px);
+    transition: opacity .3s ease, max-height .3s ease, transform .3s ease, margin .3s ease;
+  }
+  .unlocked-badge .ub-variant { display: none; align-items: center; gap: 9px; }
+  .unlocked-badge[data-tier="free"] .ub-free { display: inline-flex; }
+  .unlocked-badge[data-tier="premium"] .ub-premium { display: inline-flex; }
+  .unlocked-badge .ub-ico { font-size: 16px; line-height: 1; }
+  .unlocked-badge strong { font-weight: 800; }
+  .unlocked-badge .ub-desc { font-weight: 600; opacity: .82; }
+  body[data-viewer="free"] .unlocked-badge,
+  body[data-viewer="premium"] .unlocked-badge {
+    opacity: 1; max-height: 90px; transform: none; margin-bottom: 24px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gate-content, .lock-card, .unlocked-badge, .vb-pill { transition: none; }
+  }
+  @media (max-width: 600px) {
+    .viewer-bar { gap: 8px; padding: 0 12px; }
+    .viewer-bar .vb-label { display: none; }
+    .vb-pills { margin: 0 auto; }
+    .vb-pill { padding: 6px 11px; font-size: 12.5px; gap: 5px; }
+  }
+
   /* ---------- Responsive ---------- */
   @media (max-width: 1300px) {
     header.site .wrap { padding: 0 28px; }
@@ -621,6 +717,9 @@
   }
   @media (max-width: 680px) {
     body { font-size: 16px; }
+    .pagenav .pn-label { display: none; }
+    .pagenav .pn-tabs { margin-left: 0; }
+    .pagenav .pn-tab { padding: 6px 11px; font-size: 12.5px; }
     .hero-grid { grid-template-columns: 1fr; gap: 28px; padding-bottom: 48px; }
     .cover-wrap { max-width: 220px; margin: 0 auto; }
     .cover { transform: rotate(0); }
@@ -640,7 +739,29 @@
   }
 </style>
 </head>
-<body>
+<body data-viewer="public">
+
+<!-- ============ BARRE APERÇU VISITEUR (hors maquette, fixée en haut) ============ -->
+<div class="viewer-bar" role="radiogroup" aria-label="État du visiteur (aperçu)">
+  <span class="vb-label">Aperçu visiteur</span>
+  <div class="vb-pills">
+    <button type="button" class="vb-pill active" data-state="public" role="radio" aria-checked="true">👤 Public</button>
+    <button type="button" class="vb-pill" data-state="free" role="radio" aria-checked="false">🟢 Membre gratuit</button>
+    <button type="button" class="vb-pill" data-state="premium" role="radio" aria-checked="false">⭐ Premium</button>
+  </div>
+</div>
+
+<!-- ============ BARRE DE NAVIGATION MAQUETTE (sticky) ============ -->
+<nav class="pagenav" aria-label="Navigation entre les écrans de la maquette">
+  <div class="wrap">
+    <span class="pn-label">Maquette CPT Livre</span>
+    <div class="pn-tabs">
+      <a class="pn-tab" href="fiche-livre.html" aria-current="page">Fiche livre</a>
+      <a class="pn-tab" href="livre-auteur.html">Fiche auteur</a>
+      <a class="pn-tab" href="carte-compacte.html">Carte compacte</a>
+    </div>
+  </div>
+</nav>
 
 <button class="acf-toggle" id="acfToggle" aria-pressed="false">⚙️ <span class="acf-label">Afficher les champs ACF</span></button>
 
@@ -690,7 +811,7 @@
     <div class="breadcrumb">
       <a href="#">Accueil</a><span class="sep">›</span>
       <a href="#">Livres</a><span class="sep">›</span>
-      <span class="cur">Le Guide de la Permaculture</span>
+      <span class="cur">Le Guide de la permaculture au jardin</span>
     </div>
 
     <div class="hero-grid">
@@ -710,13 +831,13 @@
           <span class="badge badge--love">Coup de cœur</span>
         </div>
         <p class="badge-legend-removed" hidden></p>
-        <h1 data-acf="titre">Le Guide de la Permaculture</h1>
-        <p class="subtitle" data-acf="sous_titre">Concevoir, cultiver et vivre avec un jardin nourricier et résilient.</p>
+        <h1 data-acf="titre">Le Guide de la permaculture au jardin</h1>
+        <p class="subtitle" data-acf="sous_titre">Pour une abondance naturelle.</p>
 
         <div class="meta-line">
           <span>par <a href="#" class="author" data-acf="auteur_livre">Carine Mayo</a></span>
           <span class="msep">·</span>
-          <span data-acf="editeur · annee · pages">Éditions <strong style="color:#eef3ea">Ulmer</strong></span>
+          <span data-acf="editeur · annee · pages">Éditions <strong style="color:#eef3ea">Terre&nbsp;Vivante</strong></span>
           <span class="msep">·</span>
           <span class="stars" data-acf="note_pcd">
             <span class="rv">Avis de notre communauté</span>
@@ -729,10 +850,10 @@
         </div>
 
         <div class="buy-row" data-acf="lien_librairie_perma · lien_amazon · lien_fnac">
-          <button class="btn btn-primary">🌿 Librairie PermaCulturelle</button>
+          <button class="btn btn-primary">Librairie PermaCulturelle</button>
           <button class="btn btn-ghost">Amazon</button>
           <button class="btn btn-ghost">Fnac</button>
-          <button class="btn btn-ghost">Ulmer</button>
+          <button class="btn btn-ghost">Terre Vivante</button>
         </div>
       </div>
     </div>
@@ -773,69 +894,96 @@
     <!-- PANEL: FICHE -->
     <div class="panel active" id="panel-fiche">
       <div class="content">
-        <h2>De quoi parle ce livre ?</h2>
-        <p class="lead" data-acf="resume">Ce guide accompagne pas à pas la conception d'un lieu nourricier inspiré du vivant. Il traduit les grands principes de la permaculture en gestes concrets, du dessin du terrain au choix des plantes. Une porte d'entrée claire pour qui veut cultiver autrement, sans expérience préalable.</p>
+        <h2 data-acf="1-resume (H2)">Récolter plus en jardinant avec la nature, pas contre elle</h2>
+        <p class="lead" data-acf="1-resume">Loin des grands discours théoriques, Carine Mayo ramène la permaculture là où elle vous concerne vraiment : votre jardin, votre sol, vos saisons.
+Ce guide montre comment observer un terrain, le dessiner intelligemment et le faire produire davantage… en travaillant moins.
+Vous apprendrez à nourrir une terre vivante, à associer les plantes pour qu’elles s’entraident, à gérer l’eau de pluie et à accueillir la biodiversité qui abat le plus gros du travail à votre place.
+Richement illustré et entièrement tourné vers la pratique, il transforme des principes parfois intimidants en gestes simples, applicables dès la première saison.
+Sa promesse : une abondance durable, obtenue avec le vivant plutôt que contre lui.
+
+</p>
 
         <figure class="figure">
           <div class="ph">
             <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><path d="M0 90 C 30 60, 20 40, 50 20 C 40 55, 60 75, 55 90 Z" fill="#d6edcf" opacity=".4"/><path d="M160 90 C 130 55, 150 40, 120 18 C 130 55, 110 78, 120 90 Z" fill="#bfe0b8" opacity=".35"/></svg>
-            <span class="cap">📷 Livre ouvert posé sur une souche</span>
+            <span class="cap">📷 image en rapport avec le sujet du livre
+</span>
           </div>
           <figcaption>Un manuel pensé pour le terrain, à garder près de soi au jardin.</figcaption>
         </figure>
 
-        <h2>Ce que vous allez apprendre</h2>
-        <ul class="learn">
-          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>Lire et observer son terrain pour concevoir des zones et des secteurs cohérents.</li>
-          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>Composer des associations de plantes (guildes) qui se soutiennent mutuellement.</li>
-          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>Nourrir un sol vivant grâce au paillage, au compost et au non-travail de la terre.</li>
-          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>Récupérer et gérer l'eau de pluie à l'échelle d'un jardin ou d'un petit terrain.</li>
-          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>Planifier les récoltes sur l'année pour une autonomie alimentaire progressive.</li>
+        <h2 data-acf="2-apprentissages (H2)">Les gestes que vous maîtriserez dès la première saison</h2>
+        <ul class="learn" data-acf="2-apprentissages (repeater)">
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>Observer votre terrain pour le concevoir en zones cohérentes, sans erreur de départ.</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>Bâtir un sol fertile et vivant grâce au paillage, au compost et au non-travail de la terre.</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>Associer vos plantes en guildes pour qu’elles se protègent et se nourrissent entre elles.</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>Capter et économiser l’eau de pluie à l’échelle d’un simple jardin.</li>
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>Attirer la biodiversité qui pollinise, protège et travaille à votre place.</li>
         </ul>
 
-        <h2>Comment c'est organisé</h2>
-        <p>L'ouvrage suit la logique d'un projet réel : observation, design, mise en œuvre puis entretien. Chaque chapitre alterne explications illustrées, schémas de conception et fiches pratiques détachables.</p>
+        <h2 data-acf="3-organisation (H2)">Un livre qui se suit comme on mène un projet</h2>
+        <p data-acf="3-organisation">L’ouvrage avance dans l’ordre où l’on conçoit réellement un lieu : comprendre les principes, observer son terrain, dessiner son projet, puis aménager le sol, l’eau, les cultures et les abords.
+Chaque thème mêle explications claires, schémas de conception et fiches pratiques directement reproductibles.
+Les nombreuses photos ancrent chaque notion dans le concret, et les encadrés vont droit à l’essentiel. On peut le lire d’une traite ou y revenir, chapitre par chapitre, au fil des saisons.
+
+</p>
 
         <figure class="figure">
           <div class="ph">
             <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><path d="M20 90 C 40 50, 25 35, 55 18 C 45 55, 65 75, 55 90 Z" fill="#cfe7c8" opacity=".4"/><path d="M140 90 C 120 60, 138 42, 110 25 C 122 58, 104 78, 112 90 Z" fill="#a9d3a2" opacity=".35"/></svg>
-            <span class="cap">📷 Schéma de conception en zones</span>
+            <span class="cap">📷 Image de l'intérieur du livre</span>
           </div>
           <figcaption>Des planches de design pour passer de l'idée au plan.</figcaption>
         </figure>
 
-        <h2>Pour qui est ce livre ?</h2>
-        <p>Pour les jardiniers débutants, les futurs porteurs de projet et toute personne curieuse de concevoir un espace plus autonome — du balcon au grand terrain.</p>
+        <h2 data-acf="4-pour_qui (H2)">Pour celles et ceux qui débutent et veulent bien démarrer</h2>
+        <p data-acf="4-pour_qui">Ce guide s’adresse d’abord aux jardiniers débutants et aux porteurs de projet qui veulent passer à la permaculture sans se perdre dans la théorie.
+Du petit balcon au grand terrain, il parle à toute personne décidée à cultiver autrement : plus de récoltes, moins d’efforts, et un jardin vivant qui se régule en partie lui-même. Aucune connaissance préalable n’est nécessaire.
+
+</p>
+
+        <!-- BLOC 1 — Notre avis : accessible à tous, sans verrou ni badge -->
+        <h2 data-acf="5-notre_avis (H2 fixe)">Notre avis</h2>
+        <p data-acf="5-notre_avis">On le recommande sans détour comme première lecture : Carine Mayo a le don de rendre limpides des notions qui rebutent souvent les débutants, et chaque conseil sent l’expérience du terrain plutôt que la théorie recopiée.
+Les schémas de conception et les fiches pratiques en font un vrai compagnon de jardin, pas un livre de bibliothèque.
+Sa limite est le revers de sa force : à vouloir rester accessible, il survole ce qui intéressera les jardiniers déjà aguerris, qui devront chercher ailleurs pour aller plus loin.
+À conseiller donc à celles et ceux qui se lancent — ou qui veulent enfin structurer une pratique restée intuitive.
+
+</p>
       </div>
 
-      <!-- MEMBER GATE -->
-      <div class="member-gate">
-        <!-- Contenu verrouillé : flouté et en fondu progressif, pour suggérer que le texte continue derrière la carte -->
-        <div class="gate-fade" aria-hidden="true">
-          <h2 style="font-family:var(--serif);font-size:28px;color:var(--green-900);margin:0 0 14px;">Les points clés à retenir</h2>
-          <ul class="keys">
-            <li>La conception en zones et secteurs permet d'optimiser les déplacements et l'énergie dépensée sur le terrain au quotidien.</li>
-            <li>Les associations de plantes renforcent la résilience naturelle du jardin et limitent le recours aux intrants extérieurs.</li>
-            <li>Un sol couvert et vivant se construit avec le paillage, le compost et l'arrêt du travail mécanique de la terre.</li>
-            <li>L'observation patiente du site précède toute intervention : une saison complète d'observation avant d'agir.</li>
+      <!-- MEMBER GATE — BLOC 2 : points clés, réservé aux membres -->
+      <div class="member-gate" id="memberGate">
+        <!-- Badge premium : visible une fois le contenu débloqué -->
+        <div class="unlocked-badge" id="unlockedBadge" data-tier="premium">
+          <span class="ub-variant ub-free"><span class="ub-ico">🟢</span> <strong>Contenu membres</strong> <span class="ub-desc">— inclus avec votre inscription gratuite</span></span>
+          <span class="ub-variant ub-premium"><span class="ub-ico">⭐</span> <strong>Contenu L’Atelier</strong> <span class="ub-desc">— réservé aux membres premium</span></span>
+        </div>
+        <!-- Contenu réservé aux membres : masqué en fondu pour le public, révélé intégralement aux membres -->
+        <div class="gate-content" id="gateContent">
+          <h2 data-acf="6-points_cles (H2)" style="font-family:var(--serif);font-size:28px;color:var(--green-900);margin:0 0 14px;">Les enseignements que vous garderez longtemps après l’avoir refermé</h2>
+          <ul class="keys" data-acf="6-points_cles (repeater)">
+            <li>Observer une saison entière avant d’agir évite la plupart des erreurs de conception.</li>
+            <li>Un sol qu’on ne retourne pas, mais qu’on couvre et qu’on nourrit, devient plus fertile chaque année.</li>
+            <li>Bien placées, les plantes se rendent entre elles les services qu’on attend des intrants.</li>
+            <li>Concevoir en zones, c’est ranger son jardin selon la fréquence à laquelle on s’en occupe.</li>
+            <li>L’eau se gère d’abord par la conception du terrain, avant tout système d’arrosage.</li>
+            <li>La biodiversité n’est pas un décor&#8239;: c’est votre première main-d’œuvre.</li>
+            <li>Viser moins d’effort n’est pas de la paresse, c’est de l’efficacité.</li>
           </ul>
-          <h2 style="font-family:var(--serif);font-size:28px;color:var(--green-900);margin:34px 0 14px;">L'avis de l'équipe PCD</h2>
-          <p style="color:var(--ink-soft);">Un ouvrage de référence que nous recommandons sans hésiter aux débutants. Carine Mayo réussit le pari de rendre accessibles des concepts parfois techniques, sans jamais sacrifier la rigueur de la démarche. Les exemples concrets et les schémas de conception en font un compagnon précieux pour passer de la théorie au terrain, saison après saison.</p>
         </div>
 
-        <!-- Carte CTA membres -->
-        <div class="lock-card" data-acf="points_cles · avis (membres)">
+        <!-- Carte CTA membres (verrou — contenu piloté par l'état visiteur) -->
+        <div class="lock-card" id="lockCard" data-acf="points_cles · avis (membres)">
           <div class="lock-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.2" r="3"/><path d="M3.4 19.2a5.6 5.6 0 0 1 11.2 0"/><circle cx="17" cy="9.4" r="2.3"/><path d="M16.2 14.1a4.9 4.9 0 0 1 4.4 5.1"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
           </div>
-          <span class="lock-kicker">Contenu réservé aux membres</span>
-          <h3>Continuez votre lecture gratuitement</h3>
-          <p>L'intégralité de nos contenus &amp; formations est mise à la disposition des membres de L'Atelier — notre espace d'apprentissage et d'entraide en permaculture.<br />
-<strong>Inscrivez-vous gratuitement en moins d'une minute.</strong>
-</p>
+          <span class="lock-kicker" id="lockKicker">Contenu réservé aux membres</span>
+          <h3 id="lockTitle">Continuez votre lecture gratuitement</h3>
+          <p id="lockDesc">L’intégralité de nos contenus &amp; formations est mise à la disposition des membres de L’Atelier — notre espace d’apprentissage et d’entraide en permaculture.<br /><strong>Inscrivez-vous gratuitement en moins d’une minute.</strong></p>
           <div class="lock-btns">
-            <a class="btn btn-green" href="https://www.permaculturedesign.fr/devenir-membre-gratuit/">Rejoindre L'Atelier gratuitement</a>
-            <a class="lock-login" href="https://www.permaculturedesign.fr/connexion/">Déjà membre ? Se connecter</a>
+            <a class="btn btn-green" id="lockBtn" href="https://www.permaculturedesign.fr/devenir-membre-gratuit/">Rejoindre L’Atelier gratuitement</a>
+            <a class="lock-login" id="lockLogin" href="https://www.permaculturedesign.fr/connexion/">Déjà membre&#8239;? Se connecter</a>
           </div>
         </div>
       </div>
@@ -846,7 +994,7 @@
       <div class="tech">
         <table>
           <tr><th>ISBN</th><td>978-2-37922-184-6</td></tr>
-          <tr><th>Éditeur</th><td>Ulmer</td></tr>
+          <tr><th>Éditeur</th><td>Terre Vivante</td></tr>
           <tr><th>Année de parution</th><td>2024</td></tr>
           <tr><th>Nombre de pages</th><td>224 pages</td></tr>
           <tr><th>Dimensions</th><td data-acf="dimensions">19 × 24 cm</td></tr>
@@ -1234,6 +1382,65 @@
         : 'Aperçu : voir l\u2019état visiteur non connecté';
     });
   }
+  // ---- Aperçu visiteur : Public / Membre gratuit / Premium ----
+  (function () {
+    const viewerStates = {
+      public: {
+        lockKicker: 'Contenu réservé aux membres',
+        lockTitle: 'Continuez votre lecture gratuitement',
+        lockDesc: 'L’intégralité de nos contenus &amp; formations est mise à la disposition des membres de L’Atelier — notre espace d’apprentissage et d’entraide en permaculture.<br /><strong>Inscrivez-vous gratuitement en moins d’une minute.</strong>',
+        lockBtn: 'Rejoindre L’Atelier gratuitement',
+        lockHref: 'https://www.permaculturedesign.fr/devenir-membre-gratuit/',
+        stTitle: 'Le cœur du livre vous attend juste ici',
+        stSub: 'Les 7 enseignements clés du livre, distillés par l’équipe Permaculture Design.',
+        stBtn: 'Rejoindre L’Atelier gratuitement',
+        stReassure: 'Inscription gratuite · <a href="https://www.permaculturedesign.fr/connexion/">Déjà membre&#8239;? Se connecter</a>'
+      },
+      free: {
+        lockKicker: 'Contenu premium',
+        lockTitle: 'Cette partie est réservée aux membres premium',
+        lockDesc: 'Les 7 enseignements clés et notre avis complet font partie des contenus <strong>premium</strong> de L’Atelier.<br />Passez premium pour débloquer l’intégralité de la fiche.',
+        lockBtn: 'Passer premium →',
+        lockHref: 'https://www.permaculturedesign.fr/atelier/',
+        stTitle: 'Débloquez les enseignements clés et notre avis',
+        stSub: 'Cette partie de la fiche est réservée aux membres premium de L’Atelier.',
+        stBtn: 'Passer premium →',
+        stReassure: 'Déjà premium&#8239;? <a href="https://www.permaculturedesign.fr/connexion/">Se connecter</a>'
+      }
+    };
+    const pills = document.querySelectorAll('.vb-pill');
+    function setHTML(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
+    function applyViewer(state) {
+      if (!viewerStates[state] && state !== 'premium') state = 'public';
+      document.body.dataset.viewer = state;
+      const badge = document.getElementById('unlockedBadge');
+      if (badge) badge.dataset.tier = (state === 'free') ? 'free' : 'premium';
+      pills.forEach(p => {
+        const on = p.dataset.state === state;
+        p.classList.toggle('active', on);
+        p.setAttribute('aria-checked', on ? 'true' : 'false');
+      });
+      const cfg = viewerStates[state];
+      if (cfg) {
+        setHTML('lockKicker', cfg.lockKicker);
+        setHTML('lockTitle', cfg.lockTitle);
+        setHTML('lockDesc', cfg.lockDesc);
+        const lb = document.getElementById('lockBtn');
+        if (lb) { lb.textContent = cfg.lockBtn; lb.href = cfg.lockHref; }
+        setHTML('msTitle', cfg.stTitle);
+        setHTML('msSub', cfg.stSub);
+        const mb = document.querySelector('.ms-btn');
+        if (mb) mb.textContent = cfg.stBtn;
+        setHTML('msReassure', cfg.stReassure);
+      }
+      if (typeof window.__updateSticky === 'function') window.__updateSticky();
+      try { localStorage.setItem('pcd-viewer', state); } catch (e) {}
+    }
+    pills.forEach(p => p.addEventListener('click', () => applyViewer(p.dataset.state)));
+    let initial = 'public';
+    try { const s = localStorage.getItem('pcd-viewer'); if (s) initial = s; } catch (e) {}
+    applyViewer(initial);
+  })();
 </script>
 </body>
 </html>

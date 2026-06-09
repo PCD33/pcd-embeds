@@ -65,9 +65,27 @@
   img { display: block; max-width: 100%; }
   .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
 
+  /* ---------- Barre de navigation maquette (sticky) ---------- */
+  .pagenav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251,247,239,.92);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .pagenav .wrap { display: flex; align-items: center; gap: 16px; height: 46px; }
+  .pagenav .pn-label { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); white-space: nowrap; }
+  .pagenav .pn-tabs { display: flex; gap: 4px; margin-left: auto; }
+  .pagenav .pn-tab {
+    font-family: var(--sans); font-size: 13.5px; font-weight: 700; color: var(--ink-soft);
+    padding: 6px 15px; border-radius: 8px; white-space: nowrap;
+    transition: background .15s, color .15s;
+  }
+  .pagenav .pn-tab:hover { background: var(--beige-100); color: var(--green-800); }
+  .pagenav .pn-tab[aria-current="page"] { background: var(--green-700); color: #fff; }
+
   /* ---------- Header (menu) ---------- */
   header.site {
-    position: sticky; top: 0; z-index: 50;
+    position: sticky; top: 46px; z-index: 50;
     background: #ffffff;
     border-bottom: 1px solid #eceadf;
   }
@@ -317,6 +335,9 @@
   }
   @media (max-width: 680px) {
     body { font-size: 16px; }
+    .pagenav .pn-label { display: none; }
+    .pagenav .pn-tabs { margin-left: 0; }
+    .pagenav .pn-tab { padding: 6px 11px; font-size: 12.5px; }
     .screenbar .lbl { display: none; }
     .c-hero .inner { grid-template-columns: 1fr; text-align: left; }
     .c-photo { width: 150px; height: 150px; }
@@ -328,6 +349,18 @@
 </style>
 </head>
 <body>
+
+<!-- ============ BARRE DE NAVIGATION MAQUETTE (sticky) ============ -->
+<nav class="pagenav" aria-label="Navigation entre les écrans de la maquette">
+  <div class="wrap">
+    <span class="pn-label">Maquette CPT Livre</span>
+    <div class="pn-tabs">
+      <a class="pn-tab" href="fiche-livre.html">Fiche livre</a>
+      <a class="pn-tab" href="livre-auteur.html" aria-current="page">Fiche auteur</a>
+      <a class="pn-tab" href="carte-compacte.html">Carte compacte</a>
+    </div>
+  </div>
+</nav>
 
 <!-- ============ SCREEN NAV + ACF TOGGLE ============ -->
 <div class="screenbar">
@@ -442,7 +475,10 @@ Elle intervient également en radio et sur le web pour vulgariser les pratiques 
           </div>
 
           <div class="block">
-            <h3 class="block-h"><span class="bar"></span>Ses ouvrages dans notre bibliothèque <span class="count">· 3 livres référencés</span></h3>
+            <h3 class="block-h">Ses ouvrages dans notre bibliothèque
+· 3 livres référencés
+
+</h3>
             <div class="books acf" data-acf="query → auteur_livre (relation)" data-type="Relation" data-pos="in">
               <a class="book" href="#">
                 <span class="book-cover cov-1"><span class="bc-kick">Jardin · 2014</span><span class="bc-t">Le guide de la permaculture au jardin</span><span class="bc-rule"></span><span class="bc-pub">TERRE VIVANTE</span></span>
