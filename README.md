@@ -13,6 +13,7 @@ ses images dans `assets/`.
 |------------|--------------------------------------------------------------|
 | Fiche livre — *Le Guide de la Permaculture* | https://pcd33.github.io/pcd-embeds/fiche-livre.html |
 | Page auteur du livre | https://pcd33.github.io/pcd-embeds/livre-auteur.html |
+| Carte compacte (livre) | https://pcd33.github.io/pcd-embeds/carte-compacte.html |
 | Contributeur | https://pcd33.github.io/pcd-embeds/contributeur.html |
 | Contributeur — version impression | https://pcd33.github.io/pcd-embeds/contributeur-print.html |
 
