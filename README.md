@@ -15,12 +15,12 @@ ses images dans `assets/`.
 | Page auteur du livre | https://pcd33.github.io/pcd-embeds/livre-auteur.html |
 | Carte compacte (livre) | https://pcd33.github.io/pcd-embeds/carte-compacte.html |
 | Contributeur | https://pcd33.github.io/pcd-embeds/contributeur.html |
-| Glossaire (desktop) | https://pcd33.github.io/pcd-embeds/glossaire/ |
-| Glossaire (mobile) | https://pcd33.github.io/pcd-embeds/glossaire/glossaire-mobile.html |
+| Glossaire | https://pcd33.github.io/pcd-embeds/glossaire/ |
 
 > ⚙️ Le **Glossaire** utilise le nouveau format « design system » de Claude design
 > (composants React chargés depuis le CDN unpkg au runtime). Il vit dans son propre
 > dossier `glossaire/` avec ses dépendances (`_ds/`, `support.js`, `assets/`).
+> La page intègre son propre sélecteur Mobile/Desktop — **un seul lien suffit**.
 > Nécessite une connexion internet pour s'afficher (OK dans un embed Notion).
 | Contributeur — version impression | https://pcd33.github.io/pcd-embeds/contributeur-print.html |
 
