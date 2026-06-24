@@ -1,0 +1,25 @@
+/* ============================================================
+   Permaculture Design — Fonts
+   Headings: Recoleta (warm, rounded display serif) — premium font,
+     NOT freely hosted. Substituted with Fraunces (variable serif,
+     soft optical sizing) until the real Recoleta web files are added.
+   Body: Satoshi (Indian Type Foundry) — loaded free from Fontshare,
+     this is the genuine brand sans.
+   ============================================================ */
+
+/* Satoshi — real brand sans, free webfont via Fontshare */
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap");
+
+/* Fraunces — stand-in for Recoleta (display serif). SOFT/optical axes
+   tuned warm to approximate Recoleta's rounded terminals. */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap");
+
+:root {
+  --font-display: "Recoleta", "Fraunces", "Georgia", serif;
+  --font-sans: "Satoshi", "Satoshi Variable", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Fraunces needs a touch more weight + tighter optical feel to
+     read like Recoleta. Components can opt in with this. */
+  --font-display-settings: "opsz" 80, "SOFT" 0;
+}

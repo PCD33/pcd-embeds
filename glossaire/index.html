@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/tokens/colors.css">
+<link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/tokens/typography.css">
+<link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/tokens/base.css">
+<link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/styles.css">
+<script src="assets/ds-bundle.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  .pcd-scroll::-webkit-scrollbar { width: 10px; }
+  .pcd-scroll::-webkit-scrollbar-thumb { background: #D6D3B2; border-radius: 999px; border: 3px solid var(--paper,#FBFAF9); }
+  .pcd-scroll::-webkit-scrollbar-track { background: transparent; }
+  .pcd-phone .pcd-scroll::-webkit-scrollbar { width: 0; height: 0; }
+  .pcd-phone .pcd-scroll { scrollbar-width: none; }
+</style>
+</helmet>
+
+<div style="min-height:100vh; width:100%; background:var(--green-50,#F3FAF4); font-family:var(--font-sans); display:flex; flex-direction:column; align-items:center; gap:20px; padding:32px 20px 56px;">
+
+  <!-- Controls : two independent selectors + ACF toggle -->
+  <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+    <div style="display:flex; align-items:flex-end; gap:20px; flex-wrap:wrap; justify-content:center;">
+      <!-- Level 1 : screen format -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:7px;">
+        <span style="font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:#6A6F6B;">Format d'écran</span>
+        <div style="display:flex; align-items:center; gap:6px; background:#fff; border:1.5px solid var(--green-100,#E4F4E6); border-radius:999px; padding:5px; box-shadow:0 6px 24px rgba(15,36,20,.06);">
+          <button onClick="{{ goMobile }}" ref="{{ refDevM }}" style="appearance:none; border:none; cursor:pointer; font-family:var(--font-sans); font-size:13.5px; font-weight:700; padding:9px 18px; border-radius:999px; white-space:nowrap; transition:all .2s;">📱 Mobile</button>
+          <button onClick="{{ goDesktop }}" ref="{{ refDevD }}" style="appearance:none; border:none; cursor:pointer; font-family:var(--font-sans); font-size:13.5px; font-weight:700; padding:9px 18px; border-radius:999px; white-space:nowrap; transition:all .2s;">🖥 Desktop</button>
+        </div>
+      </div>
+      <!-- Level 2 : content view -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:7px;">
+        <span style="font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:#6A6F6B;">Vue de contenu</span>
+        <div style="display:flex; align-items:center; gap:6px; background:#fff; border:1.5px solid var(--green-100,#E4F4E6); border-radius:999px; padding:5px; box-shadow:0 6px 24px rgba(15,36,20,.06);">
+          <button onClick="{{ goArticle }}" ref="{{ refTabA }}" style="appearance:none; border:none; cursor:pointer; font-family:var(--font-sans); font-size:13.5px; font-weight:700; padding:9px 18px; border-radius:999px; white-space:nowrap; transition:all .2s;">Article de blog</button>
+          <button onClick="{{ goGlossary }}" ref="{{ refTabG }}" style="appearance:none; border:none; cursor:pointer; font-family:var(--font-sans); font-size:13.5px; font-weight:700; padding:9px 18px; border-radius:999px; white-space:nowrap; transition:all .2s;">Page glossaire</button>
+        </div>
+      </div>
+    </div>
+    <button onClick="{{ toggleAcf }}" style="display:flex; align-items:center; gap:10px; appearance:none; cursor:pointer; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px; font-weight:600; padding:7px 16px 7px 8px; border-radius:999px; border:1.5px solid {{ acfBtnBorder }}; box-shadow:0 6px 24px rgba(15,36,20,.06); transition:all .2s; background:{{ acfBtnBg }}; color:{{ acfBtnColor }};">
+      <span style="position:relative; width:38px; height:22px; border-radius:999px; flex:none; transition:background .2s; background:{{ acfTrackBg }};">
+        <span style="position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:999px; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.3); transition:transform .2s; transform:{{ acfKnobTransform }};"></span>
+      </span>
+      <span>Afficher les champs ACF</span>
+    </button>
+  </div>
+
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ false }}">
+  <!-- Browser window (desktop) -->
+  <div style="width:1200px; max-width:100%; background:#fff; border-radius:16px; box-shadow:0 40px 90px -30px rgba(15,36,20,.42), 0 0 0 1px rgba(15,36,20,.05); overflow:hidden; flex:none;">
+
+    <!-- Window chrome -->
+    <div style="height:48px; display:flex; align-items:center; gap:16px; padding:0 18px; background:#EEEDE7; border-bottom:1px solid #DEDCD2;">
+      <div style="display:flex; gap:8px; flex:none;">
+        <span style="width:12px; height:12px; border-radius:999px; background:#F2655A;"></span>
+        <span style="width:12px; height:12px; border-radius:999px; background:#F5BE4F;"></span>
+        <span style="width:12px; height:12px; border-radius:999px; background:#62C554;"></span>
+      </div>
+      <div style="flex:1; display:flex; align-items:center; gap:9px; background:#FBFAF9; border:1px solid #DEDCD2; border-radius:999px; height:30px; padding:0 14px; max-width:520px; margin:0 auto;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9C8D56" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <span style="font-size:13px; color:#6A6F6B; font-family:var(--font-sans); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ urlText }}</span>
+      </div>
+      <div style="width:54px; flex:none;"></div>
+    </div>
+
+    <!-- Viewport -->
+    <div class="pcd-scroll" style="height:760px; overflow-y:auto; background:var(--paper,#FBFAF9); position:relative;">
+
+      <!-- Site header -->
+      <div style="position:sticky; top:0; z-index:25; display:flex; align-items:center; justify-content:space-between; padding:18px 44px; background:rgba(251,250,249,.9); backdrop-filter:blur(10px); border-bottom:1px solid var(--green-100,#E4F4E6);">
+        <span style="font-family:var(--font-display); font-weight:500; font-size:21px; color:var(--green-700,#2F663B); letter-spacing:-.01em;">Permaculture Design</span>
+        <div style="display:flex; align-items:center; gap:30px;">
+          <span style="font-size:15px; font-weight:600; color:#3a4a3f;">Formations</span>
+          <span style="font-size:15px; font-weight:600; color:#3a4a3f;">L'Atelier</span>
+          <span style="font-size:15px; font-weight:600; color:var(--green-700,#2F663B);">Blog</span>
+          <span style="font-size:15px; font-weight:600; color:#3a4a3f;">Ressources</span>
+          <span style="display:inline-flex; align-items:center; height:40px; padding:0 20px; border-radius:8px; background:var(--green-700,#2F663B); color:#fff; font-size:14px; font-weight:700;">Rejoindre l'Atelier</span>
+        </div>
+      </div>
+
+      <!-- ============ VIEW 1 : ARTICLE (desktop) ============ -->
+      <sc-if value="{{ isArticle }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Article (desktop)" style="padding:0 0 80px;">
+        <div style="max-width:740px; margin:0 auto; padding:56px 24px 0;">
+          <span style="display:inline-block; font-size:13px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--green-600,#438E52);">Gestion de l'eau</span>
+          <h1 style="font-family:var(--font-display); font-weight:500; font-size:46px; line-height:1.1; letter-spacing:-.02em; color:var(--green-900,#23442A); margin:14px 0 20px;">Aménager un terrain en pente&nbsp;: par où commencer&nbsp;?</h1>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:34px;">
+            <div style="width:42px; height:42px; border-radius:999px; background:var(--green-100,#E4F4E6); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:500; color:var(--green-700,#2F663B); font-size:18px;">M</div>
+            <div style="font-size:14.5px; line-height:1.35;"><div style="font-weight:700; color:var(--green-900,#23442A);">Marie L.</div><div style="color:#6A6F6B;">8 min de lecture · Avril 2026</div></div>
+          </div>
+          <img src="assets/garden.jpg" alt="Jardin en permaculture" style="width:100%; height:380px; object-fit:cover; border-radius:20px; margin-bottom:38px;" />
+
+          <p style="font-size:19px; line-height:1.75; color:#2b3a30; margin:0 0 22px;">Observer avant d'agir&nbsp;: c'est la première règle. Sur un terrain en pente, la pluie ruisselle, emporte la terre fertile et file vers le bas sans jamais s'infiltrer. L'enjeu est donc de <strong style="color:var(--green-900,#23442A);">ralentir, répartir et infiltrer</strong> cette eau là où elle tombe.</p>
+
+          <p style="font-size:19px; line-height:1.75; color:#2b3a30; margin:0 0 22px;">Pour cela, l'un des aménagements les plus efficaces et les plus économiques reste la <span ref="{{ refTrigger }}" onMouseEnter="{{ showTip }}" onMouseLeave="{{ hideTip }}" onClick="{{ toggleTipPin }}" style="position:relative; display:inline-block; color:var(--green-700,#2F663B); font-weight:700; border-bottom:2px dashed var(--green-600,#438E52); cursor:pointer; line-height:1.2;">baissière<sc-if value="{{ tipVisible }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; bottom:calc(100% + 16px); left:50%; transform:translateX(-50%); width:328px; background:#fff; border:1px solid var(--green-100,#E4F4E6); border-radius:16px; box-shadow:0 20px 44px -10px rgba(15,36,20,.32); padding:18px 20px 20px; z-index:40; text-align:left; cursor:default; font-weight:400;">
+            <span style="position:relative; display:inline-flex; align-items:center; gap:8px; margin-bottom:10px;"><x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Badge" variant="success" icon="{{ dropIcon }}" hint-size="auto,24px">Eau</x-import><span style="font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#9C8D56;">Glossaire</span><sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:-13px; left:0; z-index:5; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:10px; font-weight:600; line-height:1; padding:4px 7px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35);">Badge UX (Auto) (issu du Cluster)</span></sc-if></span>
+            <span style="position:relative; display:block; font-family:var(--font-display); font-weight:500; font-size:23px; line-height:1.1; letter-spacing:-.02em; color:var(--green-900,#23442A); margin-bottom:8px;">Baissière<sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:-2px; right:0; z-index:5; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:10px; font-weight:600; line-height:1; padding:4px 7px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35);">Terme</span></sc-if></span>
+            <span style="position:relative; display:block; font-size:14.5px; line-height:1.55; color:#2b3a30; margin-bottom:14px;">Fossé creusé le long des courbes de niveau pour ralentir, infiltrer et stocker l'eau de pluie dans le sol. Idéal pour reboiser et hydrater les cultures.<sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:0; right:0; z-index:5; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:10px; font-weight:600; line-height:1; padding:4px 7px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35);">Définition courte (Infobulle)</span></sc-if></span>
+            <button onClick="{{ goGlossary }}" style="appearance:none; background:none; border:none; padding:0; cursor:pointer; font-family:var(--font-sans); display:inline-flex; align-items:center; gap:6px; color:var(--green-700,#2F663B); font-weight:700; font-size:14.5px;">Lire la définition complète <span style="font-size:16px;">→</span></button>
+            <span style="position:absolute; bottom:-8px; left:50%; transform:translateX(-50%) rotate(45deg); width:16px; height:16px; background:#fff; border-right:1px solid var(--green-100,#E4F4E6); border-bottom:1px solid var(--green-100,#E4F4E6);"></span>
+          </span></sc-if></span>. Creusée à la main ou à la mini-pelle, elle suit patiemment les courbes du terrain.</p>
+
+          <p style="font-size:19px; line-height:1.75; color:#2b3a30; margin:0 0 22px;">Une fois l'eau ralentie et stockée dans le sol, la végétation reprend ses droits&nbsp;: les arbres s'enracinent plus profondément, les cultures résistent mieux à la sécheresse et la biodiversité revient naturellement.</p>
+
+          <div style="margin-top:30px; padding:22px 26px; background:var(--green-50,#F3FAF4); border-radius:16px; border:1px solid var(--green-100,#E4F4E6);">
+            <p style="margin:0; font-size:16px; line-height:1.55; color:var(--green-700,#2F663B);"><strong style="color:var(--green-900,#23442A);">Astuce&nbsp;:</strong> survolez les mots soulignés en pointillés pour afficher leur définition sans quitter votre lecture.</p>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ VIEW 2 : GLOSSAIRE (desktop) ============ -->
+      <sc-if value="{{ isGlossary }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Glossaire (desktop)" style="padding:14px 0 70px;">
+        <div style="max-width:1080px; margin:0 auto; padding:18px 44px 0;">
+          <div style="display:flex; align-items:center; gap:8px; color:#6A6F6B; font-size:14px; margin-bottom:26px;">
+            <span style="color:var(--green-700,#2F663B); font-weight:600;">Glossaire</span>
+            <span style="color:#C9C7BC;">/</span>
+            <span style="color:#9C8D56;">Gestion de l'eau</span>
+            <span style="color:#C9C7BC;">/</span>
+            <span style="color:var(--green-900,#23442A); font-weight:600;">Baissière</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:460px 1fr; gap:52px; align-items:start;">
+            <!-- Left : illustration -->
+            <div style="position:sticky; top:24px;">
+              <div style="position:relative;">
+                <img src="assets/garden.jpg" alt="Baissière dans un jardin en permaculture" style="width:100%; height:520px; object-fit:cover; border-radius:24px; display:block; box-shadow:0 18px 40px -16px rgba(15,36,20,.3);" />
+                <sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:12px; left:12px; z-index:5; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; font-weight:600; line-height:1; padding:5px 9px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35);">Illustration</span></sc-if>
+              </div>
+            </div>
+
+            <!-- Right : detail -->
+            <div>
+              <span style="position:relative; display:inline-flex;"><x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Badge" variant="success" icon="{{ dropIcon }}" hint-size="auto,28px">Eau</x-import><sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:-14px; left:0; z-index:5; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; font-weight:600; line-height:1; padding:5px 9px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35);">Badge UX (Auto) (issu du Cluster)</span></sc-if></span>
+
+              <h1 style="position:relative; font-family:var(--font-display); font-weight:500; font-size:54px; line-height:1.02; letter-spacing:-.025em; color:var(--green-900,#23442A); margin:16px 0 0;">Baissière<sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:6px; right:0; z-index:5; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; font-weight:600; line-height:1; padding:5px 9px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35);">Terme</span></sc-if></h1>
+              <p style="position:relative; font-size:15px; color:#9C8D56; font-style:italic; margin:8px 0 24px;">aussi appelée <em>swale</em> ou fossé d'infiltration<sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:-13px; left:0; z-index:5; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; font-weight:600; line-height:1; padding:5px 9px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35);">Synonymes et variantes</span></sc-if></p>
+
+              <p style="position:relative; font-size:21px; line-height:1.5; color:var(--green-900,#23442A); font-weight:500; padding-left:20px; border-left:3px solid var(--green-300,#A0D5AA); margin:0 0 34px;">Fossé creusé le long des courbes de niveau pour ralentir, infiltrer et stocker l'eau de pluie dans le sol. Idéal pour reboiser et hydrater les cultures.<sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:2px; left:28px; z-index:5; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; font-weight:600; line-height:1; padding:5px 9px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35);">Définition courte (Infobulle)</span></sc-if></p>
+
+              <h2 style="font-family:var(--font-display); font-weight:500; font-size:28px; color:var(--green-900,#23442A); margin:0 0 12px;">À quoi ça sert&nbsp;?</h2>
+              <p style="font-size:17px; line-height:1.7; color:#2b3a30; margin:0 0 22px;">Sur un terrain en pente, une baissière intercepte l'eau de ruissellement et la laisse s'infiltrer lentement. Plutôt que de fuir en surface, l'eau recharge la nappe et reste disponible pour les plantes en période sèche.</p>
+
+              <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:14px;">
+                <li style="display:flex; gap:13px; font-size:17px; line-height:1.5; color:#2b3a30;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="11" fill="#E4F4E6"/><path d="M7.5 12.2l3 3 6-6.4" stroke="#2F663B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong style="color:var(--green-900,#23442A);">Ralentir</strong> le ruissellement et limiter l'érosion du sol.</span></li>
+                <li style="display:flex; gap:13px; font-size:17px; line-height:1.5; color:#2b3a30;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="11" fill="#E4F4E6"/><path d="M7.5 12.2l3 3 6-6.4" stroke="#2F663B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong style="color:var(--green-900,#23442A);">Infiltrer</strong> et recharger les réserves d'eau du terrain.</span></li>
+                <li style="display:flex; gap:13px; font-size:17px; line-height:1.5; color:#2b3a30;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="11" fill="#E4F4E6"/><path d="M7.5 12.2l3 3 6-6.4" stroke="#2F663B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong style="color:var(--green-900,#23442A);">Reboiser</strong> et installer des cultures pérennes plus résistantes.</span></li>
+                <li style="display:flex; gap:13px; font-size:17px; line-height:1.5; color:#2b3a30;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="11" fill="#E4F4E6"/><path d="M7.5 12.2l3 3 6-6.4" stroke="#2F663B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong style="color:var(--green-900,#23442A);">Favoriser</strong> la biodiversité autour du point d'eau créé.</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- CTA block -->
+          <div style="position:relative; margin-top:48px; background:var(--green-100,#E4F4E6); border-radius:28px; padding:44px 40px; display:flex; flex-direction:column; align-items:center; text-align:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2F663B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:12px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <p style="position:relative; font-family:var(--font-display); font-weight:500; font-size:26px; line-height:1.25; color:var(--green-900,#23442A); margin:0 0 22px; max-width:560px;">Tout savoir pour concevoir et creuser votre baissière&nbsp;:<sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:-14px; left:50%; transform:translateX(-50%); z-index:5; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; font-weight:600; line-height:1; padding:5px 9px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35);">Texte d'accroche (CTA)</span></sc-if></p>
+            <span style="position:relative; display:inline-flex;"><x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Button" variant="accent" size="xl" hint-size="auto,56px">Lire le guide pratique</x-import><sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:-14px; left:50%; transform:translateX(-50%); z-index:5; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; font-weight:600; line-height:1; padding:5px 9px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35);">Lien du CTA (URL)</span></sc-if></span>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= MOBILE ================= -->
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+  <!-- Phone frame -->
+  <div class="pcd-phone" style="position:relative; width:390px; height:820px; background:var(--green-900,#23442A); border-radius:54px; padding:13px; box-shadow:0 30px 70px -20px rgba(15,36,20,.45), 0 0 0 2px rgba(255,255,255,.04) inset; flex:none;">
+    <div style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:150px; height:30px; background:var(--green-900,#23442A); border-bottom-left-radius:18px; border-bottom-right-radius:18px; z-index:40;"></div>
+    <div style="position:relative; width:100%; height:100%; background:var(--paper,#FBFAF9); border-radius:42px; overflow:hidden;">
+
+      <!-- Status bar -->
+      <div style="position:absolute; top:0; left:0; right:0; height:46px; display:flex; align-items:flex-end; justify-content:space-between; padding:0 26px 7px; font-size:14px; font-weight:700; color:var(--green-900,#23442A); z-index:30; pointer-events:none;">
+        <span>9:41</span>
+        <span style="display:flex; align-items:center; gap:6px;">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="#23442A"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#23442A" stroke-width="1.6" stroke-linecap="round"><path d="M1 4.2a10 10 0 0 1 14 0"/><path d="M3.6 7a6.2 6.2 0 0 1 8.8 0"/><circle cx="8" cy="9.8" r="1" fill="#23442A" stroke="none"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="20" height="11" rx="3" stroke="#23442A" opacity=".4"/><rect x="2" y="2" width="16" height="8" rx="1.5" fill="#23442A"/><rect x="22" y="3.5" width="1.6" height="5" rx="1" fill="#23442A" opacity=".4"/></svg>
+        </span>
+      </div>
+
+      <!-- MOBILE VIEW 1 : ARTICLE -->
+      <sc-if value="{{ isArticle }}" hint-placeholder-val="{{ true }}">
+      <div class="pcd-scroll" data-screen-label="Article (mobile)" style="position:absolute; inset:0; overflow-y:auto; -webkit-overflow-scrolling:touch;">
+        <div style="position:sticky; top:0; z-index:20; padding:46px 22px 12px; background:rgba(251,250,249,.92); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--green-100,#E4F4E6);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#23442A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          <span style="font-family:var(--font-display); font-weight:500; font-size:17px; color:var(--green-700,#2F663B); letter-spacing:-.01em;">Permaculture Design</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#23442A" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </div>
+
+        <div style="padding:8px 24px 60px;">
+          <span style="display:inline-block; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--green-600,#438E52);">Gestion de l'eau</span>
+          <h1 style="font-family:var(--font-display); font-weight:500; font-size:30px; line-height:1.12; letter-spacing:-.015em; color:var(--green-900,#23442A); margin:10px 0 14px;">Aménager un terrain en pente&nbsp;: par où commencer&nbsp;?</h1>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:22px;">
+            <div style="width:34px; height:34px; border-radius:999px; background:var(--green-100,#E4F4E6); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:500; color:var(--green-700,#2F663B); font-size:15px;">M</div>
+            <div style="font-size:13px; line-height:1.3;"><div style="font-weight:700; color:var(--green-900,#23442A);">Marie L.</div><div style="color:#6A6F6B;">8 min de lecture · Avril 2026</div></div>
+          </div>
+
+          <img src="assets/garden.jpg" alt="Jardin en permaculture" style="width:100%; height:180px; object-fit:cover; border-radius:16px; margin-bottom:22px;" />
+
+          <p style="font-size:16.5px; line-height:1.6; color:#2b3a30; margin:0 0 16px;">Observer avant d'agir&nbsp;: c'est la première règle. Sur un terrain en pente, la pluie ruisselle, emporte la terre fertile et file vers le bas sans jamais s'infiltrer. L'enjeu est donc de <strong style="color:var(--green-900,#23442A);">ralentir, répartir et infiltrer</strong> cette eau là où elle tombe.</p>
+
+          <p style="font-size:16.5px; line-height:1.6; color:#2b3a30; margin:0 0 16px;">Pour cela, l'un des aménagements les plus efficaces et les plus économiques reste la <button onClick="{{ openSheet }}" style="appearance:none; -webkit-appearance:none; background:none; border:none; padding:0; font:inherit; cursor:pointer; color:var(--green-700,#2F663B); font-weight:700; border-bottom:2px dashed var(--green-600,#438E52); line-height:1.2;">baissière</button>. Creusée à la main ou à la mini-pelle, elle suit patiemment les courbes du terrain.</p>
+
+          <p style="font-size:16.5px; line-height:1.6; color:#2b3a30; margin:0 0 16px;">Une fois l'eau ralentie et stockée dans le sol, la végétation reprend ses droits&nbsp;: les arbres s'enracinent plus profondément, les cultures résistent mieux à la sécheresse et la biodiversité revient naturellement.</p>
+
+          <div style="margin-top:24px; padding:18px 20px; background:var(--green-50,#F3FAF4); border-radius:16px; border:1px solid var(--green-100,#E4F4E6);">
+            <p style="margin:0; font-size:14.5px; line-height:1.5; color:var(--green-700,#2F663B);"><strong style="color:var(--green-900,#23442A);">Astuce&nbsp;:</strong> touchez les mots soulignés en pointillés pour afficher leur définition sans quitter votre lecture.</p>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- MOBILE VIEW 2 : GLOSSAIRE -->
+      <sc-if value="{{ isGlossary }}" hint-placeholder-val="{{ true }}">
+      <div class="pcd-scroll" data-screen-label="Glossaire (mobile)" style="position:absolute; inset:0; overflow-y:auto; -webkit-overflow-scrolling:touch;">
+        <div style="position:sticky; top:0; z-index:20; padding:46px 22px 12px; background:rgba(251,250,249,.92); backdrop-filter:blur(8px); display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--green-100,#E4F4E6);">
+          <button onClick="{{ goArticle }}" style="appearance:none; background:none; border:none; padding:0; cursor:pointer; display:flex; align-items:center; gap:6px; color:var(--green-700,#2F663B); font-weight:700; font-size:14px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2F663B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            Glossaire
+          </button>
+        </div>
+
+        <div style="padding:18px 24px 40px;">
+          <span style="position:relative; display:inline-block;"><x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Badge" variant="success" icon="{{ dropIcon }}" hint-size="auto,26px">Eau</x-import><sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:-9px; left:0; z-index:2; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:10px; font-weight:600; line-height:1; padding:4px 7px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35); letter-spacing:.02em;">Badge UX (Auto) (issu du Cluster)</span></sc-if></span>
+
+          <h1 style="position:relative; font-family:var(--font-display); font-weight:500; font-size:38px; line-height:1.05; letter-spacing:-.02em; color:var(--green-900,#23442A); margin:14px 0 0;">Baissière<sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:2px; left:2px; z-index:2; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:10px; font-weight:600; line-height:1; padding:4px 7px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35); letter-spacing:.02em;">Terme</span></sc-if></h1>
+          <p style="position:relative; font-size:13px; color:#9C8D56; font-style:italic; margin:6px 0 20px;">aussi appelée <em>swale</em> ou fossé d'infiltration<sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:-12px; left:0; z-index:2; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:10px; font-weight:600; line-height:1; padding:4px 7px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35); letter-spacing:.02em;">Synonymes et variantes</span></sc-if></p>
+
+          <div style="position:relative; margin-bottom:22px;"><img src="assets/garden.jpg" alt="Baissière dans un jardin en permaculture" style="width:100%; height:200px; object-fit:cover; border-radius:20px; display:block;" /><sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:8px; left:8px; z-index:2; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:10px; font-weight:600; line-height:1; padding:4px 7px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35); letter-spacing:.02em;">Illustration</span></sc-if></div>
+
+          <p style="position:relative; font-size:18px; line-height:1.5; color:var(--green-900,#23442A); font-weight:500; padding-left:16px; border-left:3px solid var(--green-300,#A0D5AA); margin:0 0 26px;">Fossé creusé le long des courbes de niveau pour ralentir, infiltrer et stocker l'eau de pluie dans le sol. Idéal pour reboiser et hydrater les cultures.<sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:6px; left:22px; z-index:2; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:10px; font-weight:600; line-height:1; padding:4px 7px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35); letter-spacing:.02em;">Définition courte (Infobulle)</span></sc-if></p>
+
+          <h2 style="font-family:var(--font-display); font-weight:500; font-size:22px; color:var(--green-900,#23442A); margin:0 0 10px;">À quoi ça sert&nbsp;?</h2>
+          <p style="font-size:16px; line-height:1.6; color:#2b3a30; margin:0 0 16px;">Sur un terrain en pente, une baissière intercepte l'eau de ruissellement et la laisse s'infiltrer lentement. Plutôt que de fuir en surface, l'eau recharge la nappe et reste disponible pour les plantes en période sèche.</p>
+
+          <ul style="list-style:none; padding:0; margin:0 0 30px; display:flex; flex-direction:column; gap:12px;">
+            <li style="display:flex; gap:11px; font-size:15.5px; line-height:1.45; color:#2b3a30;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="11" fill="#E4F4E6"/><path d="M7.5 12.2l3 3 6-6.4" stroke="#2F663B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong style="color:var(--green-900,#23442A);">Ralentir</strong> le ruissellement et limiter l'érosion du sol.</span></li>
+            <li style="display:flex; gap:11px; font-size:15.5px; line-height:1.45; color:#2b3a30;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="11" fill="#E4F4E6"/><path d="M7.5 12.2l3 3 6-6.4" stroke="#2F663B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong style="color:var(--green-900,#23442A);">Infiltrer</strong> et recharger les réserves d'eau du terrain.</span></li>
+            <li style="display:flex; gap:11px; font-size:15.5px; line-height:1.45; color:#2b3a30;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="11" fill="#E4F4E6"/><path d="M7.5 12.2l3 3 6-6.4" stroke="#2F663B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong style="color:var(--green-900,#23442A);">Reboiser</strong> et installer des cultures pérennes plus résistantes.</span></li>
+            <li style="display:flex; gap:11px; font-size:15.5px; line-height:1.45; color:#2b3a30;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="11" fill="#E4F4E6"/><path d="M7.5 12.2l3 3 6-6.4" stroke="#2F663B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong style="color:var(--green-900,#23442A);">Favoriser</strong> la biodiversité autour du point d'eau créé.</span></li>
+          </ul>
+
+          <!-- CTA block -->
+          <div style="background:var(--green-100,#E4F4E6); border-radius:24px; padding:26px 24px; text-align:center;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2F663B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <p style="position:relative; font-family:var(--font-display); font-weight:500; font-size:20px; line-height:1.25; color:var(--green-900,#23442A); margin:0 0 18px;">Tout savoir pour concevoir et creuser votre baissière&nbsp;:<sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:-6px; left:50%; transform:translateX(-50%); z-index:2; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:10px; font-weight:600; line-height:1; padding:4px 7px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35); letter-spacing:.02em;">Texte d'accroche (CTA)</span></sc-if></p>
+            <div style="position:relative;"><x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Button" variant="accent" size="xl" full-width="{{ true }}" hint-size="100%,52px">Lire le guide pratique</x-import><sc-if value="{{ acf }}" hint-placeholder-val="{{ false }}"><span style="position:absolute; top:6px; left:6px; z-index:2; background:rgba(0,0,0,.82); color:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:10px; font-weight:600; line-height:1; padding:4px 7px; border-radius:5px; white-space:nowrap; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,.35); letter-spacing:.02em;">Lien du CTA (URL)</span></sc-if></div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- BOTTOM SHEET (article only) -->
+      <div onClick="{{ closeSheet }}" ref="{{ refOverlay }}" style="position:absolute; inset:0; z-index:50; background:rgba(15,36,20,.5); transition:opacity .28s ease;"></div>
+      <div ref="{{ refSheet }}" style="position:absolute; left:0; right:0; bottom:0; z-index:60; background:var(--paper,#FBFAF9); border-top-left-radius:28px; border-top-right-radius:28px; padding:14px 24px 40px; box-shadow:0 -12px 40px rgba(15,36,20,.18); transition:transform .34s cubic-bezier(.22,1,.36,1);">
+        <div style="width:44px; height:5px; border-radius:999px; background:#D6D3B2; margin:0 auto 18px;"></div>
+        <div style="display:flex; align-items:center; gap:9px; margin-bottom:12px;">
+          <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Badge" variant="success" icon="{{ dropIcon }}" hint-size="auto,24px">Eau</x-import>
+          <span style="font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:#9C8D56;">Glossaire</span>
+        </div>
+        <h3 style="font-family:var(--font-display); font-weight:500; font-size:28px; line-height:1.05; letter-spacing:-.02em; color:var(--green-900,#23442A); margin:0 0 12px;">Baissière</h3>
+        <p style="font-size:16px; line-height:1.55; color:#2b3a30; margin:0 0 22px;">Fossé creusé le long des courbes de niveau pour ralentir, infiltrer et stocker l'eau de pluie dans le sol. Idéal pour reboiser et hydrater les cultures.</p>
+        <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Button" variant="secondary" size="m" full-width="{{ true }}" icon-right="{{ arrowIcon }}" onClick="{{ goGlossary }}" hint-size="100%,46px">Lire la définition complète</x-import>
+      </div>
+
+    </div>
+  </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { device: 'mobile', view: 'article', acf: false, tipOpen: false, tipPinned: false, sheet: false };
+
+  refTabA = (el) => { this._tabA = el; if (el) this.applyTabs(this.state.view); };
+  refTabG = (el) => { this._tabG = el; if (el) this.applyTabs(this.state.view); };
+  refDevM = (el) => { this._devM = el; if (el) this.applyDevice(this.state.device); };
+  refDevD = (el) => { this._devD = el; if (el) this.applyDevice(this.state.device); };
+  refTrigger = (el) => { this._trigger = el; };
+  refSheet = (el) => { this._sheet = el; if (el) el.style.transform = 'translateY(110%)'; };
+  refOverlay = (el) => { this._overlay = el; if (el) { el.style.opacity = '0'; el.style.pointerEvents = 'none'; } };
+
+  applyTabs(view) {
+    const a = view === 'article';
+    if (this._tabA) { this._tabA.style.background = a ? 'var(--green-900,#23442A)' : 'transparent'; this._tabA.style.color = a ? '#fff' : '#6A6F6B'; }
+    if (this._tabG) { this._tabG.style.background = !a ? 'var(--green-900,#23442A)' : 'transparent'; this._tabG.style.color = !a ? '#fff' : '#6A6F6B'; }
+  }
+  applyDevice(device) {
+    const m = device === 'mobile';
+    if (this._devM) { this._devM.style.background = m ? 'var(--green-900,#23442A)' : 'transparent'; this._devM.style.color = m ? '#fff' : '#6A6F6B'; }
+    if (this._devD) { this._devD.style.background = !m ? 'var(--green-900,#23442A)' : 'transparent'; this._devD.style.color = !m ? '#fff' : '#6A6F6B'; }
+  }
+  applySheet(open) {
+    if (this._sheet) this._sheet.style.transform = open ? 'translateY(0)' : 'translateY(110%)';
+    if (this._overlay) { this._overlay.style.opacity = open ? '1' : '0'; this._overlay.style.pointerEvents = open ? 'auto' : 'none'; }
+  }
+
+  goArticle = () => { this.setState({ view: 'article', tipOpen: false, tipPinned: false, sheet: false }); this.applyTabs('article'); this.applySheet(false); };
+  goGlossary = () => { this.setState({ view: 'glossary', tipOpen: false, tipPinned: false, sheet: false }); this.applyTabs('glossary'); this.applySheet(false); };
+  goMobile = () => { this.setState({ device: 'mobile' }); this.applyDevice('mobile'); };
+  goDesktop = () => { this.setState({ device: 'desktop' }); this.applyDevice('desktop'); };
+  toggleAcf = () => { this.setState({ acf: !this.state.acf }); };
+  openSheet = () => { this.setState({ sheet: true }); this.applySheet(true); };
+  closeSheet = () => { this.setState({ sheet: false }); this.applySheet(false); };
+
+  showTip = () => { this.setState({ tipOpen: true }); };
+  hideTip = () => { if (!this.state.tipPinned) this.setState({ tipOpen: false }); };
+  toggleTipPin = () => { const p = !this.state.tipPinned; this.setState({ tipPinned: p, tipOpen: true }); };
+
+  renderVals() {
+    const h = React.createElement;
+    const dropIcon = h('svg', { width: 12, height: 15, viewBox: '0 0 13 16', fill: 'currentColor' },
+      h('path', { d: 'M6.5 0C6.5 0 0 7 0 11a6.5 6.5 0 0 0 13 0C13 7 6.5 0 6.5 0z' }));
+    const arrowIcon = h('svg', { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' },
+      h('path', { d: 'M5 12h14M13 6l6 6-6 6' }));
+    const acf = this.state.acf;
+    const isArticle = this.state.view === 'article';
+    const tipVisible = (acf && isArticle) ? true : (this.state.tipOpen || this.state.tipPinned);
+    return {
+      isArticle,
+      isGlossary: this.state.view === 'glossary',
+      isMobile: this.state.device === 'mobile',
+      isDesktop: this.state.device === 'desktop',
+      acf,
+      tipVisible,
+      dropIcon,
+      arrowIcon,
+      urlText: isArticle ? 'permaculturedesign.fr/blog/amenager-un-terrain-en-pente' : 'permaculturedesign.fr/glossaire/baissiere',
+      acfBtnBg: acf ? '#18181B' : '#fff',
+      acfBtnColor: acf ? '#fff' : '#3A3A3A',
+      acfBtnBorder: acf ? '#18181B' : 'var(--green-100,#E4F4E6)',
+      acfTrackBg: acf ? 'var(--green-600,#438E52)' : '#D6D3B2',
+      acfKnobTransform: acf ? 'translateX(16px)' : 'translateX(0)',
+      refTabA: this.refTabA,
+      refTabG: this.refTabG,
+      refDevM: this.refDevM,
+      refDevD: this.refDevD,
+      refTrigger: this.refTrigger,
+      refSheet: this.refSheet,
+      refOverlay: this.refOverlay,
+      goArticle: this.goArticle,
+      goGlossary: this.goGlossary,
+      goMobile: this.goMobile,
+      goDesktop: this.goDesktop,
+      toggleAcf: this.toggleAcf,
+      openSheet: this.openSheet,
+      closeSheet: this.closeSheet,
+      showTip: this.showTip,
+      hideTip: this.hideTip,
+      toggleTipPin: this.toggleTipPin,
+    };
+  }
+}
+</script>
+</body>
+</html>

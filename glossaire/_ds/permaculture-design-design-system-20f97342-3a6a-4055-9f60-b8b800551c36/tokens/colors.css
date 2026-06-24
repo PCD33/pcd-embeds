@@ -1,0 +1,70 @@
+/* ============================================================
+   Permaculture Design — Color tokens
+   Sampled from the "SPCD - Amélioration 2026" Figma file.
+   Forest greens lead, warm honey-yellow accents, earthy sand
+   neutrals. The brand reads natural, calm, grounded.
+   ============================================================ */
+
+:root {
+  /* ---- Green scale (primary brand family) ---------------- */
+  --green-900: #23442A; /* forest — hero & footer backgrounds, primary text */
+  --green-800: #0F2414; /* darkest green — deep text / overlays */
+  --green-700: #2F663B; /* logo green, button fill & hover */
+  --green-600: #438E52; /* mid green — links, accents, secondary surfaces */
+  --green-500: #18A957; /* vivid green — success, growth highlights */
+  --green-300: #A0D5AA; /* soft green — chips, decorative fills */
+  --green-200: #CAE8CF; /* pale green — borders, hover tints */
+  --green-100: #E4F4E6; /* mist green — section bands */
+  --green-50:  #F3FAF4; /* lightest tint — card & section surfaces */
+
+  /* ---- Honey accent (calls to action) -------------------- */
+  --yellow-400: #FFDE67; /* primary CTA fill */
+  --yellow-500: #F5C93B; /* CTA hover */
+  --brown-900:  #461B02; /* text/icon color on yellow */
+  --brown-700:  #4B0C04; /* deep cocoa — rare emphasis */
+
+  /* ---- Earthy neutrals ----------------------------------- */
+  --paper:    #FBFAF9; /* off-white page background */
+  --sand-50:  #F6F6F0; /* warm panel background */
+  --sand-300: #D6D3B2; /* sand border / divider */
+  --sand-600: #9C8D56; /* khaki — muted captions on light */
+  --ink:      #000000; /* pure black — used sparingly */
+  --white:    #FFFFFF;
+
+  /* ---- Greys --------------------------------------------- */
+  --grey-100: #F6F6F6;
+  --grey-200: #E7E7E7;
+  --grey-400: #B6B6B6;
+  --grey-600: #6A6F6B;
+
+  /* ---- Semantic states ----------------------------------- */
+  --danger:  #FF523B; /* errors, destructive */
+  --warning: #E07400; /* warnings, attention */
+  --success: #18A957; /* validation */
+  --info:    #438E52; /* informational (uses brand green) */
+
+  /* ============================================================
+     Semantic aliases — prefer these in components.
+     ============================================================ */
+  --color-bg:            var(--paper);
+  --color-bg-dark:       var(--green-900);
+  --surface-card:        var(--white);
+  --surface-tint:        var(--green-50);
+  --surface-band:        var(--green-100);
+  --surface-sand:        var(--sand-50);
+
+  --text-primary:        var(--green-900);
+  --text-secondary:      var(--green-700);
+  --text-muted:          var(--grey-600);
+  --text-on-dark:        var(--white);
+  --text-on-accent:      var(--brown-900);
+  --text-link:           var(--green-600);
+
+  --border-subtle:       var(--green-200);
+  --border-default:      var(--grey-200);
+  --border-strong:       var(--green-700);
+
+  --brand-primary:       var(--green-900);
+  --brand-fill:          var(--green-700);
+  --brand-accent:        var(--yellow-400);
+}
