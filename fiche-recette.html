@@ -98,8 +98,8 @@ button{font-family:inherit;cursor:pointer;}
 .ctrl-divider{width:1px;height:26px;background:rgba(255,255,255,.18);}
 
 /* ============================ STAGE / VIEWPORT ====================== */
-.stage{padding:34px 20px 80px;display:flex;justify-content:center;transition:background .3s;}
-.stage.mobile{background:#d9d6cc;padding:30px 20px 70px;}
+.stage{padding:34px 20px 124px;display:flex;justify-content:center;transition:background .3s;}
+.stage.mobile{background:#d9d6cc;padding:30px 20px 116px;}
 
 /* the document frame */
 .doc{
@@ -245,6 +245,46 @@ ul.ing-grid{padding:0;margin-top:16px;}
 .video .play{width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;}
 .video .play::after{content:"";border-left:20px solid var(--green-900);border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px;}
 .video .vbadge{position:absolute;top:12px;left:12px;background:var(--green-900);color:#fff;font-size:11px;font-weight:700;padding:5px 11px;border-radius:999px;letter-spacing:.04em;display:inline-flex;align-items:center;gap:5px;}
+/* — audit v2 — */
+.seg-sm button{padding:6px 11px;font-size:12px;}
+.step .body{flex:1;}
+.step .step-photo{flex:none;width:62px;height:62px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;
+  color:var(--green-700);background:linear-gradient(135deg,#eef4e8,#dfead3);border:1px solid var(--line);}
+.stage.mobile .step .step-photo{width:50px;height:50px;}
+.more-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:start;}
+.stage.mobile .more-grid{grid-template-columns:1fr;gap:18px;}
+.more-col .var-list{margin-top:0;}
+.more-col .video{margin-top:0;}
+.qa-mini{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.qa-mini p{margin:0;flex:1;min-width:220px;font-size:14px;color:#3f443a;}
+.qa-cta{flex:none;background:var(--green-900);color:#fff;border:0;border-radius:8px;padding:11px 18px;font-weight:700;font-size:13.5px;transition:.18s;}
+.qa-cta:hover{background:var(--green-700);}
+
+/* — V3 — image pleine largeur intégrée à l'étape (repeater) */
+.step .step-img{margin-top:12px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--line);
+  background:linear-gradient(135deg,#eef4e8,#dfead3);height:172px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--green-700);}
+.step .step-img .cap{font-size:11px;color:var(--muted);font-family:'SF Mono',Menlo,Consolas,monospace;font-weight:600;letter-spacing:.02em;}
+.stage.mobile .step .step-img{height:148px;}
+
+/* — V3 — barre d'engagement transversale, flottante & ancrée (composant Atelier) */
+.engage-bar{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:55;
+  display:flex;align-items:center;gap:2px;
+  background:rgba(251,250,249,.82);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);
+  border:1px solid rgba(35,68,42,.1);border-radius:999px;padding:6px 8px;
+  box-shadow:0 12px 34px rgba(15,36,20,.2),0 2px 8px rgba(15,36,20,.08);max-width:calc(100vw - 28px);}
+.engage-bar .eg{display:inline-flex;align-items:center;gap:6px;background:transparent;border:0;border-radius:999px;
+  padding:9px 13px;font-size:13px;font-weight:600;color:#4a5040;font-family:inherit;transition:.15s;line-height:1;white-space:nowrap;}
+.engage-bar .eg:hover{background:var(--green-50);color:var(--green-900);}
+.engage-bar .eg b{color:var(--green-900);font-weight:700;}
+.engage-bar .eg.on{color:var(--green-700);}
+.engage-bar .eg[data-act="like"].on svg,.engage-bar .eg[data-act="save"].on svg{fill:currentColor;}
+.engage-bar .eg-sep{width:1px;height:22px;background:var(--line);margin:0 4px;flex:none;}
+@media(max-width:560px){
+  .engage-bar{gap:0;padding:5px 6px;}
+  .engage-bar .eg{padding:9px 10px;font-size:12.5px;gap:5px;}
+  .engage-bar .eg[data-act="share"]{font-size:0;}
+  .engage-bar .eg[data-act="share"] svg{font-size:13px;}
+}
 
 /* Q&A IA */
 .qa{margin-top:16px;border:1px solid #d4e3c4;border-radius:var(--radius);overflow:hidden;background:#fff;}
@@ -264,12 +304,14 @@ ul.ing-grid{padding:0;margin-top:16px;}
 
 /* CTA inscription */
 .cta-block{margin-top:38px;border-radius:var(--radius);padding:30px 28px;text-align:center;color:#fff;
-  background:linear-gradient(135deg,var(--green-900),var(--green-700));box-shadow:var(--shadow-lg);}
+  background:#2A4B2A;box-shadow:var(--shadow-lg);}
 .cta-block h3{color:#fff;font-size:22px;}
-.cta-block p{margin:9px auto 0;max-width:430px;font-size:14px;opacity:.92;}
-.cta-block .btn{display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:var(--yellow);color:var(--brown);font-weight:700;font-size:14.5px;
+.cta-block p{margin:9px auto 0;max-width:430px;font-size:14px;color:#fff;opacity:.9;}
+.cta-block .btn{display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:#F6CE65;color:#1A3A0F;font-weight:600;font-size:14.5px;
   padding:13px 26px;border-radius:8px;border:0;transition:.18s;}
-.cta-block .btn:hover{background:var(--yellow-600);transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.25);}
+.cta-block .btn:hover{background:#eebf45;transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.25);}
+.cta-block .btn.upsell{background:#C06B3E;color:#fff;}
+.cta-block .btn.upsell:hover{background:#a85733;}
 
 /* author footer card */
 .author-card{margin-top:34px;display:flex;gap:18px;align-items:center;background:var(--beige);border-radius:var(--radius);padding:20px 22px;}
@@ -309,18 +351,18 @@ ul.ing-grid{padding:0;margin-top:16px;}
 .gated.locked .lock-overlay{
   display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;
   position:absolute;inset:0;z-index:5;padding:22px;
-  background:linear-gradient(to bottom,rgba(250,250,247,.5),rgba(250,250,247,.86));
+  background:linear-gradient(to bottom,rgba(249,250,248,.55),#F9FAF8 62%);
   border-radius:var(--radius);
 }
 .lock-overlay .lock-ic{width:46px;height:46px;border-radius:50%;background:#fff;box-shadow:var(--shadow);
-  display:flex;align-items:center;justify-content:center;font-size:22px;}
+  display:flex;align-items:center;justify-content:center;font-size:22px;color:#2A4B2A;}
 .lock-overlay .lock-msg{font-family:var(--serif);font-size:15.5px;color:var(--green-900);max-width:330px;}
 .lock-overlay .lock-sub{font-size:12.5px;color:var(--muted);max-width:300px;margin-top:-4px;}
-.lock-cta{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13.5px;padding:11px 20px;border-radius:999px;border:0;color:#fff;transition:.18s;}
-.lock-cta.green{background:var(--green-900);}
-.lock-cta.green:hover{background:var(--green-700);}
-.lock-cta.terra{background:var(--yellow);color:var(--brown);}
-.lock-cta.terra:hover{background:var(--yellow-600);}
+.lock-cta{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:13.5px;padding:12px 22px;border-radius:8px;border:0;color:#fff;transition:.18s;}
+.lock-cta.green{background:#2A4B2A;}
+.lock-cta.green:hover{background:#1d361d;}
+.lock-cta.terra{background:#F6CE65;color:#1A3A0F;}
+.lock-cta.terra:hover{background:#eebf45;}
 .acl-pill{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;letter-spacing:.04em;
   padding:3px 9px;border-radius:999px;margin-left:auto;}
 .acl-free{background:#e3f0d8;color:#3d6b1e;}
@@ -353,6 +395,7 @@ ul.ing-grid{padding:0;margin-top:16px;}
 .acf-anno .aa-ty{color:#7dd3fc;}
 .acf-anno .aa-rq{font-size:9px;}
 .acf-anno .aa-ac{margin-left:auto;font-size:11px;}
+.acf-anno .aa-note{color:#9fb4c6;font-size:9.5px;line-height:1.5;margin-top:5px;white-space:normal;max-width:240px;border-top:1px solid #1c2630;padding-top:5px;}
 
 /* bloc Schema.org (visible uniquement en vue dev) */
 .schema-dev{display:none;margin-top:34px;background:#11181f;border-radius:14px;padding:18px 20px;
@@ -387,8 +430,8 @@ ul.ing-grid{padding:0;margin-top:16px;}
   <div class="ctrl-group">
     <span class="ctrl-label">Accès</span>
     <div class="seg" id="accessSeg">
-      <button data-access="public" class="active"><i class="ic ic-sm" data-i="globe"></i>Public</button>
-      <button data-access="free"><i class="ic ic-sm" data-i="unlock"></i>Membre gratuit</button>
+      <button data-access="public"><i class="ic ic-sm" data-i="globe"></i>Public</button>
+      <button data-access="free" class="active"><i class="ic ic-sm" data-i="unlock"></i>Membre gratuit</button>
       <button data-access="paid" class="terra"><i class="ic ic-sm" data-i="lock"></i>Membre payant</button>
     </div>
   </div>
@@ -401,7 +444,7 @@ ul.ing-grid{padding:0;margin-top:16px;}
 
 <!-- ============================ STAGE ============================ -->
 <div class="stage" id="stage">
-<article class="doc" id="doc" data-access="public">
+<article class="doc" id="doc" data-access="free">
 
   <div class="notch"></div>
 
@@ -447,39 +490,24 @@ ul.ing-grid{padding:0;margin-top:16px;}
   <div class="quick">
     <div class="cell" data-acf="temps_preparation"><div class="ico"><i class="ic ic-lg" data-i="clock"></i></div><div class="k">Préparation</div><div class="v">15 min</div></div>
     <div class="cell" data-acf="temps_repos"><div class="ico"><i class="ic ic-lg" data-i="snowflake"></i></div><div class="k">Repos frigo</div><div class="v">2 h</div></div>
-    <div class="cell" data-acf="nombre_personnes"><div class="ico"><i class="ic ic-lg" data-i="users"></i></div><div class="k">Quantité</div><div class="v">≈ 12 crukies</div></div>
-    <div class="cell" data-acf="conservation"><div class="ico"><i class="ic ic-lg" data-i="package"></i></div><div class="k">Conservation</div><div class="v">2 semaines</div></div>
+    <div class="cell" data-acf="nombre_personnes,unite_personnes"><div class="ico"><i class="ic ic-lg" data-i="users"></i></div><div class="k">Quantité</div><div class="v">≈ 12 pièces</div></div>
+    <div class="cell" data-acf="conservation_duree"><div class="ico"><i class="ic ic-lg" data-i="package"></i></div><div class="k">Conservation</div><div class="v">2 semaines</div></div>
   </div>
 
   <div class="content">
 
     <!-- 4 ─ Intro -->
-    <!-- ACF: description_courte (textarea) — 🌍 | plantes_associees (relationship → CPT plante) — 🌍 | auteur (relationship/user) — 🌍 -->
+    <!-- ACF: description_courte (textarea) — 🌍 | plantes_utilisees (relationship → CPT plante) — 🌍 | auteur (relationship/user) — 🌍 -->
     <div class="intro">
-      <p class="lead" data-acf="description_courte">Des cookies crus, sans cuisson, riches en bons gras et en fibres — relevés de fleurs et plantes sauvages cueillies au fil des saisons. Gourmands, sains, et prêts en 15 minutes.</p>
-      <div class="chips" data-acf="plantes_associees">
+      <p class="lead" data-acf="description_courte">Des cookies crus, sans cuisson, riches en bons gras et en fibres, rehaussés de fleurs sauvages. Gourmands, sains et prêts en 15 minutes.</p>
+      <div class="chips" data-acf="plantes_utilisees">
         <a href="#" class="chip-plant"><i class="ic ic-sm" data-i="leaf"></i>Bleuet</a>
         <a href="#" class="chip-plant"><i class="ic ic-sm" data-i="leaf"></i>Menthe sauvage</a>
         <a href="#" class="chip-plant"><i class="ic ic-sm" data-i="leaf"></i>Pensée sauvage</a>
       </div>
-      <div class="author-chip" data-acf="auteur">
-        <span class="av">SC</span>
-        <span><b>Sabine Curci</b> · naturopathe</span>
-      </div>
     </div>
 
-    <!-- 5 ─ Photos étapes -->
-    <!-- ACF: image_etape_1 / image_etape_2 / image_etape_3 (image) + legende_etape_x (text) — 🌍 public -->
-    <div class="section">
-      <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="camera"></i> En images</h2></div></div>
-      <div class="photos">
-        <div class="photo" data-acf="image_etape_1"><div class="ph"><i class="ic ic-xl" data-i="soup"></i></div><div class="cap"><b>Étape 1</b>Préparer les ingrédients</div></div>
-        <div class="photo" data-acf="image_etape_2"><div class="ph"><i class="ic ic-xl" data-i="utensils"></i></div><div class="cap"><b>Étape 2</b>Mélanger en pâte homogène</div></div>
-        <div class="photo" data-acf="image_etape_3"><div class="ph"><i class="ic ic-xl" data-i="cookie"></i></div><div class="cap"><b>Étape 3</b>Former &amp; réfrigérer</div></div>
-      </div>
-    </div>
-
-    <!-- 6 ─ Ingrédients (PUBLIC) -->
+    <!-- 5 ─ Préparation (PUBLIC) — photos d'étapes intégrées à chaque étape -->
     <!-- ACF: ingredients (page body / repeater) — 🌍 public -->
     <div class="section">
       <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="basket"></i> Ingrédients</h2><div class="sub">Pour ≈ 12 crukies</div></div></div>
@@ -493,16 +521,16 @@ ul.ing-grid{padding:0;margin-top:16px;}
         <li><b>30 g</b> pépites de chocolat</li>
         <li><b>30 g</b> copeaux de coco</li>
       </ul>
-      <div class="note-deco"><span class="ico"><i class="ic ic-lg" data-i="flower"></i></span><div>En option, parsemez la pâte de <b>fleurs et plantes sauvages</b> (bleuet, pensée, menthe) pour la couleur et le goût.</div></div>
       <div class="utensils">
-        <div class="lab">Ustensiles</div>
-        <div class="tag-row" data-acf="ustensiles">
+        <div class="lab">Matériel spécifique</div>
+        <div class="tag-row" data-acf="materiel_specifique">
           <span class="tag"><i class="ic ic-sm" data-i="utensils"></i>Couteau</span>
           <span class="tag"><i class="ic ic-sm" data-i="soup"></i>Saladier</span>
           <span class="tag"><i class="ic ic-sm" data-i="cookie"></i>Emporte-pièce</span>
           <span class="tag"><i class="ic ic-sm" data-i="scale"></i>Balance</span>
         </div>
       </div>
+      <div class="note-deco" data-acf="conseil_decoration"><span class="ico"><i class="ic ic-lg" data-i="flower"></i></span><div>En option, parsemez la pâte de <b>fleurs et plantes sauvages</b> (bleuet, pensée, menthe) pour la couleur et le goût.</div></div>
     </div>
 
     <!-- 7 ─ Préparation (PUBLIC) -->
@@ -510,88 +538,43 @@ ul.ing-grid{padding:0;margin-top:16px;}
     <div class="section">
       <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="chefhat"></i> Préparation</h2><div class="sub">15 min · puis 2 h de repos au frigo</div></div></div>
       <div class="steps" data-acf="etapes_preparation">
-        <div class="step"><div class="num">1</div><div class="body"><h4>Préparer les ingrédients</h4><p>Concassez les noix, réhydratez les dattes si nécessaire et faites fondre l'huile de coco.</p></div></div>
+        <div class="step"><div class="num">1</div><div class="body"><h4>Préparer les ingrédients</h4><p>Concassez les noix, réhydratez les dattes si nécessaire et faites fondre l'huile de coco.</p><div class="step-img"><i class="ic ic-xl" data-i="image"></i><span class="cap">image_etape (optionnelle)</span></div></div></div>
         <div class="step"><div class="num">2</div><div class="body"><h4>Mélanger</h4><p>Réunissez tous les ingrédients et travaillez jusqu'à obtenir une pâte homogène et compacte.</p></div></div>
-        <div class="step"><div class="num">3</div><div class="body"><h4>Former</h4><p>Façonnez les crukies à l'emporte-pièce ou à la main. Décorez de fleurs sauvages.</p></div></div>
+        <div class="step"><div class="num">3</div><div class="body"><h4>Former</h4><p>Façonnez les crukies à l'emporte-pièce ou à la main. Décorez de fleurs sauvages.</p><div class="step-img"><i class="ic ic-xl" data-i="image"></i><span class="cap">image_etape (optionnelle)</span></div></div></div>
         <div class="step"><div class="num">4</div><div class="body"><h4>Réfrigérer</h4><p>Placez 2 h au réfrigérateur pour que les crukies se tiennent bien.</p></div></div>
       </div>
     </div>
 
-    <!-- 8 ─ Conseils de cueillette (PUBLIC) -->
+    <!-- 7 ─ Conseils de cueillette (PUBLIC) -->
     <!-- ACF: conseils_cueillette (wysiwyg) — 🌍 public -->
     <div class="section">
       <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="leaf"></i> Conseils de cueillette</h2></div></div>
       <div class="quote" data-acf="conseils_cueillette">
         <span class="leaf"><i class="ic ic-lg" data-i="leaf"></i></span>
-        <p>Fleurs de bleuets séchées, lamier, trèfle, pensées sauvages : toutes s'incorporent dans la pâte ou se posent en décoration. <b>Cueillez loin des zones traitées</b> (bords de route, cultures), de préférence le matin par temps sec.
-        <span class="src">— Sabine Curci, naturopathe</span></p>
+        <p>Fleurs de bleuets séchées, lamier, trèfle, pensées sauvages : toutes s'incorporent dans la pâte ou se posent en décoration. <b>Cueillez loin des zones traitées</b> (bords de route, cultures), de préférence le matin par temps sec.</p>
       </div>
     </div>
 
-    <!-- 9 ─ Conservation (PUBLIC) -->
-    <!-- ACF: conservation (text) — 🌍 public -->
-    <div class="section">
-      <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="package"></i> Conservation</h2></div></div>
-      <div class="consv" data-acf="conservation"><span class="ico"><i class="ic ic-lg" data-i="snowflake"></i></span><span><b>2 semaines au réfrigérateur</b>, dans une boîte hermétique. Se congèlent également très bien jusqu'à 3 mois.</span></div>
-    </div>
-
-    <!-- 10 ─ Variantes & astuces (MEMBRE GRATUIT) -->
-    <!-- ACF: variantes (repeater) — 🔓 membre gratuit -->
-    <div class="section gated" data-acl="free" data-acf="variantes">
+    <!-- 8 ─ Aller plus loin : variantes + vidéo (MEMBRE GRATUIT) -->
+    <!-- ACF: variantes (repeater) + video_preparation (file / oembed) — 🔓 membre gratuit -->
+    <div class="section gated" data-acl="free" data-acf="variantes,video_preparation">
       <div class="section-head">
-        <div class="htext"><span class="eyebrow">Réservé aux membres</span><h2><i class="ic ic-lg" data-i="sparkles"></i> Variantes &amp; astuces</h2></div>
+        <div class="htext"><span class="eyebrow">Réservé aux membres</span><h2><i class="ic ic-lg" data-i="sprout"></i> Aller plus loin</h2></div>
         <span class="acl-pill acl-free"><i class="ic ic-xs" data-i="unlock"></i> Gratuit</span>
       </div>
       <div class="gated-content">
-        <ul class="var-list">
-          <li><b>Version sans gluten</b> — remplacez les flocons d'avoine par du sarrasin.</li>
-          <li><b>Épices hivernales</b> — cannelle, gingembre et muscade pour une note chaleureuse.</li>
-          <li><b>Version détox</b> — incorporez de l'ortie séchée en poudre.</li>
-          <li><b>Gourmandise</b> — trempez la base des crukies dans du chocolat noir fondu.</li>
-        </ul>
-      </div>
-      <div class="lock-overlay"></div>
-    </div>
-
-    <!-- 11 ─ Vidéo de préparation (MEMBRE GRATUIT) -->
-    <!-- ACF: video_preparation (file / oembed) — 🔓 membre gratuit -->
-    <div class="section gated" data-acl="free" data-acf="video_preparation">
-      <div class="section-head">
-        <div class="htext"><span class="eyebrow">Réservé aux membres</span><h2><i class="ic ic-lg" data-i="video"></i> Vidéo de préparation</h2></div>
-        <span class="acl-pill acl-free"><i class="ic ic-xs" data-i="unlock"></i> Gratuit</span>
-      </div>
-      <div class="gated-content">
-        <div class="video">
-          <span class="vbadge"><i class="ic ic-xs" data-i="play"></i> Membres</span>
-          <span class="play"></span>
-        </div>
-      </div>
-      <div class="lock-overlay"></div>
-    </div>
-
-    <!-- 12 ─ Q&A avec l'auteur / ATG (MEMBRE PAYANT) -->
-    <!-- RAG/ATG — assistant l'Atelier — 🔒 membre payant -->
-    <div class="section gated" data-acl="paid" data-acf="qa_assistant">
-      <div class="section-head">
-        <div class="htext"><span class="eyebrow">Atelier · IA</span><h2><i class="ic ic-lg" data-i="message"></i> Posez votre question à l'auteur</h2></div>
-        <span class="acl-pill acl-paid"><i class="ic ic-xs" data-i="lock"></i> Atelier</span>
-      </div>
-      <div class="gated-content">
-        <div class="qa">
-          <div class="qa-head">
-            <span class="av"><i class="ic ic-lg" data-i="sprout"></i></span>
-            <div><b>Assistant l'Atelier</b><span>Entraîné sur les contenus de Sabine Curci &amp; PCD</span></div>
+        <div class="more-grid">
+          <div class="more-col">
+            <ul class="var-list">
+              <li><b>Version sans gluten</b> — remplacez les flocons d'avoine par du sarrasin.</li>
+              <li><b>Épices hivernales</b> — cannelle, gingembre et muscade pour une note chaleureuse.</li>
+              <li><b>Version détox</b> — incorporez de l'ortie séchée en poudre.</li>
+              <li><b>Gourmandise</b> — trempez la base des crukies dans du chocolat noir fondu.</li>
+            </ul>
           </div>
-          <div class="qa-body">
-            <div class="bubble">Bonjour ! Je peux vous aider à adapter cette recette : substitutions, conservation, cueillette… Posez votre question.</div>
-            <div class="ask">
-              <input type="text" placeholder="Par quoi remplacer les dattes ?" />
-              <button>Envoyer</button>
-            </div>
-            <div class="sugg">
-              <span>Sans fruits à coque ?</span>
-              <span>Index glycémique</span>
-              <span>Quelles fleurs en automne ?</span>
+          <div class="more-col">
+            <div class="video">
+              <span class="play"></span>
             </div>
           </div>
         </div>
@@ -599,11 +582,11 @@ ul.ing-grid{padding:0;margin-top:16px;}
       <div class="lock-overlay"></div>
     </div>
 
-    <!-- 13 ─ CTA inscription -->
+    <!-- 11 ─ CTA inscription (générique) -->
     <div class="cta-block">
-      <h3>Cultivez votre cuisine sauvage</h3>
-      <p>Créez votre compte gratuit pour débloquer les variantes et la vidéo, ou rejoignez l'Atelier pour l'accompagnement complet.</p>
-      <button class="btn">Créer mon compte gratuit →</button>
+      <h3 id="ctaTitle">Rejoignez l'Atelier Permaculture Design</h3>
+      <p id="ctaSub">Créez votre compte gratuit pour accéder à l'intégralité du contenu, échanger avec les auteurs et rejoindre la communauté.</p>
+      <button class="btn" id="mainCta">Créer mon compte gratuit →</button>
     </div>
 
     <!-- 14 ─ Pied de fiche : carte auteur + partage -->
@@ -616,17 +599,11 @@ ul.ing-grid{padding:0;margin-top:16px;}
         <a href="#">Voir toutes ses recettes →</a>
       </div>
     </div>
-    <div class="share">
-      <span class="lab">Partager</span>
-      <button><i class="ic ic-sm" data-i="link"></i>Copier le lien</button>
-      <button><i class="ic ic-sm" data-i="mail"></i>Email</button>
-      <button><i class="ic ic-sm" data-i="bookmark"></i>Pinterest</button>
-      <button><i class="ic ic-sm" data-i="facebook"></i>Facebook</button>
-    </div>
+    <!-- 14b ─ Barre d'engagement : voir composant flotté .engage-bar (hors flux, ancré bas d'écran) -->
 
     <!-- 15 ─ Articles liés -->
     <!-- ACF: articles_lies (relationship) — 🌍 public -->
-    <div class="related" data-acf="articles_lies">
+    <div class="related" data-acf="contenus_lies">
       <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="link"></i> À découvrir aussi</h2></div></div>
       <div class="rel-grid">
         <a href="#" class="rel-card"><span class="thumb"><i class="ic ic-xl" data-i="salt"></i></span><div class="rmeta"><span class="k">Recette</span><b>Sel aux herbes sauvages</b><p>Un condiment maison aux aromates cueillis au jardin.</p></div></a>
@@ -646,11 +623,23 @@ ul.ing-grid{padding:0;margin-top:16px;}
   <!-- Footer site (sim) -->
   <footer class="site-foot">
     <span class="fbrand">Permaculture Design</span>
-    <span>© 2026 · <a href="#">permaculturedesign.fr</a> · Recette par Sabine Curci</span>
   </footer>
 
 </article>
 </div><!-- /stage -->
+
+<!-- Barre d'engagement transversale de l'Atelier — ancrée bas d'écran -->
+<div class="engage-bar" aria-label="Barre d'engagement de l'Atelier">
+  <button class="eg" data-act="applaud" title="Bravo"><i class="ic ic-sm" data-i="applaud"></i><b>42</b></button>
+  <button class="eg" data-act="comment" title="Commentaires"><i class="ic ic-sm" data-i="message"></i><b>8</b></button>
+  <span class="eg-sep"></span>
+  <button class="eg" data-act="like" title="J'aime"><i class="ic ic-sm" data-i="heart"></i></button>
+  <button class="eg" data-act="save" title="Sauvegarder"><i class="ic ic-sm" data-i="bookmark"></i></button>
+  <button class="eg" data-act="share" title="Partager"><i class="ic ic-sm" data-i="share"></i>Partager</button>
+  <span class="eg-sep"></span>
+  <button class="eg" data-act="bug" title="Signaler un problème"><i class="ic ic-sm" data-i="bug"></i></button>
+  <button class="eg" data-act="idea" title="Proposer une idée"><i class="ic ic-sm" data-i="idea"></i></button>
+</div>
 
 <!-- ============================ JSON-LD Recipe ============================ -->
 <script type="application/ld+json">
@@ -733,7 +722,13 @@ ul.ing-grid{padding:0;margin-top:16px;}
     bookmark:'<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',
     share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>',
     facebook:'<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
-    salt:'<path d="M7 8V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M6 8h12l-1 12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 8zM10 12h.01M14 12h.01M12 15h.01"/>'
+    salt:'<path d="M7 8V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M6 8h12l-1 12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 8zM10 12h.01M14 12h.01M12 15h.01"/>',
+    thumbsup:'<path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>',
+    image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+    applaud:'<path d="M10.5 12.5 7 9a1.9 1.9 0 0 1 2.7-2.7l3 3"/><path d="m13.8 9.8-3.6-3.6A1.9 1.9 0 0 1 12.9 3.5L17 7.6"/><path d="M17.4 8.6a1.9 1.9 0 0 1 2.7 2.7L17 14.4c-1.4 1.4-3.4 2.3-5.3 2.3-1.6 0-3.2-.6-4.4-1.8l-1.8-1.8a1.9 1.9 0 0 1 2.7-2.7"/><path d="M4.4 4.4 5 6M8 2.6l.4 1.7M2.6 8.4 4.3 9"/>',
+    heart:'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+    bug:'<path d="M8 2l1.88 1.88M14.12 3.88 16 2"/><path d="M9 7.13V6a3 3 0 1 1 6 0v1.13"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6Z"/><path d="M12 20v-9M6.5 9C4.6 8.8 3 7.1 3 5M6 13H2M3 21c0-2.1 1.7-3.9 3.8-4M21 13h-4M20.9 5c0 2.1-1.6 3.8-3.5 4M21 21c0-2.1-1.7-3.9-3.8-4"/>',
+    idea:'<path d="M15 14c.2-1 .7-1.7 1.5-2.5C17.5 10.6 18 9.3 18 8A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/>'
   };
   function svgFor(n){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||'')+'</svg>'; }
   function injectIcons(root){ (root||document).querySelectorAll('i.ic[data-i]').forEach(function(el){ var n=el.getAttribute('data-i'); if(ICONS[n]) el.innerHTML=svgFor(n); el.removeAttribute('data-i'); }); }
@@ -744,16 +739,16 @@ ul.ing-grid{padding:0;margin-top:16px;}
   /* CTA contextuels par niveau requis du bloc */
   function overlayHTML(requiredLevel){
     if(requiredLevel === 'free'){
-      return '<div class="lock-ic"><i class="ic ic-xl" data-i="unlock"></i></div>'+
-             '<div class="lock-msg">Contenu réservé aux membres</div>'+
-             '<div class="lock-sub">Créez un compte gratuit pour débloquer les variantes et la vidéo.</div>'+
-             '<button class="lock-cta green">Accéder gratuitement → Créer un compte</button>';
+      return '<div class="lock-ic"><i class="ic ic-xl" data-i="lock"></i></div>'+
+             '<div class="lock-msg">Débloquez la suite gratuitement</div>'+
+             '<div class="lock-sub">Il vous suffit de créer un compte L\'Atelier (100 % gratuit) pour lire la suite.</div>'+
+             '<button class="lock-cta green">Créer mon compte gratuit →</button>';
     }
-    /* paid */
+    /* paid (générique, sans mention IA) */
     return '<div class="lock-ic"><i class="ic ic-xl" data-i="lock"></i></div>'+
            '<div class="lock-msg">Réservé aux abonnés l\'Atelier</div>'+
-           '<div class="lock-sub">L\'assistant IA et les échanges avec l\'auteur sont inclus dans l\'Atelier.</div>'+
-           '<button class="lock-cta terra">Accéder à l\'Atelier →</button>';
+           '<div class="lock-sub">Ce contenu est inclus dans l\'abonnement l\'Atelier.</div>'+
+           '<button class="lock-cta terra">Rejoindre l\'Atelier →</button>';
   }
 
   function applyAccess(level){
@@ -770,6 +765,28 @@ ul.ing-grid{padding:0;margin-top:16px;}
         g.classList.remove('locked');
       }
     });
+    applyCtaBlock(level);
+  }
+
+  /* ---- CTA principal contextuel : acquisition (public) vs upsell formations (membre gratuit) ---- */
+  function applyCtaBlock(level){
+    var block = document.querySelector('.cta-block');
+    var t = document.getElementById('ctaTitle');
+    var s = document.getElementById('ctaSub');
+    var b = document.getElementById('mainCta');
+    if(block) block.style.display = (level === 'paid') ? 'none' : '';
+    if(!t || !s || !b) return;
+    if(level === 'free'){
+      t.textContent = 'Allez plus loin avec nos formations';
+      s.textContent = 'Envie d\'approfondir ? Découvrez nos programmes complets et l\'accompagnement sur-mesure de L\'Atelier.';
+      b.textContent = 'Découvrir nos formations →';
+      b.classList.add('upsell');
+    } else {
+      t.textContent = 'Rejoignez l\'Atelier Permaculture Design';
+      s.textContent = 'Créez votre compte gratuit pour accéder à l\'intégralité du contenu, échanger avec les auteurs et rejoindre la communauté.';
+      b.textContent = 'Créer mon compte gratuit →';
+      b.classList.remove('upsell');
+    }
   }
 
   /* ---- segmented controls ---- */
@@ -787,7 +804,7 @@ ul.ing-grid{padding:0;margin-top:16px;}
     stage.classList.toggle('mobile', b.getAttribute('data-view') === 'mobile');
   });
 
-  applyAccess('public');
+  applyAccess('free');
 
   /* ============================================================================
      VUE DÉVELOPPEUR ACF — étiquettes posées directement sur la maquette
@@ -804,30 +821,26 @@ ul.ing-grid{padding:0;margin-top:16px;}
     { group:'Infos rapides', items:[
       { name:'temps_preparation', type:'text', req:true, acl:'public' },
       { name:'temps_repos', type:'text', req:false, acl:'public' },
-      { name:'nombre_personnes', type:'text', req:false, acl:'public' },
-      { name:'conservation', type:'text', req:false, acl:'public' }
+      { name:'nombre_personnes', type:'number', req:false, acl:'public' },
+      { name:'unite_personnes', type:'select (personnes / pièces / portions)', req:false, acl:'public' },
+      { name:'conservation_duree', type:'text', req:false, acl:'public' }
     ]},
     { group:'Intro & relations', items:[
       { name:'description_courte', type:'textarea', req:true, acl:'public' },
-      { name:'plantes_associees', type:'relationship', req:false, acl:'public' },
+      { name:'plantes_utilisees', type:'relationship', req:false, acl:'public' },
       { name:'auteur', type:'relationship', req:true, acl:'public' }
     ]},
     { group:'Contenu public', items:[
-      { name:'image_etape_1', type:'image', req:false, acl:'public' },
-      { name:'image_etape_2', type:'image', req:false, acl:'public' },
-      { name:'image_etape_3', type:'image', req:false, acl:'public' },
-      { name:'ingredients', type:'repeater', req:true, acl:'public' },
-      { name:'ustensiles', type:'repeater', req:false, acl:'public' },
-      { name:'etapes_preparation', type:'repeater', req:true, acl:'public' },
-      { name:'conseils_cueillette', type:'wysiwyg', req:false, acl:'public' },
-      { name:'articles_lies', type:'relationship', req:false, acl:'public' }
+      { name:'ingredients', type:'wysiwyg (liste à puces)', req:true, acl:'public' },
+      { name:'materiel_specifique', type:'multi_select (fermé)', req:false, acl:'public', note:'Icône générée auto côté PHP : Couteau, Saladier, Emporte-pièce, Balance.' },
+      { name:'conseil_decoration', type:'text (court)', req:false, acl:'public', note:'Conditionnel — si vide, n\'existe pas dans le DOM.' },
+      { name:'etapes_preparation', type:'repeater (titre, description, image opt.)', req:true, acl:'public' },
+      { name:'conseils_cueillette', type:'text (court)', req:false, acl:'public', note:'Conditionnel — si vide, n\'existe pas dans le DOM.' },
+      { name:'contenus_lies', type:'relationship (optionnel)', req:false, acl:'public', note:'Manuel prioritaire. Si vide → remplissage auto WordPress (même plante > même type > même saison).' }
     ]},
     { group:'Contenu membre gratuit', items:[
       { name:'variantes', type:'repeater', req:false, acl:'free' },
       { name:'video_preparation', type:'file / oembed', req:false, acl:'free' }
-    ]},
-    { group:'Contenu membre payant', items:[
-      { name:'qa_assistant', type:'RAG / ATG', req:false, acl:'paid' }
     ]}
   ];
 
@@ -840,10 +853,10 @@ ul.ing-grid{padding:0;margin-top:16px;}
     ['prepTime','temps_preparation (ISO 8601)'],
     ['cookTime','sans_cuisson ? PT0M'],
     ['totalTime','prep + repos'],
-    ['recipeYield','nombre_personnes'],
+    ['recipeYield','nombre_personnes + unite_personnes'],
     ['recipeIngredient[]','ingredients (repeater)'],
     ['recipeInstructions[]','etapes_preparation → HowToStep'],
-    ['keywords','plantes_associees + tags']
+    ['keywords','plantes_utilisees + tags']
   ];
 
   /* table de correspondance : nom de champ → métadonnées */
@@ -862,7 +875,8 @@ ul.ing-grid{padding:0;margin-top:16px;}
                '<span class="aa-ty">'+f.type+'</span>'+
                '<span class="aa-rq"><i class="ic ic-xs" data-i="'+(f.req?'check':'circle')+'"></i></span>'+
                '<span class="aa-ac">'+aclGlyph(f.acl)+'</span>'+
-             '</div>';
+             '</div>'+
+             (f.note ? '<div class="aa-note">'+f.note+'</div>' : '');
     }).join('');
     var anno = document.createElement('div');
     anno.className = 'acf-anno';
@@ -886,6 +900,22 @@ ul.ing-grid{padding:0;margin-top:16px;}
   });
 
   injectIcons(document);
+
+  /* ---- barre d'engagement : états J'aime / Sauvegarde + applaudissements ---- */
+  var eb = document.querySelector('.engage-bar');
+  if(eb){
+    eb.addEventListener('click', function(e){
+      var b = e.target.closest('.eg'); if(!b) return;
+      var act = b.getAttribute('data-act');
+      if(act === 'applaud'){
+        var c = b.querySelector('b');
+        var liked = b.classList.toggle('on');
+        c.textContent = (+c.textContent) + (liked ? 1 : -1);
+      } else if(act === 'like' || act === 'save'){
+        b.classList.toggle('on');
+      }
+    });
+  }
 })();
 </script>
 </body>
