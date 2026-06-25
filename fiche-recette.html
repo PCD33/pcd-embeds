@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fiche recette — Les Crukies · Permaculture Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+<link href="https://api.fontshare.com/v2/css?f%5B%5D=satoshi@400,500,700&display=swap" rel="stylesheet" />
+<!--
+  ============================================================================
+  MAQUETTE CPT « RECETTE » — Permaculture Design (permaculturedesign.fr)
+  Maquette HTML/CSS/JS autonome destinée au brief de développement WordPress/ACF.
+  - Switcher Desktop / Mobile
+  - Sélecteur d'accès simulé (Public / Membre gratuit / Membre payant)
+  - Panneau « Vue développeur » listant les champs ACF + Schema.org Recipe
+  Chaque bloc est annoté en commentaire : ACF nom_champ (type) — niveau_accès
+  ============================================================================
+-->
+<style>
+/* ============================ TOKENS ================================= */
+:root{
+  --green-900:#23442A;    /* vert forêt — signature, titres, footer */
+  --green-800:#2c4936;
+  --green-700:#2F663B;    /* vert logo — boutons */
+  --green-600:#438E52;    /* liens, accents */
+  --green-pale:#E4F4E6;   /* green-100 — fonds de blocs, tags plantes */
+  --green-50:#F3FAF4;     /* cartes douces */
+  --beige:#F4F2EA;        /* sable clair — fonds alternatifs */
+  --sand:#EFEDE0;
+  --paper:#FBFAF9;        /* papier chaud — fond de fiche */
+  --yellow:#FFDE67;       /* miel — accent CTA unique */
+  --yellow-600:#F2CE3E;
+  --brown:#461B02;        /* texte sur miel */
+  --terra:#438E52;        /* (anciennement terra cotta → réaligné vert) */
+  --terra-dark:#2F663B;
+  --ink:#1f2a22;          /* texte principal */
+  --muted:#5e6b5c;        /* métadonnées */
+  --line:#E1EAE0;         /* hairlines vert-tendre */
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Satoshi','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --radius:16px;
+  --radius-sm:9px;
+  --shadow:0 6px 24px rgba(15,36,20,.07);
+  --shadow-lg:0 18px 44px rgba(15,36,20,.12);
+}
+/* icônes au trait (style Lucide, stroke 2, bouts arrondis) */
+.ic{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex:none;vertical-align:-.16em;}
+.ic svg{width:100%;height:100%;display:block;}
+.ic-xs{width:12px;height:12px;}
+.ic-sm{width:15px;height:15px;}
+.ic-lg{width:22px;height:22px;}
+.ic-xl{width:42px;height:42px;}
+.quick .cell .ico{display:flex;justify-content:center;color:var(--green-700);}
+.consv .ico{display:inline-flex;color:var(--green-700);}
+.note-deco .ico{color:var(--green-600);}
+.photo .ph{color:var(--green-700);}
+.rel-card .thumb{color:var(--green-700);}
+.quote .leaf{color:var(--green-600);}
+.qa .qa-head .av .ic{color:#fff;}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--sans);
+  font-weight:500;
+  color:var(--ink);
+  background:#e7ece3;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.18;letter-spacing:-.01em;color:var(--green-900);margin:0;}
+a{color:var(--green-600);text-decoration:none;}
+img{max-width:100%;display:block;}
+button{font-family:inherit;cursor:pointer;}
+
+/* ============================ TOP CONTROL BAR ======================== */
+.controls{
+  position:sticky;top:0;z-index:60;
+  background:rgba(35,68,42,.97);
+  backdrop-filter:blur(6px);
+  color:#fff;
+  padding:11px 20px;
+  display:flex;flex-wrap:wrap;gap:18px 26px;align-items:center;justify-content:center;
+  box-shadow:0 2px 14px rgba(0,0,0,.18);
+}
+.ctrl-group{display:flex;align-items:center;gap:9px;}
+.ctrl-label{font-size:11px;letter-spacing:.09em;text-transform:uppercase;opacity:.72;font-weight:600;}
+.seg{display:inline-flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px;gap:2px;}
+.seg button{
+  border:0;background:transparent;color:rgba(255,255,255,.78);
+  padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600;
+  display:inline-flex;align-items:center;gap:6px;transition:.2s;white-space:nowrap;
+}
+.seg button:hover{color:#fff;}
+.seg button.active{background:#fff;color:var(--green-900);box-shadow:0 1px 4px rgba(0,0,0,.18);}
+.seg button.active.terra{color:var(--terra);}
+.ctrl-divider{width:1px;height:26px;background:rgba(255,255,255,.18);}
+
+/* ============================ STAGE / VIEWPORT ====================== */
+.stage{padding:34px 20px 80px;display:flex;justify-content:center;transition:background .3s;}
+.stage.mobile{background:#d9d6cc;padding:30px 20px 70px;}
+
+/* the document frame */
+.doc{
+  width:100%;max-width:820px;background:var(--paper);
+  border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg);
+}
+.stage.mobile .doc{
+  max-width:390px;
+  border-radius:34px;
+  border:10px solid #1c1c1c;
+  box-shadow:0 22px 50px rgba(0,0,0,.32);
+}
+.stage.mobile .doc .notch{display:flex;}
+.notch{display:none;height:26px;background:#1c1c1c;align-items:center;justify-content:center;}
+.notch::after{content:"";width:120px;height:6px;border-radius:6px;background:#3a3a3a;}
+
+/* ============================ SITE HEADER (sim) ===================== */
+.site-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 30px;border-bottom:1px solid var(--line);background:#fff;
+}
+.brand{display:flex;align-items:center;gap:11px;}
+.brand svg{width:30px;height:auto;}
+.brand .wordmark{font-family:var(--serif);font-size:18px;color:var(--green-900);font-weight:600;line-height:1.05;}
+.brand .wordmark small{display:block;font-family:var(--sans);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--green-700);font-weight:700;}
+.site-nav{display:flex;gap:22px;font-size:13.5px;font-weight:600;color:var(--ink);}
+.site-nav a:hover{color:var(--green-700);}
+.site-nav .cta{background:var(--yellow);color:var(--brown);padding:8px 15px;border-radius:999px;}
+.site-nav .cta:hover{background:var(--yellow-600);}
+.stage.mobile .site-nav{display:none;}
+.stage.mobile .site-head{padding:14px 18px;}
+
+/* ============================ BREADCRUMB ============================ */
+.crumb{padding:13px 30px 0;font-size:12px;color:var(--muted);display:flex;gap:7px;flex-wrap:wrap;}
+.crumb a{color:var(--muted);}
+.crumb a:hover{color:var(--green-700);}
+.crumb .sep{opacity:.5;}
+
+/* ============================ HERO ================================= */
+.hero{position:relative;margin:18px 30px 0;border-radius:var(--radius);overflow:hidden;height:300px;
+  background:linear-gradient(135deg,#dfe8cf,#cfe0bd 55%,#bcd6a4);
+  display:flex;align-items:flex-end;}
+.hero .emoji{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:130px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.12));}
+.hero .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 38%;}
+.hero .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,35,10,.62),rgba(20,35,10,.05) 55%,transparent);}
+.hero .hero-body{position:relative;padding:24px 26px;color:#fff;width:100%;}
+.hero h1{color:#fff;font-size:30px;max-width:560px;text-shadow:0 2px 12px rgba(0,0,0,.3);}
+.hero .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px;}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;
+  background:rgba(255,255,255,.92);color:var(--green-900);}
+.badge.terra{background:var(--green-700);color:#fff;}
+.stage.mobile .hero{height:210px;margin:14px 16px 0;}
+.stage.mobile .hero .emoji{font-size:88px;}
+.stage.mobile .hero h1{font-size:22px;}
+
+/* ============================ QUICK INFO BAR ======================= */
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:20px 30px 0;
+  background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.quick .cell{background:#fff;padding:15px 12px;text-align:center;}
+.quick .cell .ico{font-size:21px;}
+.quick .cell .k{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:5px;}
+.quick .cell .v{font-size:14.5px;font-weight:700;color:var(--green-900);margin-top:1px;}
+.stage.mobile .quick{grid-template-columns:repeat(2,1fr);margin:16px 16px 0;}
+
+/* ============================ CONTENT WRAP ========================= */
+.content{padding:8px 30px 30px;}
+.stage.mobile .content{padding:8px 16px 24px;}
+.section{margin-top:34px;}
+.section > h2{font-size:23px;display:flex;align-items:center;gap:10px;}
+.section > h2 .leaf{color:var(--green-700);font-size:18px;}
+.section .sub{color:var(--muted);font-size:13.5px;margin-top:3px;}
+.eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--green-600);font-weight:700;}
+
+/* intro */
+.intro{margin-top:18px;}
+.intro p.lead{font-style:italic;font-size:16.5px;color:#454a3e;font-family:var(--serif);line-height:1.6;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px;}
+.chip-plant{display:inline-flex;align-items:center;gap:6px;background:var(--green-pale);color:var(--green-900);
+  font-size:13px;font-weight:600;padding:6px 13px;border-radius:999px;border:1px solid #d4e3c4;transition:.18s;}
+.chip-plant:hover{background:#d9e8c8;transform:translateY(-1px);}
+.author-chip{display:inline-flex;align-items:center;gap:9px;margin-top:16px;background:var(--beige);
+  border-radius:999px;padding:6px 14px 6px 6px;font-size:13px;}
+.author-chip .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#8fae6a,#5f7e3e);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-family:var(--serif);}
+.author-chip b{color:var(--green-900);}
+.author-chip span{color:var(--muted);}
+
+/* steps photos */
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;}
+.photo{border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--line);background:#fff;}
+.photo .ph{height:120px;display:flex;align-items:center;justify-content:center;font-size:44px;
+  background:linear-gradient(135deg,#eef2e6,#e2ecd5);}
+.photo .cap{padding:8px 11px;font-size:12px;color:var(--muted);}
+.photo .cap b{color:var(--green-900);display:block;font-size:12.5px;}
+.stage.mobile .photos{grid-template-columns:1fr;}
+.stage.mobile .photo .ph{height:150px;}
+
+/* ingredients */
+.ing-grid{columns:2;column-gap:34px;margin-top:16px;}
+.stage.mobile .ing-grid{columns:1;}
+.ing-grid li{break-inside:avoid;list-style:none;padding:9px 0 9px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:14.5px;}
+.ing-grid li::before{content:"";position:absolute;left:4px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--green-700);}
+.ing-grid li b{color:var(--green-900);}
+ul.ing-grid{padding:0;margin-top:16px;}
+.note-deco{margin-top:16px;background:var(--green-pale);border-radius:var(--radius-sm);padding:13px 16px;font-size:13.5px;color:#3b4a2a;display:flex;gap:10px;}
+.note-deco .ico{font-size:18px;}
+.utensils{margin-top:16px;}
+.utensils .lab{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:9px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;}
+.tag{display:inline-flex;align-items:center;gap:6px;background:var(--beige);color:#5a5142;border:1px solid #e7ddc9;
+  font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:8px;}
+
+/* preparation steps */
+.steps{margin-top:16px;display:flex;flex-direction:column;gap:14px;}
+.step{display:flex;gap:15px;}
+.step .num{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid var(--green-700);color:var(--green-900);
+  display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:17px;background:#fff;}
+.step .body h4{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);font-family:var(--sans);font-weight:700;}
+.step .body p{margin:3px 0 0;font-size:14.5px;color:#3f443a;}
+
+/* quote / conseil */
+.quote{margin-top:16px;border-left:4px solid var(--green-700);background:#fff;border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  padding:18px 20px 18px 22px;display:flex;gap:14px;box-shadow:var(--shadow);}
+.quote .leaf{font-size:26px;line-height:1;}
+.quote p{margin:0;font-size:14.5px;color:#3f443a;}
+.quote .src{display:block;margin-top:9px;font-size:12.5px;color:var(--muted);font-style:italic;}
+
+/* conservation bar */
+.consv{margin-top:16px;display:flex;align-items:center;gap:14px;background:var(--beige);border-radius:var(--radius-sm);padding:15px 18px;}
+.consv .ico{font-size:26px;}
+.consv b{color:var(--green-900);}
+.consv span{color:#4a5040;font-size:14px;}
+
+/* variantes list */
+.var-list{margin-top:16px;list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;}
+.var-list li{position:relative;padding-left:24px;font-size:14.5px;color:#3f443a;}
+.var-list li::before{content:"";position:absolute;left:2px;top:8px;width:9px;height:9px;border-radius:2px;background:var(--terra);transform:rotate(45deg);}
+.var-list li b{color:var(--green-900);}
+
+/* video placeholder */
+.video{margin-top:16px;position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9;
+  background:linear-gradient(135deg,#2d3a22,#46603a);display:flex;align-items:center;justify-content:center;}
+.video .play{width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;}
+.video .play::after{content:"";border-left:20px solid var(--green-900);border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px;}
+.video .vbadge{position:absolute;top:12px;left:12px;background:var(--green-900);color:#fff;font-size:11px;font-weight:700;padding:5px 11px;border-radius:999px;letter-spacing:.04em;display:inline-flex;align-items:center;gap:5px;}
+
+/* Q&A IA */
+.qa{margin-top:16px;border:1px solid #d4e3c4;border-radius:var(--radius);overflow:hidden;background:#fff;}
+.qa .qa-head{background:var(--green-pale);padding:14px 18px;display:flex;align-items:center;gap:11px;}
+.qa .qa-head .av{width:36px;height:36px;border-radius:10px;background:var(--green-900);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.qa .qa-head b{color:var(--green-900);font-family:var(--serif);font-size:15px;}
+.qa .qa-head span{display:block;font-size:12px;color:var(--muted);}
+.qa .qa-body{padding:16px 18px;}
+.qa .bubble{background:var(--beige);border-radius:12px 12px 12px 4px;padding:11px 14px;font-size:13.5px;color:#4a5040;max-width:88%;}
+.qa .ask{margin-top:14px;display:flex;gap:9px;}
+.qa .ask input{flex:1;border:1.5px solid #d4e3c4;border-radius:10px;padding:11px 13px;font-size:13.5px;font-family:inherit;background:var(--paper);}
+.qa .ask input:focus{outline:none;border-color:var(--green-700);}
+.qa .ask button{background:var(--green-900);color:#fff;border:0;border-radius:10px;padding:0 17px;font-weight:700;font-size:13.5px;}
+.qa .ask button:hover{background:var(--green-700);}
+.qa .sugg{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
+.qa .sugg span{font-size:12px;color:var(--green-900);background:var(--green-pale);border:1px solid #d4e3c4;padding:5px 11px;border-radius:999px;}
+
+/* CTA inscription */
+.cta-block{margin-top:38px;border-radius:var(--radius);padding:30px 28px;text-align:center;color:#fff;
+  background:linear-gradient(135deg,var(--green-900),var(--green-700));box-shadow:var(--shadow-lg);}
+.cta-block h3{color:#fff;font-size:22px;}
+.cta-block p{margin:9px auto 0;max-width:430px;font-size:14px;opacity:.92;}
+.cta-block .btn{display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:var(--yellow);color:var(--brown);font-weight:700;font-size:14.5px;
+  padding:13px 26px;border-radius:8px;border:0;transition:.18s;}
+.cta-block .btn:hover{background:var(--yellow-600);transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.25);}
+
+/* author footer card */
+.author-card{margin-top:34px;display:flex;gap:18px;align-items:center;background:var(--beige);border-radius:var(--radius);padding:20px 22px;}
+.author-card .av{flex:none;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#8fae6a,#5f7e3e);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:24px;font-family:var(--serif);}
+.author-card .meta b{font-family:var(--serif);font-size:17px;color:var(--green-900);}
+.author-card .meta p{margin:3px 0 0;font-size:13px;color:var(--muted);}
+.author-card .meta a{font-size:13px;font-weight:600;}
+.share{margin-top:18px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
+.share .lab{font-size:12px;color:var(--muted);font-weight:600;}
+.share button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 13px;font-size:12.5px;font-weight:600;color:#4a5040;display:inline-flex;gap:6px;}
+.share button:hover{border-color:var(--green-700);color:var(--green-900);}
+
+/* related */
+.related{margin-top:38px;}
+.rel-grid{display:flex;flex-direction:column;gap:12px;margin-top:16px;}
+.rel-card{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);
+  padding:11px;transition:.18s;}
+.rel-card:hover{border-color:var(--green-700);transform:translateY(-2px);box-shadow:var(--shadow);}
+.rel-card .thumb{flex:none;width:74px;height:60px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:30px;
+  background:linear-gradient(135deg,#eef2e6,#dfe8cf);}
+.rel-card .rmeta .k{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);font-weight:700;}
+.rel-card .rmeta b{display:block;font-family:var(--serif);font-size:15px;color:var(--green-900);margin-top:2px;}
+.rel-card .rmeta p{margin:3px 0 0;font-size:12.5px;color:var(--muted);}
+
+/* site footer sim */
+.site-foot{background:var(--green-900);color:rgba(255,255,255,.82);padding:24px 30px;font-size:12.5px;display:flex;
+  justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.site-foot .fbrand{font-family:var(--serif);font-size:15px;color:#fff;}
+.site-foot a{color:rgba(255,255,255,.82);}
+
+/* ============================ LOCK SYSTEM ========================== */
+.gated{position:relative;transition:.3s;}
+.gated .lock-overlay{display:none;}
+.gated-content{transition:opacity .3s ease;}
+.gated.locked .gated-content{filter:blur(3px);opacity:.5;pointer-events:none;user-select:none;}
+.gated.locked .lock-overlay{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;
+  position:absolute;inset:0;z-index:5;padding:22px;
+  background:linear-gradient(to bottom,rgba(250,250,247,.5),rgba(250,250,247,.86));
+  border-radius:var(--radius);
+}
+.lock-overlay .lock-ic{width:46px;height:46px;border-radius:50%;background:#fff;box-shadow:var(--shadow);
+  display:flex;align-items:center;justify-content:center;font-size:22px;}
+.lock-overlay .lock-msg{font-family:var(--serif);font-size:15.5px;color:var(--green-900);max-width:330px;}
+.lock-overlay .lock-sub{font-size:12.5px;color:var(--muted);max-width:300px;margin-top:-4px;}
+.lock-cta{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13.5px;padding:11px 20px;border-radius:999px;border:0;color:#fff;transition:.18s;}
+.lock-cta.green{background:var(--green-900);}
+.lock-cta.green:hover{background:var(--green-700);}
+.lock-cta.terra{background:var(--yellow);color:var(--brown);}
+.lock-cta.terra:hover{background:var(--yellow-600);}
+.acl-pill{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;letter-spacing:.04em;
+  padding:3px 9px;border-radius:999px;margin-left:auto;}
+.acl-free{background:#e3f0d8;color:#3d6b1e;}
+.acl-paid{background:#fbf0cf;color:#7a5a12;}
+.section-head{display:flex;align-items:flex-start;gap:12px;}
+.section-head .htext{flex:1;}
+
+/* ============================ ACF DEV PANEL ======================== */
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}70%{box-shadow:0 0 0 7px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+
+/* bouton « Vue développeur » dans la barre sticky */
+.dev-btn{display:inline-flex;align-items:center;gap:8px;background:#16202a;color:#ffd23f;
+  border:1px solid rgba(255,255,255,.16);font-family:'SF Mono',Menlo,Consolas,monospace;
+  font-size:12.5px;font-weight:700;padding:8px 14px;border-radius:999px;transition:.18s;white-space:nowrap;}
+.dev-btn:hover{background:#1d2b38;}
+.dev-btn.active{background:#ffd23f;color:#16202a;border-color:#ffd23f;}
+.dev-btn .dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite;}
+.dev-btn.active .dot{background:#16202a;animation:none;}
+
+/* étiquettes ACF posées directement sur la maquette (vue dev) */
+.acf-anno{display:none;}
+.doc.dev [data-acf]{position:relative;outline:1.5px dashed rgba(196,98,45,.65);outline-offset:3px;border-radius:6px;overflow:visible;}
+.doc.dev .hero, .doc.dev .quick{overflow:visible;}
+.doc.dev .acf-anno{display:block;position:absolute;z-index:40;bottom:100%;right:0;margin-bottom:5px;
+  background:#11181f;border:1px solid #2a3a48;border-radius:8px;padding:6px 9px;
+  box-shadow:0 10px 24px rgba(0,0,0,.5);font-family:'SF Mono',Menlo,Consolas,monospace;max-width:260px;}
+.acf-anno .aa-title{color:#8aa0b5;font-size:9px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;margin-bottom:5px;}
+.acf-anno .aa-row{display:flex;align-items:center;gap:7px;font-size:10px;line-height:1.7;white-space:nowrap;}
+.acf-anno .aa-fn{color:#ffd23f;font-weight:700;}
+.acf-anno .aa-ty{color:#7dd3fc;}
+.acf-anno .aa-rq{font-size:9px;}
+.acf-anno .aa-ac{margin-left:auto;font-size:11px;}
+
+/* bloc Schema.org (visible uniquement en vue dev) */
+.schema-dev{display:none;margin-top:34px;background:#11181f;border-radius:14px;padding:18px 20px;
+  font-family:'SF Mono',Menlo,Consolas,monospace;}
+.doc.dev .schema-dev{display:block;}
+.schema-dev .sd-head{display:flex;align-items:center;gap:9px;color:#ffd23f;font-size:13px;font-weight:700;margin-bottom:14px;}
+.schema-dev .sd-head .dot{width:8px;height:8px;border-radius:50%;background:#4ade80;}
+.schema-dev .sd-tag{margin-left:auto;background:#1e3a8a33;color:#93c5fd;font-size:10px;padding:3px 9px;border-radius:6px;letter-spacing:.04em;}
+.schema-dev .sd-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #1c2630;font-size:11.5px;}
+.schema-dev .sd-row:last-child{border-bottom:0;}
+.schema-dev .sd-prop{color:#7dd3fc;}
+.schema-dev .sd-map{color:#ffd23f;text-align:right;}
+
+@media(max-width:560px){
+  .controls{gap:12px 16px;padding:10px 12px;}
+  .ctrl-divider{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================ CONTROL BAR ============================ -->
+<div class="controls">
+  <div class="ctrl-group">
+    <span class="ctrl-label">Vue</span>
+    <div class="seg" id="viewSeg">
+      <button data-view="desktop" class="active"><i class="ic ic-sm" data-i="monitor"></i>Desktop</button>
+      <button data-view="mobile"><i class="ic ic-sm" data-i="smartphone"></i>Mobile</button>
+    </div>
+  </div>
+  <div class="ctrl-divider"></div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Accès</span>
+    <div class="seg" id="accessSeg">
+      <button data-access="public" class="active"><i class="ic ic-sm" data-i="globe"></i>Public</button>
+      <button data-access="free"><i class="ic ic-sm" data-i="unlock"></i>Membre gratuit</button>
+      <button data-access="paid" class="terra"><i class="ic ic-sm" data-i="lock"></i>Membre payant</button>
+    </div>
+  </div>
+  <div class="ctrl-divider"></div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Dev</span>
+    <button class="dev-btn" id="devBtn"><span class="dot"></span>{ } Champs ACF</button>
+  </div>
+</div>
+
+<!-- ============================ STAGE ============================ -->
+<div class="stage" id="stage">
+<article class="doc" id="doc" data-access="public">
+
+  <div class="notch"></div>
+
+  <!-- 1 ─ Header site (simulation) -->
+  <header class="site-head">
+    <div class="brand">
+      <span id="logoSlot"></span>
+      <span class="wordmark">Permaculture Design<small>Recettes sauvages</small></span>
+    </div>
+    <nav class="site-nav">
+      <a href="#">Formations</a>
+      <a href="#">Articles</a>
+      <a href="#">Recettes</a>
+      <a href="#" class="cta">L'Atelier</a>
+    </nav>
+  </header>
+
+  <nav class="crumb">
+    <a href="#">Accueil</a><span class="sep">›</span>
+    <a href="#">Recettes</a><span class="sep">›</span>
+    <a href="#">Culinaire</a><span class="sep">›</span>
+    <span>Les Crukies</span>
+  </nav>
+
+  <!-- 2 ─ Hero -->
+  <!-- ACF: image_principale (image) — 🌍 public | titre (post_title) — 🌍 | type_recette (select), saison (select), niveau (select), sans_cuisson (true_false) -->
+  <div class="hero">
+    <img class="hero-img" data-acf="image_principale" src="assets/recette/assiette-crukies.jpg" alt="Assiette de crukies décorés de fleurs sauvages" />
+    <div class="scrim"></div>
+    <div class="hero-body">
+      <h1 data-acf="post_title">Les « Crukies » — cookies crus, gourmands &amp; équilibrés</h1>
+      <div class="badges" data-acf="type_recette,saison,niveau,sans_cuisson">
+        <span class="badge"><i class="ic ic-sm" data-i="utensils"></i>Culinaire</span>
+        <span class="badge"><i class="ic ic-sm" data-i="sun"></i>Toutes saisons</span>
+        <span class="badge"><i class="ic ic-sm" data-i="sprout"></i>Facile</span>
+        <span class="badge terra"><i class="ic ic-sm" data-i="snowflake"></i>Sans cuisson</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 ─ Barre infos rapides -->
+  <!-- ACF: temps_preparation (text), temps_repos (text), nombre_personnes (text), conservation (text) — 🌍 public -->
+  <div class="quick">
+    <div class="cell" data-acf="temps_preparation"><div class="ico"><i class="ic ic-lg" data-i="clock"></i></div><div class="k">Préparation</div><div class="v">15 min</div></div>
+    <div class="cell" data-acf="temps_repos"><div class="ico"><i class="ic ic-lg" data-i="snowflake"></i></div><div class="k">Repos frigo</div><div class="v">2 h</div></div>
+    <div class="cell" data-acf="nombre_personnes"><div class="ico"><i class="ic ic-lg" data-i="users"></i></div><div class="k">Quantité</div><div class="v">≈ 12 crukies</div></div>
+    <div class="cell" data-acf="conservation"><div class="ico"><i class="ic ic-lg" data-i="package"></i></div><div class="k">Conservation</div><div class="v">2 semaines</div></div>
+  </div>
+
+  <div class="content">
+
+    <!-- 4 ─ Intro -->
+    <!-- ACF: description_courte (textarea) — 🌍 | plantes_associees (relationship → CPT plante) — 🌍 | auteur (relationship/user) — 🌍 -->
+    <div class="intro">
+      <p class="lead" data-acf="description_courte">Des cookies crus, sans cuisson, riches en bons gras et en fibres — relevés de fleurs et plantes sauvages cueillies au fil des saisons. Gourmands, sains, et prêts en 15 minutes.</p>
+      <div class="chips" data-acf="plantes_associees">
+        <a href="#" class="chip-plant"><i class="ic ic-sm" data-i="leaf"></i>Bleuet</a>
+        <a href="#" class="chip-plant"><i class="ic ic-sm" data-i="leaf"></i>Menthe sauvage</a>
+        <a href="#" class="chip-plant"><i class="ic ic-sm" data-i="leaf"></i>Pensée sauvage</a>
+      </div>
+      <div class="author-chip" data-acf="auteur">
+        <span class="av">SC</span>
+        <span><b>Sabine Curci</b> · naturopathe</span>
+      </div>
+    </div>
+
+    <!-- 5 ─ Photos étapes -->
+    <!-- ACF: image_etape_1 / image_etape_2 / image_etape_3 (image) + legende_etape_x (text) — 🌍 public -->
+    <div class="section">
+      <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="camera"></i> En images</h2></div></div>
+      <div class="photos">
+        <div class="photo" data-acf="image_etape_1"><div class="ph"><i class="ic ic-xl" data-i="soup"></i></div><div class="cap"><b>Étape 1</b>Préparer les ingrédients</div></div>
+        <div class="photo" data-acf="image_etape_2"><div class="ph"><i class="ic ic-xl" data-i="utensils"></i></div><div class="cap"><b>Étape 2</b>Mélanger en pâte homogène</div></div>
+        <div class="photo" data-acf="image_etape_3"><div class="ph"><i class="ic ic-xl" data-i="cookie"></i></div><div class="cap"><b>Étape 3</b>Former &amp; réfrigérer</div></div>
+      </div>
+    </div>
+
+    <!-- 6 ─ Ingrédients (PUBLIC) -->
+    <!-- ACF: ingredients (page body / repeater) — 🌍 public -->
+    <div class="section">
+      <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="basket"></i> Ingrédients</h2><div class="sub">Pour ≈ 12 crukies</div></div></div>
+      <ul class="ing-grid" data-acf="ingredients">
+        <li><b>75 g</b> flocons d'avoine</li>
+        <li><b>100 g</b> poudre d'amandes</li>
+        <li><b>25 g</b> noix</li>
+        <li><b>20 g</b> purée de noisettes</li>
+        <li><b>75 g</b> dattes Mazafati</li>
+        <li><b>35 g</b> huile de coco</li>
+        <li><b>30 g</b> pépites de chocolat</li>
+        <li><b>30 g</b> copeaux de coco</li>
+      </ul>
+      <div class="note-deco"><span class="ico"><i class="ic ic-lg" data-i="flower"></i></span><div>En option, parsemez la pâte de <b>fleurs et plantes sauvages</b> (bleuet, pensée, menthe) pour la couleur et le goût.</div></div>
+      <div class="utensils">
+        <div class="lab">Ustensiles</div>
+        <div class="tag-row" data-acf="ustensiles">
+          <span class="tag"><i class="ic ic-sm" data-i="utensils"></i>Couteau</span>
+          <span class="tag"><i class="ic ic-sm" data-i="soup"></i>Saladier</span>
+          <span class="tag"><i class="ic ic-sm" data-i="cookie"></i>Emporte-pièce</span>
+          <span class="tag"><i class="ic ic-sm" data-i="scale"></i>Balance</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 ─ Préparation (PUBLIC) -->
+    <!-- ACF: etapes_preparation (page body / repeater: titre + description) — 🌍 public -->
+    <div class="section">
+      <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="chefhat"></i> Préparation</h2><div class="sub">15 min · puis 2 h de repos au frigo</div></div></div>
+      <div class="steps" data-acf="etapes_preparation">
+        <div class="step"><div class="num">1</div><div class="body"><h4>Préparer les ingrédients</h4><p>Concassez les noix, réhydratez les dattes si nécessaire et faites fondre l'huile de coco.</p></div></div>
+        <div class="step"><div class="num">2</div><div class="body"><h4>Mélanger</h4><p>Réunissez tous les ingrédients et travaillez jusqu'à obtenir une pâte homogène et compacte.</p></div></div>
+        <div class="step"><div class="num">3</div><div class="body"><h4>Former</h4><p>Façonnez les crukies à l'emporte-pièce ou à la main. Décorez de fleurs sauvages.</p></div></div>
+        <div class="step"><div class="num">4</div><div class="body"><h4>Réfrigérer</h4><p>Placez 2 h au réfrigérateur pour que les crukies se tiennent bien.</p></div></div>
+      </div>
+    </div>
+
+    <!-- 8 ─ Conseils de cueillette (PUBLIC) -->
+    <!-- ACF: conseils_cueillette (wysiwyg) — 🌍 public -->
+    <div class="section">
+      <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="leaf"></i> Conseils de cueillette</h2></div></div>
+      <div class="quote" data-acf="conseils_cueillette">
+        <span class="leaf"><i class="ic ic-lg" data-i="leaf"></i></span>
+        <p>Fleurs de bleuets séchées, lamier, trèfle, pensées sauvages : toutes s'incorporent dans la pâte ou se posent en décoration. <b>Cueillez loin des zones traitées</b> (bords de route, cultures), de préférence le matin par temps sec.
+        <span class="src">— Sabine Curci, naturopathe</span></p>
+      </div>
+    </div>
+
+    <!-- 9 ─ Conservation (PUBLIC) -->
+    <!-- ACF: conservation (text) — 🌍 public -->
+    <div class="section">
+      <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="package"></i> Conservation</h2></div></div>
+      <div class="consv" data-acf="conservation"><span class="ico"><i class="ic ic-lg" data-i="snowflake"></i></span><span><b>2 semaines au réfrigérateur</b>, dans une boîte hermétique. Se congèlent également très bien jusqu'à 3 mois.</span></div>
+    </div>
+
+    <!-- 10 ─ Variantes & astuces (MEMBRE GRATUIT) -->
+    <!-- ACF: variantes (repeater) — 🔓 membre gratuit -->
+    <div class="section gated" data-acl="free" data-acf="variantes">
+      <div class="section-head">
+        <div class="htext"><span class="eyebrow">Réservé aux membres</span><h2><i class="ic ic-lg" data-i="sparkles"></i> Variantes &amp; astuces</h2></div>
+        <span class="acl-pill acl-free"><i class="ic ic-xs" data-i="unlock"></i> Gratuit</span>
+      </div>
+      <div class="gated-content">
+        <ul class="var-list">
+          <li><b>Version sans gluten</b> — remplacez les flocons d'avoine par du sarrasin.</li>
+          <li><b>Épices hivernales</b> — cannelle, gingembre et muscade pour une note chaleureuse.</li>
+          <li><b>Version détox</b> — incorporez de l'ortie séchée en poudre.</li>
+          <li><b>Gourmandise</b> — trempez la base des crukies dans du chocolat noir fondu.</li>
+        </ul>
+      </div>
+      <div class="lock-overlay"></div>
+    </div>
+
+    <!-- 11 ─ Vidéo de préparation (MEMBRE GRATUIT) -->
+    <!-- ACF: video_preparation (file / oembed) — 🔓 membre gratuit -->
+    <div class="section gated" data-acl="free" data-acf="video_preparation">
+      <div class="section-head">
+        <div class="htext"><span class="eyebrow">Réservé aux membres</span><h2><i class="ic ic-lg" data-i="video"></i> Vidéo de préparation</h2></div>
+        <span class="acl-pill acl-free"><i class="ic ic-xs" data-i="unlock"></i> Gratuit</span>
+      </div>
+      <div class="gated-content">
+        <div class="video">
+          <span class="vbadge"><i class="ic ic-xs" data-i="play"></i> Membres</span>
+          <span class="play"></span>
+        </div>
+      </div>
+      <div class="lock-overlay"></div>
+    </div>
+
+    <!-- 12 ─ Q&A avec l'auteur / ATG (MEMBRE PAYANT) -->
+    <!-- RAG/ATG — assistant l'Atelier — 🔒 membre payant -->
+    <div class="section gated" data-acl="paid" data-acf="qa_assistant">
+      <div class="section-head">
+        <div class="htext"><span class="eyebrow">Atelier · IA</span><h2><i class="ic ic-lg" data-i="message"></i> Posez votre question à l'auteur</h2></div>
+        <span class="acl-pill acl-paid"><i class="ic ic-xs" data-i="lock"></i> Atelier</span>
+      </div>
+      <div class="gated-content">
+        <div class="qa">
+          <div class="qa-head">
+            <span class="av"><i class="ic ic-lg" data-i="sprout"></i></span>
+            <div><b>Assistant l'Atelier</b><span>Entraîné sur les contenus de Sabine Curci &amp; PCD</span></div>
+          </div>
+          <div class="qa-body">
+            <div class="bubble">Bonjour ! Je peux vous aider à adapter cette recette : substitutions, conservation, cueillette… Posez votre question.</div>
+            <div class="ask">
+              <input type="text" placeholder="Par quoi remplacer les dattes ?" />
+              <button>Envoyer</button>
+            </div>
+            <div class="sugg">
+              <span>Sans fruits à coque ?</span>
+              <span>Index glycémique</span>
+              <span>Quelles fleurs en automne ?</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lock-overlay"></div>
+    </div>
+
+    <!-- 13 ─ CTA inscription -->
+    <div class="cta-block">
+      <h3>Cultivez votre cuisine sauvage</h3>
+      <p>Créez votre compte gratuit pour débloquer les variantes et la vidéo, ou rejoignez l'Atelier pour l'accompagnement complet.</p>
+      <button class="btn">Créer mon compte gratuit →</button>
+    </div>
+
+    <!-- 14 ─ Pied de fiche : carte auteur + partage -->
+    <!-- ACF: auteur (relationship) — 🌍 public -->
+    <div class="author-card" data-acf="auteur">
+      <span class="av">SC</span>
+      <div class="meta">
+        <b>Sabine Curci</b>
+        <p>Naturopathe, passionnée de plantes sauvages comestibles. Partage ses recettes saines sur merci-nature.fr</p>
+        <a href="#">Voir toutes ses recettes →</a>
+      </div>
+    </div>
+    <div class="share">
+      <span class="lab">Partager</span>
+      <button><i class="ic ic-sm" data-i="link"></i>Copier le lien</button>
+      <button><i class="ic ic-sm" data-i="mail"></i>Email</button>
+      <button><i class="ic ic-sm" data-i="bookmark"></i>Pinterest</button>
+      <button><i class="ic ic-sm" data-i="facebook"></i>Facebook</button>
+    </div>
+
+    <!-- 15 ─ Articles liés -->
+    <!-- ACF: articles_lies (relationship) — 🌍 public -->
+    <div class="related" data-acf="articles_lies">
+      <div class="section-head"><div class="htext"><h2><i class="ic ic-lg" data-i="link"></i> À découvrir aussi</h2></div></div>
+      <div class="rel-grid">
+        <a href="#" class="rel-card"><span class="thumb"><i class="ic ic-xl" data-i="salt"></i></span><div class="rmeta"><span class="k">Recette</span><b>Sel aux herbes sauvages</b><p>Un condiment maison aux aromates cueillis au jardin.</p></div></a>
+        <a href="#" class="rel-card"><span class="thumb"><i class="ic ic-xl" data-i="leaf"></i></span><div class="rmeta"><span class="k">Guide</span><b>Cueillir les plantes sauvages</b><p>Les bons gestes pour récolter sans risque.</p></div></a>
+        <a href="#" class="rel-card"><span class="thumb"><i class="ic ic-xl" data-i="sprout"></i></span><div class="rmeta"><span class="k">Fiche plante</span><b>Le bleuet des champs</b><p>Reconnaître, cueillir et cuisiner cette fleur bleue.</p></div></a>
+      </div>
+    </div>
+
+    <!-- DEV ─ Schema.org Recipe (visible en vue développeur uniquement) -->
+    <div class="schema-dev">
+      <div class="sd-head"><span class="dot"></span>Schema.org · Recipe (JSON-LD)<span class="sd-tag">rich snippet Google</span></div>
+      <div class="sd-rows" id="schemaRows"></div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- Footer site (sim) -->
+  <footer class="site-foot">
+    <span class="fbrand">Permaculture Design</span>
+    <span>© 2026 · <a href="#">permaculturedesign.fr</a> · Recette par Sabine Curci</span>
+  </footer>
+
+</article>
+</div><!-- /stage -->
+
+<!-- ============================ JSON-LD Recipe ============================ -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org/",
+  "@type":"Recipe",
+  "name":"Les « Crukies » — cookies crus gourmands, sains et équilibrés",
+  "image":["https://permaculturedesign.fr/wp-content/uploads/crukies.jpg"],
+  "author":{"@type":"Person","name":"Sabine Curci","url":"https://merci-nature.fr"},
+  "datePublished":"2026-06-23",
+  "description":"Cookies crus sans cuisson, riches en bons gras et fibres, relevés de plantes sauvages.",
+  "recipeCategory":"Culinaire",
+  "recipeCuisine":"Crue / vivante",
+  "keywords":"crukies, cookies crus, sans cuisson, plantes sauvages, bleuet",
+  "prepTime":"PT15M",
+  "cookTime":"PT0M",
+  "totalTime":"PT2H15M",
+  "recipeYield":"12 crukies",
+  "suitableForDiet":"https://schema.org/VegetarianDiet",
+  "recipeIngredient":[
+    "75 g de flocons d'avoine",
+    "100 g de poudre d'amandes",
+    "25 g de noix",
+    "20 g de purée de noisettes",
+    "75 g de dattes Mazafati",
+    "35 g d'huile de coco",
+    "30 g de pépites de chocolat",
+    "30 g de copeaux de coco"
+  ],
+  "recipeInstructions":[
+    {"@type":"HowToStep","name":"Préparer les ingrédients","text":"Concasser les noix, réhydrater les dattes, faire fondre l'huile de coco."},
+    {"@type":"HowToStep","name":"Mélanger","text":"Réunir tous les ingrédients et travailler jusqu'à obtenir une pâte homogène."},
+    {"@type":"HowToStep","name":"Former","text":"Façonner à l'emporte-pièce ou à la main, décorer de fleurs sauvages."},
+    {"@type":"HowToStep","name":"Réfrigérer","text":"Placer 2 h au réfrigérateur."}
+  ]
+}
+</script>
+
+<script>
+/* ============================================================================
+   INTERACTIONS — vanilla JS
+   ============================================================================ */
+(function(){
+  var LOGO = `<svg style="width:30px;height:auto;" xmlns="http://www.w3.org/2000/svg" width="75.986" height="83.076" viewBox="0 0 75.986 83.076" fill="#23442A"> <path d="M 56.987 53.748 C 58.62 53.748 59.944 55.072 59.944 56.705 C 59.944 58.338 58.62 59.662 56.987 59.662 L 49.42 59.662 L 49.42 77.162 L 56.987 77.162 C 58.62 77.162 59.944 78.486 59.944 80.119 C 59.944 81.752 58.62 83.076 56.987 83.076 L 46.463 83.076 C 44.83 83.076 43.506 81.752 43.506 80.119 L 43.506 56.705 C 43.506 55.072 44.83 53.748 46.463 53.748 L 56.987 53.748 Z M 20.933 70.339 C 22.566 70.339 23.89 71.663 23.89 73.296 C 23.89 74.929 22.566 76.253 20.933 76.253 L 19.448 76.253 C 17.815 76.253 16.491 74.929 16.491 73.296 C 16.491 71.663 17.815 70.339 19.448 70.339 L 20.933 70.339 Z M 33.743 55.639 C 35.376 55.639 36.7 56.962 36.7 58.595 L 36.7 71.064 C 36.7 72.697 35.376 74.021 33.743 74.021 C 32.111 74.021 30.787 72.697 30.787 71.064 L 30.787 58.595 C 30.787 56.962 32.111 55.639 33.743 55.639 Z M 17.442 56.943 C 20.596 56.943 23.632 58.107 25.994 60.221 C 27.211 61.31 27.314 63.179 26.225 64.396 C 25.136 65.613 23.267 65.716 22.05 64.627 C 20.774 63.485 19.138 62.856 17.442 62.856 C 13.625 62.856 10.519 65.962 10.519 69.779 C 10.519 71.412 9.195 72.736 7.563 72.736 C 5.93 72.736 4.606 71.412 4.606 69.779 C 4.606 62.701 10.364 56.943 17.442 56.943 Z M 58.246 32.96 C 60.639 32.96 62.963 33.43 65.152 34.355 C 67.265 35.249 69.162 36.528 70.79 38.156 C 72.418 39.785 73.697 41.681 74.591 43.794 C 75.516 45.983 75.986 48.307 75.986 50.7 C 75.986 53.094 75.516 55.418 74.591 57.607 C 73.697 59.72 72.418 61.616 70.79 63.245 C 69.162 64.873 67.265 66.152 65.152 67.045 C 62.963 67.971 60.639 68.441 58.246 68.441 C 56.613 68.441 55.289 67.117 55.289 65.484 C 55.289 63.851 56.613 62.527 58.246 62.527 C 59.844 62.527 61.392 62.215 62.848 61.599 C 64.256 61.004 65.521 60.15 66.608 59.063 C 67.696 57.976 68.549 56.711 69.144 55.303 C 69.76 53.847 70.072 52.298 70.072 50.7 C 70.072 49.103 69.76 47.554 69.144 46.098 C 68.549 44.69 67.696 43.425 66.608 42.338 C 65.521 41.25 64.256 40.397 62.848 39.802 C 61.392 39.186 59.844 38.874 58.246 38.874 C 56.613 38.874 55.289 37.55 55.289 35.917 C 55.289 34.284 56.613 32.96 58.246 32.96 Z M 20.604 24.391 C 22.237 24.391 23.561 25.714 23.561 27.347 L 23.561 48.278 C 23.561 49.515 22.791 50.621 21.631 51.051 C 21.296 51.175 20.948 51.235 20.605 51.235 C 19.758 51.235 18.933 50.871 18.36 50.203 L 0.713 29.633 C -0.35 28.394 -0.208 26.527 1.031 25.464 C 2.271 24.401 4.137 24.543 5.201 25.783 L 17.647 40.291 L 17.647 27.347 C 17.647 25.714 18.971 24.391 20.604 24.391 Z M 55.074 24.108 C 55.1 25.741 53.798 27.086 52.166 27.113 C 50.701 27.137 49.544 27.572 48.628 28.444 C 47.733 29.296 47.327 30.363 47.351 31.802 C 47.369 32.897 47.886 34.132 48.89 35.474 C 49.913 36.784 50.994 38.147 52.103 39.527 L 52.199 39.647 L 52.283 39.777 C 53.45 41.586 54.109 43.514 54.241 45.505 C 54.349 47.134 53.116 48.543 51.486 48.651 C 51.42 48.655 51.353 48.657 51.288 48.657 C 49.744 48.657 48.444 47.459 48.341 45.896 C 48.277 44.932 47.974 44.041 47.39 43.103 C 46.294 41.737 45.225 40.389 44.212 39.091 L 44.177 39.046 C 42.398 36.678 41.477 34.273 41.438 31.898 C 41.388 28.823 42.464 26.148 44.551 24.162 C 46.534 22.272 49.134 21.248 52.069 21.2 C 53.706 21.178 55.047 22.476 55.074 24.108 Z M 29.387 32.884 C 31.02 32.884 32.344 34.207 32.344 35.84 C 32.344 39.396 35.237 42.289 38.793 42.289 C 40.426 42.289 41.75 43.613 41.75 45.246 C 41.75 46.879 40.426 48.202 38.793 48.202 C 31.976 48.202 26.431 42.657 26.431 35.84 C 26.431 34.207 27.755 32.884 29.387 32.884 Z M 71.831 15.608 L 71.831 26.852 C 71.831 28.485 70.507 29.808 68.874 29.808 C 67.242 29.808 65.918 28.485 65.918 26.852 L 65.918 21.522 L 60.582 21.522 C 58.949 21.522 57.625 20.198 57.625 18.565 C 57.625 16.932 58.949 15.608 60.582 15.608 L 71.831 15.608 Z M 35.381 0 C 37.014 0 38.338 1.324 38.338 2.957 L 38.338 22.788 C 38.338 24.421 37.014 25.745 35.381 25.745 C 33.748 25.745 32.425 24.421 32.425 22.788 L 32.425 2.957 C 32.425 1.324 33.748 0 35.381 0 Z M 24.756 5.897 C 26.389 5.897 27.713 7.221 27.713 8.854 L 27.713 16.103 C 27.713 17.735 26.389 19.059 24.756 19.059 C 23.123 19.059 21.799 17.735 21.799 16.103 L 21.799 8.854 C 21.799 7.221 23.123 5.897 24.756 5.897 Z M 55.092 6.264 C 56.266 7.4 56.297 9.272 55.161 10.445 C 53.157 12.517 50.52 13.593 47.323 13.646 L 47.273 13.646 C 45.663 13.646 44.344 12.354 44.318 10.737 C 44.291 9.105 45.593 7.76 47.226 7.733 C 48.864 7.706 50.001 7.275 50.911 6.333 C 52.047 5.16 53.919 5.129 55.092 6.264 Z" fill="currentColor" fill-rule="evenodd"></path> </svg>`;
+  document.getElementById('logoSlot').innerHTML = LOGO;
+
+  var doc = document.getElementById('doc');
+  var stage = document.getElementById('stage');
+
+  /* ---- icônes au trait (style Lucide, stroke 2, bouts arrondis) ---- */
+  var ICONS = {
+    monitor:'<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+    smartphone:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 18h.01"/>',
+    globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/>',
+    unlock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>',
+    lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    check:'<path d="M20 6 9 17l-5-5"/>',
+    circle:'<circle cx="12" cy="12" r="8"/>',
+    utensils:'<path d="M3 2v7c0 1.1.9 2 2 2a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    sprout:'<path d="M7 20h10M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/>',
+    snowflake:'<path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+    package:'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/>',
+    leaf:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/>',
+    camera:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/>',
+    basket:'<path d="m5 11 4-7M19 11l-4-7M2 11h20M4 11l1.6 7.4a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L20 11M9 15v2M15 15v2"/>',
+    chefhat:'<path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.46.32-.84.73-1.04a4 4 0 0 0-2.04-7.5 5 5 0 0 0-9.38 0 4 4 0 0 0-2.04 7.5c.41.2.73.58.73 1.04V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/>',
+    scale:'<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10M12 3v18M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+    cookie:'<path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5h.01M16 15.5h.01M12 12h.01M11 17h.01M7 14h.01"/>',
+    soup:'<path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9zM7 21h10M11 3a2 2 0 0 0-2 2c0 1 1 1.5 1 2.5M15 3a2 2 0 0 0-2 2c0 1 1 1.5 1 2.5"/>',
+    sparkles:'<path d="M12 3 13.9 8.6 19.5 10.5 13.9 12.4 12 18 10.1 12.4 4.5 10.5 10.1 8.6Z"/><path d="M19 3v3M21.5 4.5h-3M5 17v2M6 18H4"/>',
+    video:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3z"/>',
+    play:'<path d="M7 4v16l13-8z"/>',
+    message:'<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/>',
+    flower:'<circle cx="12" cy="12" r="2.2"/><path d="M12 9.8C12 6 13 4.5 12 2.2 11 4.5 12 6 12 9.8M12 14.2C12 18 13 19.5 12 21.8 11 19.5 12 18 12 14.2M9.8 12C6 12 4.5 11 2.2 12 4.5 13 6 12 9.8 12M14.2 12C18 12 19.5 11 21.8 12 19.5 13 18 12 14.2 12"/>',
+    link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+    mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/>',
+    bookmark:'<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',
+    share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>',
+    facebook:'<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
+    salt:'<path d="M7 8V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M6 8h12l-1 12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 8zM10 12h.01M14 12h.01M12 15h.01"/>'
+  };
+  function svgFor(n){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||'')+'</svg>'; }
+  function injectIcons(root){ (root||document).querySelectorAll('i.ic[data-i]').forEach(function(el){ var n=el.getAttribute('data-i'); if(ICONS[n]) el.innerHTML=svgFor(n); el.removeAttribute('data-i'); }); }
+
+  /* ---- niveaux d'accès : rang croissant ---- */
+  var RANK = { public:0, free:1, paid:2 };
+
+  /* CTA contextuels par niveau requis du bloc */
+  function overlayHTML(requiredLevel){
+    if(requiredLevel === 'free'){
+      return '<div class="lock-ic"><i class="ic ic-xl" data-i="unlock"></i></div>'+
+             '<div class="lock-msg">Contenu réservé aux membres</div>'+
+             '<div class="lock-sub">Créez un compte gratuit pour débloquer les variantes et la vidéo.</div>'+
+             '<button class="lock-cta green">Accéder gratuitement → Créer un compte</button>';
+    }
+    /* paid */
+    return '<div class="lock-ic"><i class="ic ic-xl" data-i="lock"></i></div>'+
+           '<div class="lock-msg">Réservé aux abonnés l\'Atelier</div>'+
+           '<div class="lock-sub">L\'assistant IA et les échanges avec l\'auteur sont inclus dans l\'Atelier.</div>'+
+           '<button class="lock-cta terra">Accéder à l\'Atelier →</button>';
+  }
+
+  function applyAccess(level){
+    doc.setAttribute('data-access', level);
+    var cur = RANK[level];
+    document.querySelectorAll('.gated').forEach(function(g){
+      var req = g.getAttribute('data-acl');
+      var ov = g.querySelector('.lock-overlay');
+      if(cur < RANK[req]){
+        g.classList.add('locked');
+        ov.innerHTML = overlayHTML(req);
+        injectIcons(ov);
+      } else {
+        g.classList.remove('locked');
+      }
+    });
+  }
+
+  /* ---- segmented controls ---- */
+  document.getElementById('accessSeg').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.remove('active');});
+    b.classList.add('active');
+    applyAccess(b.getAttribute('data-access'));
+  });
+
+  document.getElementById('viewSeg').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.remove('active');});
+    b.classList.add('active');
+    stage.classList.toggle('mobile', b.getAttribute('data-view') === 'mobile');
+  });
+
+  applyAccess('public');
+
+  /* ============================================================================
+     VUE DÉVELOPPEUR ACF — étiquettes posées directement sur la maquette
+     ============================================================================ */
+  var FIELDS = [
+    { group:'En-tête & métadonnées', items:[
+      { name:'image_principale', type:'image', req:true, acl:'public' },
+      { name:'post_title', type:'text', req:true, acl:'public' },
+      { name:'type_recette', type:'select', req:true, acl:'public' },
+      { name:'saison', type:'select', req:false, acl:'public' },
+      { name:'niveau', type:'select', req:false, acl:'public' },
+      { name:'sans_cuisson', type:'true_false', req:false, acl:'public' }
+    ]},
+    { group:'Infos rapides', items:[
+      { name:'temps_preparation', type:'text', req:true, acl:'public' },
+      { name:'temps_repos', type:'text', req:false, acl:'public' },
+      { name:'nombre_personnes', type:'text', req:false, acl:'public' },
+      { name:'conservation', type:'text', req:false, acl:'public' }
+    ]},
+    { group:'Intro & relations', items:[
+      { name:'description_courte', type:'textarea', req:true, acl:'public' },
+      { name:'plantes_associees', type:'relationship', req:false, acl:'public' },
+      { name:'auteur', type:'relationship', req:true, acl:'public' }
+    ]},
+    { group:'Contenu public', items:[
+      { name:'image_etape_1', type:'image', req:false, acl:'public' },
+      { name:'image_etape_2', type:'image', req:false, acl:'public' },
+      { name:'image_etape_3', type:'image', req:false, acl:'public' },
+      { name:'ingredients', type:'repeater', req:true, acl:'public' },
+      { name:'ustensiles', type:'repeater', req:false, acl:'public' },
+      { name:'etapes_preparation', type:'repeater', req:true, acl:'public' },
+      { name:'conseils_cueillette', type:'wysiwyg', req:false, acl:'public' },
+      { name:'articles_lies', type:'relationship', req:false, acl:'public' }
+    ]},
+    { group:'Contenu membre gratuit', items:[
+      { name:'variantes', type:'repeater', req:false, acl:'free' },
+      { name:'video_preparation', type:'file / oembed', req:false, acl:'free' }
+    ]},
+    { group:'Contenu membre payant', items:[
+      { name:'qa_assistant', type:'RAG / ATG', req:false, acl:'paid' }
+    ]}
+  ];
+
+  var SCHEMA = [
+    ['name','post_title'],
+    ['image','image_principale'],
+    ['author','auteur → Person'],
+    ['description','description_courte'],
+    ['recipeCategory','type_recette'],
+    ['prepTime','temps_preparation (ISO 8601)'],
+    ['cookTime','sans_cuisson ? PT0M'],
+    ['totalTime','prep + repos'],
+    ['recipeYield','nombre_personnes'],
+    ['recipeIngredient[]','ingredients (repeater)'],
+    ['recipeInstructions[]','etapes_preparation → HowToStep'],
+    ['keywords','plantes_associees + tags']
+  ];
+
+  /* table de correspondance : nom de champ → métadonnées */
+  var FIELDMAP = {};
+  FIELDS.forEach(function(g){ g.items.forEach(function(f){ FIELDMAP[f.name] = f; }); });
+
+  function aclGlyph(acl){ return '<i class="ic ic-xs" data-i="'+(acl==='public'?'globe':(acl==='free'?'unlock':'lock'))+'"></i>'; }
+
+  /* injecte une étiquette ACF dans chaque région annotée [data-acf] */
+  document.querySelectorAll('[data-acf]').forEach(function(el){
+    var names = el.getAttribute('data-acf').split(',').map(function(s){return s.trim();}).filter(Boolean);
+    var rows = names.map(function(n){
+      var f = FIELDMAP[n] || { name:n, type:'text', req:false, acl:'public' };
+      return '<div class="aa-row">'+
+               '<span class="aa-fn">'+f.name+'</span>'+
+               '<span class="aa-ty">'+f.type+'</span>'+
+               '<span class="aa-rq"><i class="ic ic-xs" data-i="'+(f.req?'check':'circle')+'"></i></span>'+
+               '<span class="aa-ac">'+aclGlyph(f.acl)+'</span>'+
+             '</div>';
+    }).join('');
+    var anno = document.createElement('div');
+    anno.className = 'acf-anno';
+    anno.innerHTML = (names.length>1 ? '<div class="aa-title">{ } '+names.length+' champs ACF</div>' : '') + rows;
+    el.appendChild(anno);
+  });
+
+  /* tableau Schema.org (bloc dev en bas de fiche) */
+  var schemaRows = document.getElementById('schemaRows');
+  if(schemaRows){
+    schemaRows.innerHTML = SCHEMA.map(function(r){
+      return '<div class="sd-row"><span class="sd-prop">'+r[0]+'</span><span class="sd-map">'+r[1]+'</span></div>';
+    }).join('');
+  }
+
+  /* bascule « Vue développeur » depuis la barre sticky */
+  var devBtn = document.getElementById('devBtn');
+  devBtn.addEventListener('click', function(){
+    var on = doc.classList.toggle('dev');
+    devBtn.classList.toggle('active', on);
+  });
+
+  injectIcons(document);
+})();
+</script>
+</body>
+</html>
