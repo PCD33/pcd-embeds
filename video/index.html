@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&amp;display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  :root{
+    --green:#4A7C59;--green-d:#3A6247;--green-dd:#243B2A;--ink:#2D3B2E;--ink2:#6B7568;
+    --green-soft:#EAF2EA;--green-100:#DDEBDD;--green-line:#D9E4D9;
+    --terra:#C87850;--terra-d:#A85434;--terra-soft:#F6E7DE;--terra-line:#EAD0C1;
+    --blue:#3A6B8C;--blue-soft:#E4EEF4;
+    --cream:#F5F1E8;--paper:#FFFFFF;--line:#E7E2D4;--yellow:#FFDE67;
+    --serif:'Fraunces',Georgia,serif;--sans:'Satoshi',system-ui,sans-serif;
+    --shadow:0 6px 24px rgba(15,36,20,.07);--shadow-lg:0 16px 40px rgba(15,36,20,.12);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#E8E9E3;font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .lucide{stroke-width:1.6}
+  .scrollx{scrollbar-width:none}
+  .scrollx::-webkit-scrollbar{display:none;height:0}
+  h1,h2,h3,h4{font-family:var(--serif);letter-spacing:-.01em}
+
+  /* ---- control bar + stage ---- */
+  .ctrlbar{position:fixed;top:0;left:0;right:0;z-index:300;background:#FBFAF7;border-bottom:1px solid var(--line);
+    padding:11px 18px;display:flex;align-items:center;justify-content:flex-start;gap:16px;flex-wrap:wrap;font-family:var(--sans)}
+  .ctrl-lbl{font-size:12px;font-weight:600;color:#9a9384}
+  .seg-wrap{display:flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
+  .seg-btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:8px 14px;
+    font:600 13px var(--sans);cursor:pointer;background:transparent;color:#5c5546;transition:background .15s,color .15s}
+  .stage.format-mobile button[data-format="mobile"],.stage.format-desktop button[data-format="desktop"]{background:var(--green);color:#fff}
+  .sw{width:42px;height:24px;border-radius:999px;border:none;cursor:pointer;position:relative;background:#CDCBBF;transition:background .2s;flex:0 0 auto}
+  .stage.show-notes .sw{background:var(--terra)}
+  .sw-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .2s}
+  .stage.show-notes .sw-knob{transform:translateX(18px)}
+
+  .stage{padding:88px 20px 60px}
+  .mockwrap{max-width:1180px;margin:0 auto 8px}
+  .mock-sep{display:flex;align-items:center;gap:16px;max-width:1180px;margin:40px auto 20px}
+  .mock-sep:first-of-type{margin-top:0}
+  .mock-sep .num{flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:var(--green-dd);color:#fff;
+    font-family:var(--serif);font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center}
+  .mock-sep h2{margin:0;font-size:26px;color:var(--green-dd);font-weight:600}
+  .mock-sep .sub{font-size:13px;color:var(--ink2);margin-top:2px;font-family:var(--sans)}
+  .mock-sep .line{flex:1;height:1px;background:var(--line)}
+
+  /* info banner */
+  .infobar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;background:#FBFAF7;border:1px solid var(--line);
+    border-radius:10px;padding:11px 16px;margin-bottom:14px;font-family:var(--sans)}
+  .infobar .ib-url{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;
+    color:var(--green-d);background:#fff;border:1px solid var(--green-line);border-radius:7px;padding:5px 11px}
+  .infobar .ib-ctx{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink2)}
+  .infobar .ib-ctx b{color:var(--ink);font-weight:700}
+  .ib-noindex{display:inline-flex;align-items:center;gap:5px;font-family:ui-monospace,Menlo,monospace;font-size:11px;
+    color:#8a5a2a;background:#FBEEDD;border:1px solid #EAD0A8;border-radius:6px;padding:4px 9px;font-weight:600}
+
+  /* browser frame */
+  .frame{margin:0 auto;border:1px solid #DCD8CB;border-radius:14px;overflow:hidden;background:#fff;box-shadow:var(--shadow-lg)}
+  .stage.format-desktop .frame{width:100%;max-width:1180px}
+  .stage.format-mobile .frame{width:390px;max-width:100%}
+  .chrome{display:flex;align-items:center;gap:12px;height:42px;background:#EDEBE4;border-bottom:1px solid #DCD8CB;padding:0 15px}
+  .chrome .dots{display:flex;gap:7px}
+  .chrome .dots span{width:11px;height:11px;border-radius:50%}
+  .chrome .addr{flex:1;max-width:520px;margin:0 auto;background:#fff;border-radius:7px;height:26px;display:flex;align-items:center;
+    justify-content:center;gap:7px;font-size:12px;color:var(--ink2);border:1px solid #DCD8CB}
+  .screen{background:var(--cream);overflow-y:auto;height:720px}
+  .screen.scrollx{scrollbar-width:thin}
+  .stage.format-mobile .screen{height:760px}
+  .page{font-family:var(--sans)}
+
+  /* ---- site header ---- */
+  .site-hd{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#fff;border-bottom:1px solid var(--line);padding:14px 22px;position:sticky;top:0;z-index:40}
+  .site-hd .logo{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-weight:600;font-size:19px;color:var(--green-dd)}
+  .site-hd .logo .mark{width:30px;height:30px;border-radius:8px;background:var(--green-dd);color:#fff;display:flex;align-items:center;justify-content:center}
+  .site-nav{display:flex;gap:22px;font-size:14px;font-weight:600;color:var(--ink)}
+  .site-nav a{color:inherit;text-decoration:none;transition:color .15s}
+  .site-nav a:hover{color:var(--green)}
+  .site-hd .hd-actions{display:flex;align-items:center;gap:12px}
+  .stage.format-mobile .site-nav{display:none}
+  .stage.format-mobile .hd-search{display:none}
+  .icon-btn{width:38px;height:38px;border-radius:9px;border:1px solid var(--green-line);background:#fff;color:var(--green-d);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s}
+  .icon-btn:hover{background:var(--green-soft)}
+
+  /* breadcrumb */
+  .crumb{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);padding:14px 0}
+  .crumb a{color:var(--green-d);text-decoration:none}
+  .crumb a:hover{text-decoration:underline}
+
+  /* ---- buttons ---- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:8px;
+    padding:12px 22px;font:700 15px var(--sans);cursor:pointer;transition:filter .15s,transform .1s,background .15s;text-decoration:none;line-height:1}
+  .btn:hover{filter:brightness(.95)}
+  .btn:active{transform:translateY(1px)}
+  .btn-sm{padding:9px 15px;font-size:13px;border-radius:8px}
+  .btn-primary{background:var(--green);color:#fff}
+  .btn-accent{background:var(--terra);color:#fff}
+  .btn-yellow{background:var(--yellow);color:#461B02}
+  .btn-ghost{background:#fff;border:1.5px solid var(--green-line);color:var(--green-d)}
+  .btn-ghost:hover{background:var(--green-soft);filter:none}
+
+  /* ---- access badges ---- */
+  .badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 11px;font:700 12px var(--sans);white-space:nowrap}
+  .badge-public{background:var(--green-soft);color:#3D6B4A}
+  .badge-gratuit{background:var(--blue-soft);color:var(--blue)}
+  .badge-payant{background:var(--terra-soft);color:var(--terra-d)}
+  .badge-video{background:#F0E4F6;color:#7B4A8C}
+
+  .card{background:var(--paper);border-radius:12px;box-shadow:var(--shadow)}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--green)}
+
+  /* ---- FluentPlayer wrapper ---- */
+  .player{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#4A6E5A,#243B2A);
+    display:flex;align-items:center;justify-content:center}
+  .player-compact{border-radius:10px}
+  .player::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.14),transparent 60%);pointer-events:none}
+  .player-veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,25,15,.55),rgba(15,25,15,.05) 55%);z-index:1}
+  .play-btn{position:relative;z-index:3;width:66px;height:66px;border-radius:50%;border:none;background:rgba(255,255,255,.92);
+    color:var(--green-dd);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.28);transition:transform .15s,background .15s}
+  .play-btn:hover{transform:scale(1.06);background:#fff}
+  .player-fluent-tag{position:absolute;top:11px;left:11px;z-index:3;display:inline-flex;align-items:center;gap:5px;
+    background:rgba(15,25,15,.55);color:#fff;border-radius:6px;padding:4px 9px;font:600 11px var(--sans);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+  .player-dur{position:absolute;bottom:11px;right:11px;z-index:3;background:rgba(15,25,15,.72);color:#fff;border-radius:6px;
+    padding:3px 8px;font:700 12px var(--sans)}
+  .player-bar{position:absolute;left:0;right:0;bottom:0;z-index:4;height:5px;background:rgba(255,255,255,.25)}
+  .player-bar i{display:block;height:100%;background:var(--terra)}
+
+  /* barre de lecture pédagogique (M2) : montre les 25% déjà visionnés avant le verrou */
+  .watchbar{margin:12px 0 4px}
+  .watchbar-track{position:relative;height:6px;border-radius:999px;background:#E4E1D2}
+  .watchbar-fill{position:absolute;left:0;top:0;bottom:0;width:25%;background:var(--terra);border-radius:999px 0 0 999px}
+  .watchbar-marker{position:absolute;left:25%;top:50%;width:13px;height:13px;border-radius:50%;background:#fff;border:2.5px solid var(--terra-d);transform:translate(-50%,-50%);box-shadow:0 1px 3px rgba(0,0,0,.22)}
+  .watchbar-times{display:flex;justify-content:space-between;margin-top:7px;font:700 12px var(--sans);color:var(--ink2)}
+  .watchbar-times .now{color:var(--terra-d)}
+
+  /* post-it pédagogique : conséquence UX de verrou_type (M2 uniquement) */
+  .pedago-note{display:none;background:#FFF6D6;border:1px solid #F0DE94;border-radius:6px;padding:13px 15px;box-shadow:0 4px 14px rgba(90,70,10,.10);
+    font-family:'Inter',system-ui,sans-serif;transform:rotate(-.6deg)}
+  .stage.show-notes .pedago-note{display:block}
+  .pedago-note .pn-head{font-size:13.5px;font-weight:700;color:#5C4A0A;margin-bottom:5px;line-height:1.35}
+  .pedago-note p{margin:0;font-size:13px;line-height:1.5;color:#6B5A1E}
+  .pedago-note code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;background:rgba(90,70,10,.1);padding:1px 5px;border-radius:4px;color:#5C4A0A}
+  .player-title{position:absolute;left:14px;bottom:16px;z-index:3;color:#fff;font-weight:700;font-size:14px;
+    text-shadow:0 1px 4px rgba(0,0,0,.5);max-width:70%}
+
+  /* verrou temporel : formulaire in-video */
+  .lock-temporal{position:absolute;inset:0;z-index:6;background:linear-gradient(160deg,rgba(20,40,26,.93),rgba(15,28,18,.96));
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px;color:#fff}
+  .lock-temporal .lt-eye{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.06em;color:#FFDE67;margin-bottom:9px}
+  .lock-temporal h4{margin:0 0 7px;font-size:19px;color:#fff}
+  .lock-temporal p{margin:0 0 15px;font-size:13px;line-height:1.5;color:rgba(255,255,255,.82);max-width:360px}
+  .lt-form{display:flex;gap:8px;width:100%;max-width:380px}
+  .lt-form input{flex:1;border:none;border-radius:8px;padding:12px 14px;font:500 14px var(--sans);color:var(--ink)}
+  .stage.format-mobile .lt-form{flex-direction:column}
+
+  /* verrou catégoriel : poster payant */
+  .lock-cat{position:absolute;inset:0;z-index:6;background:linear-gradient(160deg,rgba(60,32,18,.72),rgba(30,18,12,.9));
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px;color:#fff}
+  .lock-cat .lc-ic{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .lock-cat h4{margin:0 0 8px;font-size:22px;color:#fff}
+  .lock-cat p{margin:0 0 18px;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.85);max-width:400px}
+
+  /* verrou contextuel : bloc sous player */
+  .lock-ctx{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--terra-line);background:#FBF3EE}
+  .lock-ctx .lx-body{filter:blur(4px);opacity:.6;pointer-events:none;padding:20px;-webkit-user-select:none;user-select:none}
+  .lock-ctx .lx-over{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:22px;background:linear-gradient(to bottom,rgba(251,243,238,.4),rgba(251,243,238,.86))}
+  .lock-ctx .lx-ic{width:46px;height:46px;border-radius:50%;background:var(--terra-soft);color:var(--terra-d);display:flex;align-items:center;justify-content:center;margin-bottom:11px}
+
+  /* ---- chapitres ---- */
+  .chap-list{display:flex;flex-direction:column;gap:3px}
+  .chap{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:9px;cursor:pointer;text-align:left;
+    background:transparent;border:none;width:100%;transition:background .15s;font-family:var(--sans)}
+  .chap:hover{background:var(--green-soft)}
+  .chap .ct{flex:0 0 auto;font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:var(--green-d);
+    background:var(--green-soft);border-radius:6px;padding:4px 8px;min-width:52px;text-align:center}
+  .chap .cl{flex:1;font-size:14px;font-weight:600;color:var(--ink)}
+  .chap .cp{flex:0 0 auto;color:#b7bcae;display:flex}
+
+  /* transcription */
+  .transcript{border:1px solid var(--line);border-radius:11px;background:#fff;overflow:hidden}
+  .transcript>summary{display:flex;align-items:center;gap:10px;list-style:none;cursor:pointer;padding:15px 17px;font-weight:700;font-size:14.5px;color:var(--ink)}
+  .transcript>summary::-webkit-details-marker{display:none}
+  .transcript>summary .chev{margin-left:auto;color:var(--ink2);transition:transform .2s}
+  .transcript[open]>summary .chev{transform:rotate(180deg)}
+  .transcript .tbody{padding:0 17px 17px;border-top:1px solid var(--line)}
+  .transcript .tbody p{margin:14px 0 0;font-size:13.5px;line-height:1.65;color:var(--ink2);text-wrap:pretty}
+
+  /* cross-nav */
+  .crossnav{display:flex;align-items:center;gap:15px;border-radius:12px;padding:17px 19px;text-decoration:none}
+  .crossnav-arv{background:var(--green-soft);border:1px solid var(--green-100)}
+  .crossnav-video{background:#F0E4F6;border:1px solid #E2CFEC}
+  .crossnav .cn-ic{flex:0 0 auto;width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:#fff}
+  .crossnav .cn-k{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
+  .crossnav .cn-t{font-size:15px;font-weight:700;color:var(--green-dd);margin-top:2px;font-family:var(--serif)}
+  .crossnav .cn-go{flex:0 0 auto;color:var(--green)}
+  .crossnav:hover .cn-go{transform:translateX(3px)}
+  .crossnav .cn-go{transition:transform .15s}
+
+  /* ---- vignette ---- */
+  .vignette{background:#fff;border-radius:12px;overflow:hidden;box-shadow:var(--shadow);text-decoration:none;color:inherit;
+    display:block;transition:transform .18s,box-shadow .18s;border:1px solid #EFEBDF}
+  .vignette:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+  .v-thumb{position:relative;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
+  .v-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(15,25,15,.4),transparent 55%)}
+  .v-play{position:relative;z-index:2;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--green-dd);
+    display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.85);transition:opacity .18s,transform .18s}
+  .vignette:hover .v-play{opacity:1;transform:scale(1)}
+  .v-dur{position:absolute;z-index:3;bottom:9px;right:9px;background:rgba(15,25,15,.78);color:#fff;border-radius:5px;padding:2px 7px;font:700 11.5px var(--sans)}
+  .v-badge{position:absolute;z-index:3;top:9px;left:9px}
+  .v-body{padding:13px 14px 15px}
+  .v-title{font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.3;text-wrap:pretty}
+  .v-meta{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:var(--ink2)}
+  .v-meta .dot{width:3px;height:3px;border-radius:50%;background:#c3c8bb}
+  .v-author{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:var(--ink2)}
+  .v-author .v-pd{width:16px;height:16px;border-radius:50%;flex:0 0 auto;background:linear-gradient(135deg,#6E8B4A,#3D5230);color:#fff;font-family:var(--serif);font-weight:600;font-size:7.5px;display:flex;align-items:center;justify-content:center}
+
+  /* ---- library layout ---- */
+  .lib-layout{display:grid;gap:26px;align-items:start}
+  .stage.format-desktop .lib-layout{grid-template-columns:258px 1fr}
+  .stage.format-mobile .lib-layout{grid-template-columns:1fr}
+  .vgrid{display:grid;gap:18px}
+  .stage.format-desktop .vgrid{grid-template-columns:repeat(3,1fr)}
+  .stage.format-mobile .vgrid{grid-template-columns:1fr}
+  .facet{border-bottom:1px solid var(--line);padding:15px 0}
+  .facet:first-child{padding-top:0}
+  .facet h4{margin:0 0 11px;font-size:13px;font-weight:700;color:var(--ink);font-family:var(--sans)}
+  .fopt{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:13.5px;color:var(--ink);cursor:pointer}
+  .fbox{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--green-line);flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .15s,border-color .15s}
+  .fopt:hover .fbox{border-color:var(--green)}
+  .fopt.on .fbox{background:var(--green);border-color:var(--green)}
+  .fopt .fcount{margin-left:auto;font-size:12px;color:var(--ink2)}
+  .facet-sidebar{position:sticky;top:14px}
+  .stage.format-mobile .facet-sidebar{display:none}
+  .filter-btn{display:none}
+  .stage.format-mobile .filter-btn{display:inline-flex}
+
+  .sortbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .sort-chip{border:1px solid var(--green-line);background:#fff;border-radius:999px;padding:7px 14px;font:600 13px var(--sans);color:var(--ink);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+  .sort-chip:hover{border-color:var(--green)}
+  .sort-chip.on{background:var(--green-dd);border-color:var(--green-dd);color:#fff}
+
+  /* bottom sheet */
+  .sheet-scrim{position:absolute;inset:0;z-index:80;background:rgba(20,30,20,.4);display:flex;align-items:flex-end}
+  .sheet{background:#fff;width:100%;max-height:82%;overflow-y:auto;border-radius:18px 18px 0 0;padding:8px 18px 22px;animation:sheetup .25s cubic-bezier(.22,1,.36,1)}
+  @keyframes sheetup{from{transform:translateY(30px);opacity:.4}to{transform:translateY(0);opacity:1}}
+  .sheet-grab{width:40px;height:4px;border-radius:2px;background:#D8D3C4;margin:8px auto 12px}
+
+  /* playlists */
+  .pl-card{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:4/3;display:flex;flex-direction:column;justify-content:flex-end;
+    padding:16px;color:#fff;text-decoration:none;transition:transform .18s;box-shadow:var(--shadow)}
+  .pl-card:hover{transform:translateY(-4px)}
+  .pl-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(15,25,15,.72),rgba(15,25,15,.08))}
+  .pl-card>*{position:relative;z-index:2}
+
+  /* pedagogic callout */
+  .callout{display:flex;gap:13px;background:var(--green-soft);border:1px solid var(--green-100);border-radius:12px;padding:16px 18px}
+  .callout .co-ic{flex:0 0 auto;width:38px;height:38px;border-radius:10px;background:#fff;color:var(--green);display:flex;align-items:center;justify-content:center}
+  .callout h4{margin:0 0 5px;font-size:15px;color:var(--green-dd)}
+  .callout p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink)}
+
+  /* article body */
+  .article-body h2{font-size:26px;color:var(--green-dd);margin:30px 0 12px}
+  .article-body h3{font-size:19px;color:var(--ink);margin:22px 0 8px}
+  .article-body p{font-size:15.5px;line-height:1.72;color:var(--ink);margin:0 0 15px;text-wrap:pretty}
+  .stage.format-mobile .article-body h2{font-size:22px}
+
+  .meta-row{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;font-size:13px;color:var(--ink2)}
+  .meta-row .mi{display:inline-flex;align-items:center;gap:6px}
+
+  .maillage-card{display:flex;align-items:center;gap:13px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px;text-decoration:none;color:inherit;transition:background .15s,border-color .15s}
+  .maillage-card:hover{background:var(--green-soft);border-color:var(--green-100)}
+  .maillage-card .mc-th{width:52px;height:52px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff}
+
+  .contrib{display:flex;align-items:center;gap:13px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px}
+  .contrib .cv{width:52px;height:52px;border-radius:50%;flex:0 0 auto;background:linear-gradient(135deg,#6E8B4A,#3D5230);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-weight:600;font-size:20px}
+
+  .relbox{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
+  .rel-chip{display:inline-flex;align-items:center;gap:7px;background:var(--green-soft);border:1px solid var(--green-100);color:var(--green-dd);border-radius:999px;padding:7px 13px;font:600 13px var(--sans);text-decoration:none;transition:background .15s}
+  .rel-chip:hover{background:var(--green-100)}
+
+  /* annotation badge */
+  .anno{display:none}
+  .stage.show-notes .anno{display:flex;align-items:flex-start;gap:6px;background:#FBEEDD;border:1px solid #EAD0A8;color:#8a5a2a;
+    border-radius:8px;padding:8px 11px;font:600 12px var(--sans);line-height:1.4;margin:10px 0}
+  .stage.show-notes .anno i{flex:0 0 auto;margin-top:1px}
+
+  .site-ft{background:var(--green-dd);color:rgba(255,255,255,.85);padding:34px 24px 26px;font-family:var(--sans)}
+  .site-ft a{color:rgba(255,255,255,.85);text-decoration:none;font-size:13.5px;display:block;padding:4px 0}
+  .site-ft a:hover{color:#fff}
+  .site-ft h5{margin:0 0 10px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);font-family:var(--sans);font-weight:700}
+  .ft-cols{display:grid;gap:26px;max-width:1000px;margin:0 auto}
+  .stage.format-desktop .ft-cols{grid-template-columns:2fr 1fr 1fr 1fr}
+  .stage.format-mobile .ft-cols{grid-template-columns:1fr 1fr}
+
+  .sec-h{font-size:20px;font-weight:600;color:var(--green-dd);margin:0 0 4px}
+  .stat-strip{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+  .stat-strip .st{display:inline-flex;align-items:baseline;gap:6px}
+  .stat-strip .st b{font-family:var(--serif);font-size:22px;color:var(--green-dd);font-weight:600}
+  .stat-strip .st span{font-size:12.5px;color:var(--ink2)}
+
+  /* ===== V2 : sélecteur de maquette ===== */
+  .module{display:none}
+  .stage.mock-m1 .module-m1,.stage.mock-m2 .module-m2,.stage.mock-m3 .module-m3,.stage.mock-m4 .module-m4{display:block}
+  .stage.mock-m1 [data-mock="m1"],.stage.mock-m2 [data-mock="m2"],.stage.mock-m3 [data-mock="m3"],.stage.mock-m4 [data-mock="m4"]{background:var(--green);color:#fff}
+  .stage.role-public [data-role="public"],.stage.role-gratuit [data-role="gratuit"],.stage.role-atelier [data-role="atelier"]{background:var(--green);color:#fff}
+  .ctx-ind{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 11px;white-space:nowrap}
+  .ctx-ind b{color:var(--green-dd);font-weight:700}
+  .stage.show-acf .sw-acf{background:#3A6B8C}
+
+  /* ===== V2 : gates de rôle (verrous) ===== */
+  [data-gate]{display:none!important}
+  [data-open]{display:none!important}
+  .stage.role-public [data-gate="free"]{display:flex!important}
+  .stage.role-public [data-gate="atelier"],.stage.role-gratuit [data-gate="atelier"]{display:flex!important}
+  .stage.role-gratuit [data-open="free"],.stage.role-atelier [data-open="free"]{display:var(--d,block)!important}
+  .stage.role-atelier [data-open="atelier"]{display:var(--d,block)!important}
+  .stage.role-atelier .hide-atelier{display:none!important}
+  .stage.role-atelier .lock-ctx .lx-body{filter:none;opacity:1;pointer-events:auto}
+
+  /* vignette lock overlay */
+  .v-lock{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;padding:10px;background:linear-gradient(160deg,rgba(30,22,14,.5),rgba(18,13,8,.8))}
+  .v-lock .vl-ic{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;display:flex;align-items:center;justify-content:center}
+  .v-lock span{color:#fff;font-size:11.5px;font-weight:700;line-height:1.3}
+  /* cadenas discret (fiche focus, vidéos similaires) : centré, sans texte, ne révèle pas le tier */
+  .v-lockmini{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center}
+  .v-lockmini span{width:40px;height:40px;border-radius:50%;background:rgba(20,30,20,.42);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+
+  /* ===== V2 : champs ACF ===== */
+  .stage.show-acf [data-acf],.stage.show-acf [data-acf-bl]{outline:1px dashed #7AA6C6;outline-offset:2px;border-radius:8px}
+  .stage.show-acf [data-acf]{position:relative}
+  .stage.show-acf [data-acf]::after{content:attr(data-acf);position:absolute;right:5px;bottom:5px;z-index:30;font:400 10px ui-monospace,Menlo,Consolas,monospace;letter-spacing:0;background:rgba(58,107,140,.14);color:#2C5470;border:1px solid rgba(58,107,140,.3);padding:2px 6px;border-radius:5px;pointer-events:none}
+  .stage.show-acf [data-acf-bl]::after{content:attr(data-acf-bl);position:absolute;left:5px;bottom:5px;z-index:30;font:400 10px ui-monospace,Menlo,Consolas,monospace;letter-spacing:0;background:rgba(255,255,255,.92);color:#2C5470;border:1px solid rgba(58,107,140,.3);padding:2px 6px;border-radius:5px;pointer-events:none}
+
+  /* ===== V4 : toggles ARV + contributeur ===== */
+  .stage.arv-yes [data-arv="yes"],.stage.arv-no [data-arv="no"]{background:var(--green);color:#fff}
+  .stage.contrib-1 [data-contrib="1"],.stage.contrib-2 [data-contrib="2"],.stage.contrib-3 [data-contrib="3"]{background:var(--green);color:#fff}
+
+  /* SEO + schema badges (dev indicators) */
+  .ib-seo{display:inline-flex;align-items:center;gap:5px;font-family:ui-monospace,Menlo,monospace;font-size:11px;border-radius:6px;padding:4px 9px;font-weight:600}
+  .ib-seo.seo-noindex{color:#8a5a2a;background:#FBEEDD;border:1px solid #EAD0A8}
+  .ib-seo.seo-index{color:#3D6B4A;background:var(--green-soft);border:1px solid var(--green-100)}
+  .ib-schema{display:inline-flex;align-items:center;gap:5px;font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#4A5A6B;background:#EEF1F4;border:1px solid #D9E0E6;border-radius:6px;padding:4px 9px;font-weight:600}
+
+  /* barre d'engagement standard PCD */
+  .engage{display:flex;align-items:center;gap:2px;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:22px}
+  .eng{display:inline-flex;align-items:center;gap:7px;border:none;background:transparent;border-radius:9px;padding:9px 12px;cursor:pointer;font:700 13.5px var(--sans);color:var(--ink);transition:background .15s,color .15s}
+  .eng:hover{background:var(--green-soft);color:var(--green-d)}
+  .eng.on{color:var(--green)}
+  .eng .ec{font-variant-numeric:tabular-nums}
+  .eng-sep{color:#cfd3c7;font-weight:700;padding:0 4px;-webkit-user-select:none;user-select:none}
+  .eng-muted{color:var(--ink2)}
+  .eng-muted:hover{background:var(--terra-soft);color:var(--terra-d)}
+
+  /* sections relations en pleine largeur */
+  .rel-sec{margin-top:30px}
+  .rel-sec .rs-h{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:20px;font-weight:600;color:var(--green-dd);margin:0 0 14px}
+  .rel-sec .rs-h .rs-ic{width:34px;height:34px;border-radius:9px;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .rel-grid{display:grid;gap:12px}
+  .stage.format-desktop .rel-grid.g-plante{grid-template-columns:repeat(4,1fr)}
+  .stage.format-desktop .rel-grid.g-book{grid-template-columns:repeat(3,1fr)}
+  .stage.format-desktop .rel-grid.g-tech{grid-template-columns:repeat(4,1fr)}
+  .stage.format-mobile .rel-grid{grid-template-columns:1fr}
+  .stage.format-mobile .rel-grid>*{scroll-snap-align:start}
+
+  .pcard{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 13px;text-decoration:none;color:inherit;transition:transform .18s,box-shadow .18s,border-color .15s}
+  .pcard:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--green-100)}
+  .pcard .pc-th{width:50px;height:50px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff}
+  .pcard .pc-n{font-weight:700;font-size:14px;color:var(--ink);line-height:1.25}
+  .pcard .pc-b{font-size:12px;font-style:italic;color:var(--ink2);margin-top:2px}
+
+  .bcard{display:flex;gap:13px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;text-decoration:none;color:inherit;transition:transform .18s,box-shadow .18s,border-color .15s}
+  .bcard:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--green-100)}
+  .bcard .bc-cover{width:58px;height:80px;border-radius:6px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.9);box-shadow:0 3px 10px rgba(0,0,0,.18)}
+  .bcard .bc-t{font-weight:700;font-size:13.5px;color:var(--ink);line-height:1.3}
+  .bcard .bc-a{font-size:12px;color:var(--ink2);margin-top:3px}
+
+  .tcard{display:flex;flex-direction:column;gap:9px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;text-decoration:none;color:inherit;transition:transform .18s,box-shadow .18s,border-color .15s}
+  .tcard:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--green-100)}
+  .tcard .tc-ic{width:40px;height:40px;border-radius:10px;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center}
+  .tcard .tc-n{font-weight:700;font-size:14px;color:var(--ink);line-height:1.3}
+  .lvl{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;border-radius:999px;padding:3px 9px;width:fit-content}
+  .lvl-deb{background:var(--green-soft);color:#3D6B4A}
+  .lvl-int{background:var(--blue-soft);color:var(--blue)}
+  .lvl-exp{background:var(--terra-soft);color:var(--terra-d)}
+
+  /* encart article latéral */
+  .article-cta{display:block;background:var(--green-soft);border:1px solid var(--green-100);border-radius:12px;padding:17px;text-decoration:none;color:inherit;transition:background .15s}
+  .article-cta:hover{background:var(--green-100)}
+
+  /* contributeur cas 2 (intervenant simple) */
+  .contrib-simple{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink2);background:#FBFAF7;border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+  .contrib-simple .cs-ic{width:32px;height:32px;border-radius:50%;background:#EDEBE4;color:var(--ink2);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+
+  /* verrou : icône ronde + CTA plein largeur vers page d'inscription */
+  .lock-temporal .lt-ic{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;margin-bottom:12px}
+  .lt-cta{width:100%;max-width:340px;padding:14px 22px}
+  .lt-login{margin-top:12px;font-size:12px;color:rgba(255,255,255,.7);text-decoration:none}
+  .lt-login:hover{color:#fff;text-decoration:underline}
+
+  /* ===== V6 : refonte mobile (M2 ≤ 640px) ===== */
+  .stage.format-mobile .module-m2 h1{font-size:28px !important;line-height:1.18 !important}
+  .stage.format-mobile .module-m2 .meta-row{font-size:13px;gap:4px 14px}
+  .stage.format-mobile .lock-temporal{padding:18px 16px}
+  .stage.format-mobile .lock-temporal h4{font-size:21px}
+  .stage.format-mobile .lock-temporal p{font-size:12.5px;margin-bottom:14px}
+  .stage.format-mobile .lock-temporal .lt-ic{width:46px;height:46px;margin-bottom:10px}
+  .stage.format-mobile .module-m2 .engage{gap:0;flex-wrap:nowrap}
+  .stage.format-mobile .module-m2 .eng{padding:8px 6px;font-size:13px;gap:5px}
+  .stage.format-mobile .module-m2 .eng-sep{padding:0 2px}
+</style>
+</helmet>
+<div class="{{ stageClass }}">
+
+  <!-- CONTROL BAR -->
+  <div class="ctrlbar">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="ctrl-lbl">Format</span>
+      <div class="seg-wrap">
+        <button data-format="mobile" onClick="{{ setFormat }}" class="seg-btn"><i data-lucide="smartphone" style="width:16px;height:16px"></i>Mobile</button>
+        <button data-format="desktop" onClick="{{ setFormat }}" class="seg-btn"><i data-lucide="monitor" style="width:16px;height:16px"></i>Desktop</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="ctrl-lbl">Maquette</span>
+      <div class="seg-wrap">
+        <button data-mock="m1" onClick="{{ setMock }}" class="seg-btn">1. ARV + vidéo</button>
+        <button data-mock="m2" onClick="{{ setMock }}" class="seg-btn">2. Fiche vidéo focus</button>
+        <button data-mock="m3" onClick="{{ setMock }}" class="seg-btn">3. Bibliothèque</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="ctrl-lbl">ARV lié</span>
+      <div class="seg-wrap">
+        <button data-arv="yes" onClick="{{ setArv }}" class="seg-btn">Avec</button>
+        <button data-arv="no" onClick="{{ setArv }}" class="seg-btn">Sans</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="ctrl-lbl">Contributeur</span>
+      <div class="seg-wrap">
+        <button data-contrib="1" onClick="{{ setContrib }}" class="seg-btn">Officiel</button>
+        <button data-contrib="2" onClick="{{ setContrib }}" class="seg-btn">Intervenant</button>
+        <button data-contrib="3" onClick="{{ setContrib }}" class="seg-btn">Aucun</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button onClick="{{ toggleAcf }}" aria-label="Champs ACF" class="sw sw-acf"><span class="sw-knob"></span></button>
+      <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#5c5546"><i data-lucide="database" style="width:16px;height:16px"></i>Champs ACF</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button onClick="{{ toggleNotes }}" aria-label="Annotations" class="sw"><span class="sw-knob"></span></button>
+      <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#5c5546"><i data-lucide="message-square-text" style="width:16px;height:16px"></i>Annotations</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:9px;margin-left:auto">
+      <span class="ctrl-lbl">Profil</span>
+      <div class="seg-wrap">
+        <button data-role="public" onClick="{{ setRole }}" class="seg-btn">🆓 Public</button>
+        <button data-role="gratuit" onClick="{{ setRole }}" class="seg-btn">🔐 Gratuit</button>
+        <button data-role="atelier" onClick="{{ setRole }}" class="seg-btn">💎 Payant</button>
+      </div>
+      <span class="ctx-ind"><i data-lucide="eye" style="width:14px;height:14px"></i>Vu comme : <b>{{ roleLabel }}</b></span>
+    </div>
+  </div>
+
+  <div class="stage-inner" style="padding-top:0">
+
+  <!-- ============================================================= -->
+  <!-- MAQUETTE 1 — ARV avec vidéo intégrée -->
+  <!-- ============================================================= -->
+  <div class="module module-m1">
+  <div class="mock-sep">
+    <div class="num">1</div>
+    <div style="flex:1"><h2>Article ARV avec vidéo intégrée</h2><div class="sub">Le contenu éditorial reste prioritaire ; la vidéo est un encart compact.</div></div>
+    <div class="line"></div>
+  </div>
+  <div class="mockwrap">
+    <div class="infobar">
+      <span class="ib-url"><i data-lucide="lock" style="width:12px;height:12px"></i>permaculturedesign.fr/le-mulch-en-permaculture/</span>
+      <span class="ib-ctx"><i data-lucide="file-text" style="width:14px;height:14px"></i><b>Page A1</b> · article existant (URL canonique)</span>
+      <span class="ib-ctx"><i data-lucide="user-x" style="width:14px;height:14px"></i>Contexte : <b>visiteur anonyme</b> · verrou temporel 25&nbsp;%</span>
+    </div>
+
+    <div class="frame">
+      <div class="chrome">
+        <div class="dots"><span style="background:#FF5F57"></span><span style="background:#FEBC2E"></span><span style="background:#28C840"></span></div>
+        <div class="addr"><i data-lucide="lock" style="width:12px;height:12px;color:#9aa39a"></i>permaculturedesign.fr/le-mulch-en-permaculture/</div>
+        <div style="width:44px"></div>
+      </div>
+      <div class="screen scrollx" data-screen-label="M1 · Article ARV">
+
+        <!-- header -->
+        <div class="site-hd">
+          <div class="logo"><span class="mark"><i data-lucide="sprout" style="width:18px;height:18px"></i></span>Permaculture Design</div>
+          <nav class="site-nav"><a href="#">Formations</a><a href="#">Vidéos</a><a href="#">Blog</a><a href="#">l'Atelier</a></nav>
+          <div class="hd-actions">
+            <button class="icon-btn hd-search"><i data-lucide="search" style="width:18px;height:18px"></i></button>
+            <a href="#" class="btn btn-primary btn-sm">Rejoindre</a>
+          </div>
+        </div>
+
+        <div style="max-width:760px;margin:0 auto;padding:0 22px 40px">
+          <div class="crumb"><a href="#">Accueil</a><i data-lucide="chevron-right" style="width:13px;height:13px"></i><a href="#">Blog</a><i data-lucide="chevron-right" style="width:13px;height:13px"></i><span>Le mulch en permaculture</span></div>
+
+          <h1 style="font-size:38px;line-height:1.12;color:var(--green-dd);margin:4px 0 14px;font-weight:700">Le mulch en permaculture : BRF, paillage et broyeur</h1>
+
+          <div class="meta-row" data-acf="auteur_principal · date_maj" style="margin-bottom:14px">
+            <span class="mi"><i data-lucide="user" style="width:15px;height:15px"></i>Par l'équipe PCD</span>
+            <span class="mi"><i data-lucide="calendar" style="width:15px;height:15px"></i>Mis à jour le 18 mars 2026</span>
+            <span class="mi"><i data-lucide="clock" style="width:15px;height:15px"></i>9 min de lecture</span>
+          </div>
+
+          <p style="font-size:17px;line-height:1.65;color:var(--ink);margin:0 0 24px;font-weight:500">Le sol nu s'épuise, se tasse et se dessèche. Couvrir la terre, c'est imiter la forêt : nourrir la vie souterraine et retenir l'eau. Voici comment choisir votre paillage, produire votre BRF et vous équiper d'un broyeur adapté.</p>
+
+          <!-- ENCART VIDÉO COMPACT -->
+          <div class="card" style="padding:15px;margin-bottom:26px;border:1px solid var(--line)">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px">
+              <span class="eyebrow"><i data-lucide="play-circle" style="width:14px;height:14px"></i>Regarder en vidéo</span>
+            </div>
+            <div class="player player-compact" data-acf="video_source · youtube_id">
+              <span class="player-fluent-tag"><i data-lucide="play" style="width:11px;height:11px"></i>FluentPlayer</span>
+              <span class="player-dur">18:24</span>
+              <button class="play-btn" data-open="free" style="--d:flex" onClick="{{ noop }}"><i data-lucide="play" style="width:26px;height:26px;margin-left:3px"></i></button>
+              <div class="lock-temporal" data-gate="free" data-acf-bl="verrou_type">
+                <span class="lt-eye"><i data-lucide="clock" style="width:13px;height:13px"></i>Aperçu de 25&nbsp;% terminé</span>
+                <h4>La suite est gratuite</h4>
+                <p>Créez un compte gratuit pour reprendre la vidéo là où elle s'est arrêtée et accéder à toutes nos vidéos publiques.</p>
+                <div class="lt-form">
+                  <input type="email" placeholder="Votre adresse e-mail" aria-label="e-mail">
+                  <button class="btn btn-yellow btn-sm" style="white-space:nowrap">Continuer la vidéo</button>
+                </div>
+                <div style="margin-top:11px;font-size:11.5px;color:rgba(255,255,255,.6)">Déjà membre&nbsp;? <a href="#" style="color:#FFDE67">Se connecter</a></div>
+              </div>
+              <div class="player-bar"><i style="width:25%"></i></div>
+            </div>
+            <div class="anno"><i data-lucide="info" style="width:14px;height:14px"></i>Verrou temporel : lecture libre jusqu'à 25&nbsp;% (barre terracotta), puis overlay d'inscription in-video. La barre de progression reflète le seuil.</div>
+
+            <!-- chapitres -->
+            <!-- chapitres : repliés par défaut sur l'ARV (doublon avec les H2) -->
+            <div style="margin-top:14px" data-acf="chapitres">
+              <button onClick="{{ toggleChapM1 }}" aria-expanded="{{ chapM1Open }}" style="display:inline-flex;align-items:center;gap:6px;border:none;background:transparent;padding:5px 0;cursor:pointer;font:700 13px var(--sans);color:var(--green-d)"><i data-lucide="{{ chapM1Icon }}" style="width:15px;height:15px"></i>{{ chapM1Label }}</button>
+              <div style="{{ chapM1WrapStyle }}">
+                <div class="chap-list" style="padding-top:8px">
+                  <sc-for list="{{ chaptersM1 }}" as="c" hint-placeholder-count="5">
+                    <button class="chap" style="{{ c.style }}" data-grp="m1" data-idx="{{ c.idx }}" onClick="{{ setChapter }}">
+                      <span class="ct">{{ c.time }}</span><span class="cl">{{ c.label }}</span><span class="cp"><i data-lucide="play" style="width:14px;height:14px"></i></span>
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- corps article -->
+          <div class="article-body">
+            <h2>Pourquoi couvrir le sol change tout</h2>
+            <p>En permaculture, le sol nu est considéré comme une plaie à refermer. Un couvert végétal protège la terre du soleil et de la pluie battante, limite l'évaporation et nourrit en continu la faune du sol. Résultat : moins d'arrosage, moins de désherbage, une structure qui s'améliore d'année en année.</p>
+            <p>Le mulch (ou paillage) désigne toute matière déposée en surface : paille, foin, feuilles mortes, tontes séchées, broyat de bois. Chaque matière a ses usages, sa vitesse de décomposition et son rapport carbone / azote.</p>
+
+            <div style="border-radius:12px;aspect-ratio:16/8;background:linear-gradient(135deg,#6E8B4A,#3D5230);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);margin:20px 0;gap:8px;font-size:13px;font-weight:600"><i data-lucide="image" style="width:20px;height:20px"></i>Paillage de paille sur une planche de culture</div>
+
+            <h3>Le BRF : le bois raméal fragmenté</h3>
+            <p>Le BRF est un broyat de jeunes rameaux (moins de 7&nbsp;cm de diamètre), riches en lignine et en nutriments. Épandu en fine couche, il favorise le développement des champignons du sol et reproduit le fonctionnement d'une lisière de forêt. C'est un amendement de fond, pas un simple paillage de saison.</p>
+
+            <div class="callout" style="margin:18px 0">
+              <span class="co-ic"><i data-lucide="lightbulb" style="width:20px;height:20px"></i></span>
+              <div><h4>À retenir</h4><p>Étalez le BRF à l'automne en couche de 3 à 5&nbsp;cm. Évitez de l'enfouir : il se composte en surface, comme dans la nature.</p></div>
+            </div>
+
+            <h3>Choisir son broyeur de végétaux</h3>
+            <p>Pour produire votre propre BRF, un broyeur à rotor est plus adapté qu'un broyeur à disque pour les branches vertes et souples. Pensez au diamètre maximal de coupe, au niveau sonore et à la facilité d'évacuation du broyat. Un modèle mutualisé entre voisins reste souvent la meilleure option.</p>
+            <p>À l'achat, visez un moteur d'au moins 2&nbsp;500&nbsp;W et une capacité de coupe adaptée à vos branches, sans oublier l'entretien régulier des lames&nbsp;: le coût reste élevé, ce qui rend la location ou l'achat groupé entre voisins souvent bien plus raisonnable.</p>
+          </div>
+
+          <!-- maillage -->
+          <div style="margin:30px 0 10px">
+            <div class="sec-h" style="font-size:17px">Pour aller plus loin</div>
+          </div>
+          <div style="display:grid;gap:11px;grid-template-columns:1fr;margin-bottom:8px">
+            <a href="#" class="maillage-card"><span class="mc-th" style="background:linear-gradient(135deg,#5E7C4A,#33471F)"><i data-lucide="leaf" style="width:22px;height:22px"></i></span><div style="flex:1"><div style="font-size:11px;color:var(--ink2);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Plante</div><div style="font-weight:700;color:var(--green-dd)">La consoude, championne du paillage</div></div><i data-lucide="chevron-right" style="width:18px;height:18px;color:#b7bcae"></i></a>
+            <a href="#" class="maillage-card"><span class="mc-th" style="background:linear-gradient(135deg,#8A6A4A,#4A2E1A)"><i data-lucide="book-open" style="width:22px;height:22px"></i></span><div style="flex:1"><div style="font-size:11px;color:var(--ink2);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Livre</div><div style="font-weight:700;color:var(--green-dd)">Le guide du sol vivant</div></div><i data-lucide="chevron-right" style="width:18px;height:18px;color:#b7bcae"></i></a>
+            <a href="#" class="maillage-card"><span class="mc-th" style="background:linear-gradient(135deg,#4A7C6B,#22403A)"><i data-lucide="graduation-cap" style="width:22px;height:22px"></i></span><div style="flex:1"><div style="font-size:11px;color:var(--ink2);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Formation</div><div style="font-weight:700;color:var(--green-dd)">Concevoir un potager naturel</div></div><i data-lucide="chevron-right" style="width:18px;height:18px;color:#b7bcae"></i></a>
+          </div>
+
+          <!-- CTA fin -->
+          <div class="hide-atelier" style="background:var(--green-dd);border-radius:14px;padding:26px 22px;text-align:center;margin-top:22px">
+            <h3 style="color:#fff;font-size:22px;margin:0 0 8px">Passez de la théorie au terrain</h3>
+            <p style="color:rgba(255,255,255,.8);font-size:14px;margin:0 0 18px;line-height:1.5">40+ formations vidéo, calendriers et une communauté de jardiniers. Apprenez à votre rythme, où que vous soyez.</p>
+            <a href="#" class="btn btn-yellow">Rejoindre l'Atelier · 89&nbsp;€/an</a>
+          </div>
+        </div>
+
+        <!-- footer -->
+        <div class="site-ft">
+          <div class="ft-cols">
+            <div>
+              <div class="logo" style="color:#fff;margin-bottom:10px"><span class="mark" style="background:#fff;color:var(--green-dd)"><i data-lucide="sprout" style="width:18px;height:18px"></i></span>Permaculture Design</div>
+              <p style="font-size:13px;line-height:1.55;color:rgba(255,255,255,.7);margin:0;max-width:280px">Rêvez plus, vivez votre lieu de vie, construisez-le.</p>
+            </div>
+            <div><h5>Apprendre</h5><a href="#">Formations</a><a href="#">Vidéos</a><a href="#">Blog</a></div>
+            <div><h5>Communauté</h5><a href="#">l'Atelier</a><a href="#">Avis</a><a href="#">Contact</a></div>
+            <div><h5>Suivre</h5><a href="#">YouTube</a><a href="#">Instagram</a><a href="#">Facebook</a></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div><!-- /module m1 -->
+
+  <!-- ============================================================= -->
+  <!-- MAQUETTE 2 — Fiche vidéo focus (noindex) -->
+  <!-- ============================================================= -->
+  <div class="module module-m2">
+  <div class="mock-sep">
+    <div class="num">2</div>
+    <div style="flex:1"><h2>Fiche vidéo focus</h2><div class="sub">Template unique <code style="font-family:ui-monospace,Menlo,monospace;font-size:11.5px;background:#EDEBE4;padding:1px 6px;border-radius:4px">single-pcd_video.php</code> : le comportement s'adapte selon la présence d'un ARV lié.</div></div>
+    <div class="line"></div>
+  </div>
+  <div class="mockwrap">
+    <div class="infobar">
+      <span class="ib-url"><i data-lucide="lock" style="width:12px;height:12px"></i>permaculturedesign.fr/video/le-mulch-en-permaculture/</span>
+      <span class="ib-seo {{ seoCls }}" data-acf="is_indexable"><i data-lucide="{{ seoIcon }}" style="width:12px;height:12px"></i>{{ seoText }}</span>
+      <span class="ib-schema"><i data-lucide="code" style="width:12px;height:12px"></i>Schema.org : {{ schemaText }}</span>
+    </div>
+
+    <div class="frame">
+      <div class="chrome">
+        <div class="dots"><span style="background:#FF5F57"></span><span style="background:#FEBC2E"></span><span style="background:#28C840"></span></div>
+        <div class="addr"><i data-lucide="lock" style="width:12px;height:12px;color:#9aa39a"></i>permaculturedesign.fr/video/le-mulch-en-permaculture/</div>
+        <div style="width:44px"></div>
+      </div>
+      <div class="screen scrollx" data-screen-label="M2 · Fiche vidéo">
+
+        <div class="site-hd">
+          <div class="logo"><span class="mark"><i data-lucide="sprout" style="width:18px;height:18px"></i></span>Permaculture Design</div>
+          <nav class="site-nav"><a href="#">Formations</a><a href="#">Vidéos</a><a href="#">Blog</a><a href="#">l'Atelier</a></nav>
+          <div class="hd-actions"><button class="icon-btn hd-search"><i data-lucide="search" style="width:18px;height:18px"></i></button><span class="icon-btn" style="background:var(--green-soft);border-color:var(--green-100);font-weight:700;color:var(--green-d)">C</span></div>
+        </div>
+
+        <div style="max-width:1120px;margin:0 auto;padding:0 22px 40px">
+          <div class="crumb"><a href="#">Accueil</a><i data-lucide="chevron-right" style="width:13px;height:13px"></i><a href="#">Vidéos</a><i data-lucide="chevron-right" style="width:13px;height:13px"></i><span>Le mulch en permaculture</span></div>
+
+          <h1 data-acf="titre" style="font-size:32px;line-height:1.14;color:var(--green-dd);margin:0 0 12px;font-weight:700">Le mulch en permaculture : BRF, paillage et broyeur</h1>
+          <div class="meta-row" data-acf="duree · date_publication_yt" style="margin-bottom:16px">
+            <span class="mi"><i data-lucide="clock" style="width:15px;height:15px"></i>18 min 24</span>
+            <span class="mi"><i data-lucide="calendar" style="width:15px;height:15px"></i>Publiée le 4 février 2026</span>
+          </div>
+
+          <!-- player pleine largeur -->
+          <div class="player" style="margin-bottom:14px" data-acf="video_source · youtube_id · verrou_type · acces_membre">
+            <span class="player-fluent-tag"><i data-lucide="play" style="width:11px;height:11px"></i>FluentPlayer</span>
+            <span class="player-dur">18:24</span>
+            <button class="play-btn" data-open="free" style="--d:flex" onClick="{{ noop }}"><i data-lucide="play" style="width:26px;height:26px;margin-left:3px"></i></button>
+            <span class="player-title" data-open="free" style="--d:block">Le mulch en permaculture</span>
+            <div class="lock-temporal" data-gate="free" data-acf-bl="verrou_type" style="background:rgba(45,59,46,.85)">
+              <span class="lt-ic"><i data-lucide="lock-open" style="width:26px;height:26px"></i></span>
+              <h4>Créez votre compte gratuit</h4>
+              <p>Cette vidéo est accessible gratuitement en créant votre compte.</p>
+              <a href="#" class="btn btn-accent lt-cta">Créer mon compte gratuit<i data-lucide="arrow-right" style="width:17px;height:17px"></i></a>
+              <a href="#" class="lt-login">Déjà inscrit&nbsp;? Se connecter</a>
+            </div>
+            <div class="player-bar"><i style="width:25%"></i></div>
+          </div>
+
+          <!-- lecture à 25% + annotation pédagogique : le verrou se déclenche APRÈS lecture, pas au chargement -->
+          <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:18px">
+            <div class="watchbar" style="flex:1 1 260px;min-width:220px;margin:2px 0 0">
+              <div class="watchbar-track"><div class="watchbar-fill"></div><span class="watchbar-marker"></span></div>
+              <div class="watchbar-times"><span class="now">04:36 déjà visionné</span><span>18:24</span></div>
+            </div>
+            <div class="pedago-note" style="flex:1 1 300px;max-width:380px">
+              <div class="pn-head">⏱ Overlay déclenché après 25&nbsp;% de lecture</div>
+              <p>Ce verrou est piloté par FluentPlayer selon le champ ACF <code>verrou_type = temporel_25</code>. L'utilisateur voit d'abord le player normal&nbsp;; la vidéo se met en pause automatiquement à 25&nbsp;% du temps de lecture, puis cet overlay se superpose pour inviter à la création de compte gratuit.</p>
+            </div>
+          </div>
+
+          <!-- barre d'engagement standard PCD -->
+          <div class="engage" data-acf="engagement_pcd">
+            <button class="eng {{ clapOn }}" onClick="{{ toggleClap }}" aria-label="Bravo"><i data-lucide="thumbs-up" style="width:18px;height:18px"></i><span class="ec">{{ clapCount }}</span></button>
+            <button class="eng" aria-label="Commentaires"><i data-lucide="message-circle" style="width:18px;height:18px"></i><span class="ec">32</span></button>
+            <button class="eng {{ favOn }}" onClick="{{ toggleFav }}" aria-label="Coup de cœur"><i data-lucide="heart" style="width:18px;height:18px"></i></button>
+            <button class="eng {{ bookOn }}" onClick="{{ toggleBook }}" aria-label="Enregistrer"><i data-lucide="bookmark" style="width:18px;height:18px"></i></button>
+            <button class="eng" aria-label="Partager"><i data-lucide="share-2" style="width:18px;height:18px"></i></button>
+            <span class="eng-sep">·</span>
+            <button class="eng eng-muted" aria-label="Signaler une erreur"><i data-lucide="bug" style="width:17px;height:17px"></i></button>
+            <button class="eng eng-muted" aria-label="Suggestion"><i data-lucide="lightbulb" style="width:17px;height:17px"></i></button>
+          </div>
+          <div class="anno"><i data-lucide="info" style="width:14px;height:14px"></i>Barre d'engagement standard PCD (partagée avec Plantes, Livres, Recettes) : bravo · commentaires · coup de cœur · enregistrer · partager, puis séparés par « · » signaler une erreur et suggestion (modales FluentForms).</div>
+
+          <!-- 2 colonnes -->
+          <div class="col2" style="{{ col2Style }}">
+            <!-- principale -->
+            <div style="min-width:0">
+              <h2 class="sec-h">Résumé</h2>
+              <p style="font-size:15px;line-height:1.68;color:var(--ink);margin:6px 0 22px;text-wrap:pretty" data-acf="resume_court">Couvrir le sol est l'un des gestes les plus rentables au potager. Dans cette vidéo, Benjamin détaille les grandes familles de paillage, explique la fabrication et la maturation du BRF, puis compare les broyeurs de végétaux. Vous repartez avec une méthode concrète pour nourrir votre sol toute l'année, réduire l'arrosage et limiter le désherbage, en imitant le fonctionnement d'une lisière de forêt.</p>
+
+              <h2 class="sec-h" style="margin-top:4px">Chapitres</h2>
+              <div class="chap-list" data-acf="chapitres" style="margin:8px 0 24px">
+                <sc-for list="{{ chaptersM2 }}" as="c" hint-placeholder-count="6">
+                  <button class="chap" style="{{ c.style }}" data-grp="m2" data-idx="{{ c.idx }}" onClick="{{ setChapter }}">
+                    <span class="ct">{{ c.time }}</span><span class="cl">{{ c.label }}</span><span class="cp"><i data-lucide="play" style="width:14px;height:14px"></i></span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- latérale -->
+            <div style="min-width:0;display:flex;flex-direction:column;gap:16px">
+              <!-- 1. Contributeur adaptatif (3 cas éditoriaux) -->
+              <sc-if value="{{ contrib1 }}" hint-placeholder-val="{{ true }}">
+                <div class="contrib" style="align-items:flex-start" data-acf="auteur_principal">
+                  <span class="cv">PD</span>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-weight:700;color:var(--green-dd);font-size:15px">Permaculture Design</div>
+                    <div style="font-size:12.5px;color:var(--ink2);line-height:1.45;margin-top:2px">Bureau d'études en permaculture</div>
+                    <a href="#" style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--green);text-decoration:none;margin-top:8px">Voir la fiche complète<i data-lucide="arrow-right" style="width:14px;height:14px"></i></a>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ contrib2 }}" hint-placeholder-val="">
+                <div class="contrib-simple" data-acf="credit_intervenant_texte">
+                  <span class="cs-ic"><i data-lucide="mic" style="width:16px;height:16px"></i></span>
+                  <span>Avec Marie L., maraîchère</span>
+                </div>
+              </sc-if>
+
+              <!-- 2. Encart « Lire l'article complet » (si has_article) -->
+              <sc-if value="{{ hasArticle }}" hint-placeholder-val="{{ true }}">
+                <a href="#" class="article-cta" data-acf="has_article">
+                  <span class="eyebrow"><i data-lucide="book-open-text" style="width:14px;height:14px"></i>Article complet</span>
+                  <div style="font-family:var(--serif);font-size:16px;font-weight:600;color:var(--green-dd);line-height:1.25;margin:8px 0 9px">Le mulch en permaculture : BRF, paillage et broyeur</div>
+                  <span style="display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:var(--green)">Lire l'article complet<i data-lucide="arrow-right" style="width:15px;height:15px"></i></span>
+                </a>
+              </sc-if>
+
+              <div class="anno"><i data-lucide="info" style="width:14px;height:14px"></i>Colonne latérale : contributeur adaptatif (officiel / intervenant simple / aucun) puis, si <b>has_article = true</b>, l'encart « Lire l'article complet ». Les relations passent en pleine largeur sous la transcription.</div>
+            </div>
+
+            <!-- transcription : sous le contenu principal (desktop) / dans le flux (mobile) -->
+            <details class="transcript" style="min-width:0;grid-column:1;margin-top:2px" data-acf="transcription · has_transcription">
+              <summary><i data-lucide="file-text" style="width:18px;height:18px;color:var(--green)"></i>Transcription de la vidéo<span class="chev"><i data-lucide="chevron-down" style="width:18px;height:18px"></i></span></summary>
+              <div class="tbody">
+                <p>Bonjour à tous et bienvenue dans cette nouvelle vidéo. Aujourd'hui, on parle d'un geste tout simple mais qui change absolument tout au potager : couvrir le sol. Pendant longtemps, on nous a appris à biner, à laisser la terre nue et propre. En permaculture, on fait l'inverse.</p>
+                <p>Le premier réflexe, c'est d'observer la forêt. Dans une forêt, personne ne passe le motoculteur, et pourtant le sol est d'une fertilité incroyable. Pourquoi&nbsp;? Parce qu'il est couvert en permanence de feuilles, de brindilles, de bois en décomposition.</p>
+                <p>On va donc reproduire ce fonctionnement chez nous, avec ce qu'on a sous la main : paille, foin, tontes, feuilles mortes, et surtout le fameux BRF, le bois raméal fragmenté, dont on va parler en détail dans un instant.</p>
+              </div>
+            </details>
+          </div>
+
+          <!-- relations pleine largeur (sous la transcription) -->
+          <div class="rel-sec" data-acf="plantes_citees">
+            <div class="rs-h"><span class="rs-ic"><i data-lucide="leaf" style="width:18px;height:18px"></i></span>Plantes citées dans cette vidéo</div>
+            <div class="rel-grid g-plante scrollx">
+              <a href="#" class="pcard"><span class="pc-th" style="background:linear-gradient(135deg,#5E7C4A,#33471F)"><i data-lucide="sprout" style="width:22px;height:22px"></i></span><div style="min-width:0"><div class="pc-n">Consoude</div><div class="pc-b">Symphytum officinale</div></div></a>
+              <a href="#" class="pcard"><span class="pc-th" style="background:linear-gradient(135deg,#4A7C6B,#22403A)"><i data-lucide="sprout" style="width:22px;height:22px"></i></span><div style="min-width:0"><div class="pc-n">Ortie</div><div class="pc-b">Urtica dioica</div></div></a>
+              <a href="#" class="pcard"><span class="pc-th" style="background:linear-gradient(135deg,#6E8B4A,#3D5230)"><i data-lucide="sprout" style="width:22px;height:22px"></i></span><div style="min-width:0"><div class="pc-n">Luzerne</div><div class="pc-b">Medicago sativa</div></div></a>
+              <a href="#" class="pcard"><span class="pc-th" style="background:linear-gradient(135deg,#5E7C6A,#2E4A40)"><i data-lucide="sprout" style="width:22px;height:22px"></i></span><div style="min-width:0"><div class="pc-n">Bourrache</div><div class="pc-b">Borago officinalis</div></div></a>
+            </div>
+          </div>
+
+          <div class="rel-sec" data-acf="livres_recommandes">
+            <div class="rs-h"><span class="rs-ic"><i data-lucide="book-open" style="width:18px;height:18px"></i></span>Livres recommandés</div>
+            <div class="rel-grid g-book scrollx">
+              <a href="#" class="bcard"><span class="bc-cover" style="background:linear-gradient(135deg,#8A6A4A,#4A2E1A)"><i data-lucide="book" style="width:20px;height:20px"></i></span><div style="display:flex;flex-direction:column;min-width:0;flex:1"><div class="bc-t">Introduction à la permaculture</div><div class="bc-a">Bill Mollison</div><span style="margin-top:auto;display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--green);padding-top:10px">Voir la fiche<i data-lucide="arrow-right" style="width:13px;height:13px"></i></span></div></a>
+              <a href="#" class="bcard"><span class="bc-cover" style="background:linear-gradient(135deg,#5E7C4A,#33471F)"><i data-lucide="book" style="width:20px;height:20px"></i></span><div style="display:flex;flex-direction:column;min-width:0;flex:1"><div class="bc-t">Le sol vivant</div><div class="bc-a">Christophe Gatineau</div><span style="margin-top:auto;display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--green);padding-top:10px">Voir la fiche<i data-lucide="arrow-right" style="width:13px;height:13px"></i></span></div></a>
+              <a href="#" class="bcard"><span class="bc-cover" style="background:linear-gradient(135deg,#3D6B6B,#22403E)"><i data-lucide="book" style="width:20px;height:20px"></i></span><div style="display:flex;flex-direction:column;min-width:0;flex:1"><div class="bc-t">Le BRF, une révolution</div><div class="bc-a">J. Dupety</div><span style="margin-top:auto;display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--green);padding-top:10px">Voir la fiche<i data-lucide="arrow-right" style="width:13px;height:13px"></i></span></div></a>
+            </div>
+          </div>
+
+          <div class="rel-sec" data-acf="techniques_associees">
+            <div class="rs-h"><span class="rs-ic"><i data-lucide="wrench" style="width:18px;height:18px"></i></span>Techniques associées</div>
+            <div class="rel-grid g-tech scrollx">
+              <a href="#" class="tcard"><span class="tc-ic"><i data-lucide="layers" style="width:20px;height:20px"></i></span><div class="tc-n">Paillage</div><span class="lvl lvl-deb">Débutant</span></a>
+              <a href="#" class="tcard"><span class="tc-ic"><i data-lucide="recycle" style="width:20px;height:20px"></i></span><div class="tc-n">Compostage de surface</div><span class="lvl lvl-deb">Débutant</span></a>
+              <a href="#" class="tcard"><span class="tc-ic"><i data-lucide="axe" style="width:20px;height:20px"></i></span><div class="tc-n">Fabrication du BRF</div><span class="lvl lvl-int">Intermédiaire</span></a>
+              <a href="#" class="tcard"><span class="tc-ic"><i data-lucide="mountain" style="width:20px;height:20px"></i></span><div class="tc-n">Buttes de culture</div><span class="lvl lvl-int">Intermédiaire</span></a>
+            </div>
+          </div>
+
+          <!-- vidéos similaires -->
+          <div style="margin-top:34px">
+            <h2 class="sec-h" style="margin-bottom:16px">Vidéos similaires</h2>
+            <div class="vgrid" data-acf="videos_similaires">
+              <sc-for list="{{ similar }}" as="v" hint-placeholder-count="4">
+                <a href="#" class="vignette">
+                  <div class="v-thumb" style="background:{{ v.grad }}">
+                    <span class="v-play"><i data-lucide="play" style="width:18px;height:18px;margin-left:2px"></i></span>
+                    <span class="v-dur">{{ v.dur }}</span>
+                    <sc-if value="{{ v.locked }}" hint-placeholder-val=""><div class="v-lockmini"><span><i data-lucide="lock" style="width:20px;height:20px"></i></span></div></sc-if>
+                  </div>
+                  <div class="v-body"><div class="v-title">{{ v.title }}</div><div class="v-author"><sc-if value="{{ v.isPD }}" hint-placeholder-val=""><span class="v-pd">PD</span></sc-if><span>{{ v.author }}</span></div></div>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div class="site-ft">
+          <div class="ft-cols">
+            <div><div class="logo" style="color:#fff;margin-bottom:10px"><span class="mark" style="background:#fff;color:var(--green-dd)"><i data-lucide="sprout" style="width:18px;height:18px"></i></span>Permaculture Design</div><p style="font-size:13px;line-height:1.55;color:rgba(255,255,255,.7);margin:0;max-width:280px">Rêvez plus, vivez votre lieu de vie, construisez-le.</p></div>
+            <div><h5>Apprendre</h5><a href="#">Formations</a><a href="#">Vidéos</a><a href="#">Blog</a></div>
+            <div><h5>Communauté</h5><a href="#">l'Atelier</a><a href="#">Avis</a><a href="#">Contact</a></div>
+            <div><h5>Suivre</h5><a href="#">YouTube</a><a href="#">Instagram</a><a href="#">Facebook</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- /module m2 -->
+
+  <!-- ============================================================= -->
+  <!-- MAQUETTE 3 — Fiche vidéo publique payante (sans ARV) -->
+  <!-- ============================================================= -->
+  <div class="module module-retired-payant">
+  <div class="mock-sep">
+    <div class="num">3</div>
+    <div style="flex:1"><h2>Fiche vidéo 100&nbsp;% payante</h2><div class="sub">Formation Atelier, sans article ARV. Verrou catégoriel sur le player.</div></div>
+    <div class="line"></div>
+  </div>
+  <div class="mockwrap">
+    <div class="infobar">
+      <span class="ib-url"><i data-lucide="lock" style="width:12px;height:12px"></i>permaculturedesign.fr/video/formation-design-permaculture-avance/</span>
+      <span class="ib-noindex" data-acf="is_indexable"><i data-lucide="eye-off" style="width:12px;height:12px"></i>noindex</span>
+      <span class="ib-ctx"><i data-lucide="user-x" style="width:14px;height:14px"></i>Contexte : <b>visiteur anonyme</b> · verrou catégoriel 100&nbsp;% payant</span>
+    </div>
+
+    <div class="frame">
+      <div class="chrome">
+        <div class="dots"><span style="background:#FF5F57"></span><span style="background:#FEBC2E"></span><span style="background:#28C840"></span></div>
+        <div class="addr"><i data-lucide="lock" style="width:12px;height:12px;color:#9aa39a"></i>permaculturedesign.fr/video/formation-design-permaculture-avance/</div>
+        <div style="width:44px"></div>
+      </div>
+      <div class="screen scrollx" data-screen-label="M3 · Fiche vidéo payante">
+
+        <div class="site-hd">
+          <div class="logo"><span class="mark"><i data-lucide="sprout" style="width:18px;height:18px"></i></span>Permaculture Design</div>
+          <nav class="site-nav"><a href="#">Formations</a><a href="#">Vidéos</a><a href="#">Blog</a><a href="#">l'Atelier</a></nav>
+          <div class="hd-actions"><button class="icon-btn hd-search"><i data-lucide="search" style="width:18px;height:18px"></i></button><a href="#" class="btn btn-primary btn-sm">Rejoindre</a></div>
+        </div>
+
+        <div style="max-width:1120px;margin:0 auto;padding:0 22px 40px">
+          <div class="crumb"><a href="#">Accueil</a><i data-lucide="chevron-right" style="width:13px;height:13px"></i><a href="#">Vidéos</a><i data-lucide="chevron-right" style="width:13px;height:13px"></i><span>Design avancé en permaculture</span></div>
+
+          <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px" data-acf="acces_membre"><span class="badge badge-payant">💎 Payant</span><span style="font-size:12px;color:var(--ink2)">Formation réservée aux membres de l'Atelier</span></div>
+          <h1 style="font-size:32px;line-height:1.14;color:var(--green-dd);margin:0 0 12px;font-weight:700">Design avancé en permaculture : lire et concevoir son terrain</h1>
+          <div class="meta-row" data-acf="duree · niveau" style="margin-bottom:16px">
+            <span class="mi"><i data-lucide="mic" style="width:15px;height:15px"></i>Avec Benjamin Broustey</span>
+            <span class="mi"><i data-lucide="clock" style="width:15px;height:15px"></i>1&nbsp;h&nbsp;12</span>
+            <span class="mi"><i data-lucide="layers" style="width:15px;height:15px"></i>Module 4 · Formation Atelier</span>
+          </div>
+
+          <!-- poster verrouillé -->
+          <div class="player" style="margin-bottom:22px;background:linear-gradient(135deg,#7A5A3C,#3A2617)" data-acf="video_source · youtube_id">
+            <span class="player-fluent-tag"><i data-lucide="play" style="width:11px;height:11px"></i>FluentPlayer</span>
+            <span class="player-dur">1:12:40</span>
+            <button class="play-btn" data-open="atelier" style="--d:flex" onClick="{{ noop }}"><i data-lucide="play" style="width:26px;height:26px;margin-left:3px"></i></button>
+            <div class="lock-cat" data-gate="atelier" data-acf-bl="verrou_type">
+              <span class="lc-ic"><i data-lucide="lock" style="width:26px;height:26px"></i></span>
+              <h4>Contenu réservé à l'Atelier</h4>
+              <p>Cette formation fait partie de l'Atelier. Rejoignez la communauté pour visionner l'intégralité de nos formations en illimité.</p>
+              <a href="#" class="btn btn-yellow"><i data-lucide="sparkles" style="width:17px;height:17px"></i>Rejoindre l'Atelier pour visionner (89&nbsp;€/an)</a>
+              <div style="margin-top:12px;font-size:12px;color:rgba(255,255,255,.65)">Déjà membre&nbsp;? <a href="#" style="color:#FFDE67">Se connecter</a></div>
+            </div>
+          </div>
+          <div class="anno"><i data-lucide="info" style="width:14px;height:14px"></i>Verrou catégoriel : aucune lecture possible. Le poster est remplacé par une invitation à rejoindre l'Atelier.</div>
+
+          <!-- bloc éditorial enrichi (remplace l'encart article) -->
+          <div class="col2" style="{{ col2Style }}">
+            <div style="min-width:0">
+              <h2 class="sec-h">Ce que vous allez apprendre</h2>
+              <p style="font-size:15px;line-height:1.7;color:var(--ink);margin:8px 0 16px;text-wrap:pretty" data-acf="description">Concevoir un lieu ne s'improvise pas : cela commence par une lecture fine du paysage. Dans ce module avancé, vous apprenez à observer votre terrain avant d'y toucher : relief, circulation de l'eau, vents dominants, ensoleillement, sols et micro-climats. Chaque information devient une contrainte ou une ressource dans votre plan de design.</p>
+              <p style="font-size:15px;line-height:1.7;color:var(--ink);margin:0 0 16px;text-wrap:pretty">Nous déroulons ensuite une méthode de zonage complète (zones 0 à 5) et l'analyse des secteurs, pour placer chaque élément au bon endroit : le poulailler près de la maison, le verger là où l'eau s'accumule, la mare au point bas. Vous repartez avec une trame de conception applicable immédiatement à votre propre projet, quel que soit sa taille.</p>
+              <p style="font-size:15px;line-height:1.7;color:var(--ink);margin:0 0 20px;text-wrap:pretty">La dernière partie est consacrée aux erreurs les plus fréquentes des débutants et à la manière de séquencer les travaux dans le temps, pour ne pas s'épuiser et laisser le lieu se révéler saison après saison.</p>
+
+              <div style="display:grid;gap:14px;grid-template-columns:1fr 1fr;margin-bottom:20px">
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#5E7C4A,#33471F);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);font-size:12px;font-weight:600;gap:6px"><i data-lucide="image" style="width:18px;height:18px"></i>Lecture du relief</div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#3D6B6B,#22403E);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);font-size:12px;font-weight:600;gap:6px"><i data-lucide="image" style="width:18px;height:18px"></i>Plan de zonage</div>
+              </div>
+
+              <div class="callout" data-acf="ressources_complementaires">
+                <span class="co-ic"><i data-lucide="package" style="width:20px;height:20px"></i></span>
+                <div><h4>Ressources complémentaires</h4><p style="margin-bottom:10px">Cette formation est accompagnée de sa fiche de synthèse imprimable, d'une grille d'observation de terrain et d'un modèle de plan de zonage.</p>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px"><span class="rel-chip" style="background:#fff;border-color:var(--green-line)"><i data-lucide="file-down" style="width:14px;height:14px"></i>Fiche de synthèse (PDF)</span><span class="rel-chip" style="background:#fff;border-color:var(--green-line)"><i data-lucide="clipboard-list" style="width:14px;height:14px"></i>Grille d'observation</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div style="min-width:0;display:flex;flex-direction:column;gap:16px">
+              <div class="card hide-atelier" style="padding:18px;border:1px solid var(--terra-line);background:var(--terra-soft)">
+                <div style="font-family:var(--serif);font-size:19px;font-weight:600;color:var(--terra-d);margin-bottom:6px">Accès inclus dans l'Atelier</div>
+                <p style="font-size:13.5px;color:var(--ink);line-height:1.55;margin:0 0 14px">40+ formations, calendriers, communauté et réponses à vos questions.</p>
+                <div class="stat-strip" style="margin-bottom:16px">
+                  <span class="st"><b>40+</b><span>formations</span></span>
+                  <span class="st"><b>+ 12 500</b><span>élèves</span></span>
+                </div>
+                <a href="#" class="btn btn-accent" style="width:100%"><i data-lucide="sparkles" style="width:16px;height:16px"></i>Rejoindre · 89&nbsp;€/an</a>
+              </div>
+
+              <div class="contrib"><span class="cv">BB</span><div style="flex:1;min-width:0"><div style="font-weight:700;color:var(--green-dd);font-size:15px">Benjamin Broustey</div><div style="font-size:12.5px;color:var(--ink2);line-height:1.45;margin-top:2px">Formateur en permaculture, 14 ans d'expertise terrain.</div></div></div>
+
+              <div class="relbox">
+                <div style="font-size:12px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Dans la même formation</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <a href="#" class="fopt" style="text-decoration:none"><span class="badge badge-payant" style="padding:3px 8px">💎</span>Module 3 · Gestion de l'eau<i data-lucide="chevron-right" style="width:16px;height:16px;color:#b7bcae;margin-left:auto"></i></a>
+                  <a href="#" class="fopt" style="text-decoration:none"><span class="badge badge-payant" style="padding:3px 8px">💎</span>Module 5 · Les guildes<i data-lucide="chevron-right" style="width:16px;height:16px;color:#b7bcae;margin-left:auto"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="site-ft">
+          <div class="ft-cols">
+            <div><div class="logo" style="color:#fff;margin-bottom:10px"><span class="mark" style="background:#fff;color:var(--green-dd)"><i data-lucide="sprout" style="width:18px;height:18px"></i></span>Permaculture Design</div><p style="font-size:13px;line-height:1.55;color:rgba(255,255,255,.7);margin:0;max-width:280px">Rêvez plus, vivez votre lieu de vie, construisez-le.</p></div>
+            <div><h5>Apprendre</h5><a href="#">Formations</a><a href="#">Vidéos</a><a href="#">Blog</a></div>
+            <div><h5>Communauté</h5><a href="#">l'Atelier</a><a href="#">Avis</a><a href="#">Contact</a></div>
+            <div><h5>Suivre</h5><a href="#">YouTube</a><a href="#">Instagram</a><a href="#">Facebook</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- /module m3 -->
+
+  <!-- ============================================================= -->
+  <!-- MAQUETTE 4 — Bibliothèque /videos/ -->
+  <!-- ============================================================= -->
+  <div class="module module-m3">
+  <div class="mock-sep">
+    <div class="num">3</div>
+    <div style="flex:1"><h2>Bibliothèque des vidéos</h2><div class="sub">Le hub qui centralise ~270 vidéos. Filtres facettés + tri + playlists.</div></div>
+    <div class="line"></div>
+  </div>
+  <div class="mockwrap">
+    <div class="infobar">
+      <span class="ib-url"><i data-lucide="lock" style="width:12px;height:12px"></i>permaculturedesign.fr/videos/</span>
+      <span class="ib-ctx"><i data-lucide="layout-grid" style="width:14px;height:14px"></i><b>Archive</b> du CPT Vidéo</span>
+      <span class="ib-ctx"><i data-lucide="mouse-pointer-2" style="width:14px;height:14px"></i>Survolez une vignette pour l'état hover</span>
+    </div>
+
+    <div class="frame">
+      <div class="chrome">
+        <div class="dots"><span style="background:#FF5F57"></span><span style="background:#FEBC2E"></span><span style="background:#28C840"></span></div>
+        <div class="addr"><i data-lucide="lock" style="width:12px;height:12px;color:#9aa39a"></i>permaculturedesign.fr/videos/</div>
+        <div style="width:44px"></div>
+      </div>
+      <div class="screen scrollx" data-screen-label="M3 · Bibliothèque" style="position:relative">
+
+        <div class="site-hd">
+          <div class="logo"><span class="mark"><i data-lucide="sprout" style="width:18px;height:18px"></i></span>Permaculture Design</div>
+          <nav class="site-nav"><a href="#">Formations</a><a href="#" style="color:var(--green)">Vidéos</a><a href="#">Blog</a><a href="#">l'Atelier</a></nav>
+          <div class="hd-actions"><button class="icon-btn hd-search"><i data-lucide="search" style="width:18px;height:18px"></i></button><a href="#" class="btn btn-primary btn-sm">Rejoindre</a></div>
+        </div>
+
+        <!-- héro -->
+        <div style="background:var(--green-dd);color:#fff;padding:38px 22px 34px">
+          <div style="max-width:1120px;margin:0 auto">
+            <span class="eyebrow" style="color:#B7D9BE"><i data-lucide="clapperboard" style="width:14px;height:14px"></i>Vidéothèque</span>
+            <h1 style="font-size:36px;line-height:1.1;margin:10px 0 10px;color:#fff;font-weight:700">Toutes nos vidéos permaculture</h1>
+            <p style="font-size:15px;line-height:1.55;color:rgba(255,255,255,.8);margin:0 0 20px;max-width:560px">Tutoriels, formations et inédits pour concevoir votre lieu, cultiver un sol vivant et gérer l'eau. Apprenez à votre rythme, où que vous soyez.</p>
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <div style="position:relative;flex:1;max-width:440px;min-width:220px">
+                <i data-lucide="search" style="width:18px;height:18px;color:#9aa39a;position:absolute;left:14px;top:50%;transform:translateY(-50%)"></i>
+                <input type="text" placeholder="Rechercher une vidéo (mulch, eau, compost…)" style="width:100%;border:none;border-radius:10px;padding:14px 14px 14px 42px;font:500 14px var(--sans);color:var(--ink)">
+              </div>
+              <span style="display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:#fff;background:rgba(255,255,255,.12);border-radius:10px;padding:12px 16px"><i data-lucide="clapperboard" style="width:16px;height:16px"></i>273 vidéos disponibles</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="max-width:1120px;margin:0 auto;padding:22px 22px 40px">
+          <!-- barre mobile filtres + tri -->
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+            <button class="btn btn-ghost btn-sm filter-btn" onClick="{{ openSheet }}"><i data-lucide="sliders-horizontal" style="width:16px;height:16px"></i>Filtres</button>
+            <div class="sortbar" style="margin-left:auto">
+              <span style="font-size:12.5px;color:var(--ink2);font-weight:600;margin-right:2px">Trier :</span>
+              <sc-for list="{{ sorts }}" as="s" hint-placeholder-count="4">
+                <button class="sort-chip {{ s.on }}" data-sort="{{ s.key }}" onClick="{{ setSort }}">{{ s.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div class="lib-layout">
+            <!-- sidebar filtres -->
+            <aside class="facet-sidebar">
+              <div class="card" style="padding:18px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-weight:700;font-size:15px;color:var(--green-dd);font-family:var(--serif)">Filtres</span><a href="#" style="font-size:12px;color:var(--green);text-decoration:none;font-weight:600">Réinitialiser</a></div>
+                <sc-for list="{{ facets }}" as="f" hint-placeholder-count="5">
+                  <div class="facet">
+                    <h4>{{ f.title }}</h4>
+                    <sc-for list="{{ f.opts }}" as="o">
+                      <label class="fopt {{ o.on }}"><span class="fbox"><sc-if value="{{ o.checked }}" hint-placeholder-val=""><i data-lucide="check" style="width:13px;height:13px"></i></sc-if></span>{{ o.label }}<span class="fcount">{{ o.count }}</span></label>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+              <div class="pedago-note" style="margin-top:14px">
+                <div class="pn-head">⏱ Masquage dynamique des facettes</div>
+                <p>Chaque option est masquée automatiquement si aucune vidéo publiée n'y correspond (compteur = 0).</p>
+              </div>
+            </aside>
+
+            <!-- grille -->
+            <div style="min-width:0">
+              <div class="vgrid" data-acf="pcd_video">
+                <sc-for list="{{ library }}" as="v" hint-placeholder-count="9">
+                  <a href="#" class="vignette">
+                    <div class="v-thumb" style="background:{{ v.grad }}">
+                      <span class="v-play"><i data-lucide="play" style="width:18px;height:18px;margin-left:2px"></i></span>
+                      <span class="v-dur">{{ v.dur }}</span>
+                      <sc-if value="{{ v.locked }}" hint-placeholder-val=""><div class="v-lockmini"><span><i data-lucide="lock" style="width:20px;height:20px"></i></span></div></sc-if>
+                    </div>
+                    <div class="v-body"><div class="v-title">{{ v.title }}</div><div class="v-meta"><span>{{ v.cat }}</span><span class="dot"></span><span>{{ v.author }}</span></div></div>
+                  </a>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;justify-content:center;margin-top:26px"><button class="btn btn-ghost">Charger plus de vidéos<i data-lucide="chevron-down" style="width:16px;height:16px"></i></button></div>
+            </div>
+          </div>
+
+          <!-- playlists -->
+          <div style="margin-top:40px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:16px">
+              <h2 class="sec-h" style="margin:0">Playlists thématiques</h2>
+              <div class="pedago-note" style="flex:1 1 320px;max-width:420px">
+                <div class="pn-head">⏱ Playlists — deux origines coexistent</div>
+                <p>Import automatique des playlists YouTube PCD (transversal) + playlists curatoriales spécifiques créées en back-office (parcours thématiques, séries pilotes). Nécessite un CPT dédié <code>pcd_playlist</code> — à instruire séparément.</p>
+              </div>
+            </div>
+            <div class="vgrid" data-acf="playlists" style="grid-template-columns:repeat(2,1fr)">
+              <sc-for list="{{ playlists }}" as="p" hint-placeholder-count="4">
+                <a href="#" class="pl-card" style="background:{{ p.grad }}">
+                  <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(15,25,15,.32);border-radius:4px;padding:3px 8px;font:700 11px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.02em;width:fit-content;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);margin-bottom:8px"><sc-if value="{{ p.isYt }}" hint-placeholder-val=""><i data-lucide="youtube" style="width:12px;height:12px"></i></sc-if>{{ p.srcLabel }}</span>
+                  <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);border-radius:999px;padding:4px 10px;font:700 11px var(--sans);width:fit-content;margin-bottom:auto"><i data-lucide="list-video" style="width:13px;height:13px"></i>{{ p.count }} vidéos</span>
+                  <div style="font-family:var(--serif);font-size:19px;font-weight:600;margin-top:10px">{{ p.title }}</div>
+                  <div style="font-size:12.5px;color:rgba(255,255,255,.82);margin-top:3px">{{ p.desc }}</div>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div class="site-ft">
+          <div class="ft-cols">
+            <div><div class="logo" style="color:#fff;margin-bottom:10px"><span class="mark" style="background:#fff;color:var(--green-dd)"><i data-lucide="sprout" style="width:18px;height:18px"></i></span>Permaculture Design</div><p style="font-size:13px;line-height:1.55;color:rgba(255,255,255,.7);margin:0;max-width:280px">Rêvez plus, vivez votre lieu de vie, construisez-le.</p></div>
+            <div><h5>Apprendre</h5><a href="#">Formations</a><a href="#">Vidéos</a><a href="#">Blog</a></div>
+            <div><h5>Communauté</h5><a href="#">l'Atelier</a><a href="#">Avis</a><a href="#">Contact</a></div>
+            <div><h5>Suivre</h5><a href="#">YouTube</a><a href="#">Instagram</a><a href="#">Facebook</a></div>
+          </div>
+        </div>
+
+        <!-- bottom sheet filtres (mobile) -->
+        <sc-if value="{{ sheetOpen }}" hint-placeholder-val="">
+          <div class="sheet-scrim" onClick="{{ closeSheet }}">
+            <div class="sheet" onClick="{{ stopProp }}">
+              <div class="sheet-grab"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-weight:700;font-size:17px;color:var(--green-dd);font-family:var(--serif)">Filtres</span><button class="icon-btn" onClick="{{ closeSheet }}"><i data-lucide="x" style="width:18px;height:18px"></i></button></div>
+              <sc-for list="{{ facets }}" as="f" hint-placeholder-count="6">
+                <div class="facet">
+                  <h4>{{ f.title }}</h4>
+                  <sc-for list="{{ f.opts }}" as="o">
+                    <label class="fopt {{ o.on }}"><span class="fbox"><sc-if value="{{ o.checked }}" hint-placeholder-val=""><i data-lucide="check" style="width:13px;height:13px"></i></sc-if></span>{{ o.label }}<span class="fcount">{{ o.count }}</span></label>
+                  </sc-for>
+                </div>
+              </sc-for>
+              <button class="btn btn-primary" style="width:100%;margin-top:16px" onClick="{{ closeSheet }}">Voir les 273 vidéos</button>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </div>
+  </div><!-- /module m4 -->
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { format: 'desktop', activeMock: 'm1', role: 'public', showAcf: false, showNotes: false, chapM1Open: false, chap: { m1: 0, m2: 0 }, sort: 'recent', sheetOpen: false, hasArticle: true, contribCase: 1, clapped: false, faved: false, booked: false };
+
+  componentDidMount() { this._mounted = true; this.renderIcons(); }
+  componentDidUpdate() { this.renderIcons(); }
+  componentWillUnmount() { this._mounted = false; }
+
+  renderIcons() {
+    const tick = () => {
+      if (!this._mounted) return;
+      if (window.lucide && window.lucide.createIcons) { try { window.lucide.createIcons(); } catch (e) {} }
+      else setTimeout(tick, 150);
+    };
+    tick();
+  }
+
+  setFormat(e) { this.setState({ format: e.currentTarget.getAttribute('data-format') }); }
+  toggleNotes() { this.setState(s => ({ showNotes: !s.showNotes })); }
+  noop(e) { if (e && e.preventDefault) e.preventDefault(); }
+  stopProp(e) { e.stopPropagation(); }
+  openSheet() { this.setState({ sheetOpen: true }); }
+  closeSheet() { this.setState({ sheetOpen: false }); }
+  setSort(e) { this.setState({ sort: e.currentTarget.getAttribute('data-sort') }); }
+  setMock(e) { this.setState({ activeMock: e.currentTarget.getAttribute('data-mock') }); }
+  setRole(e) { this.setState({ role: e.currentTarget.getAttribute('data-role') }); }
+  toggleAcf() { this.setState(s => ({ showAcf: !s.showAcf })); }
+  setArv(e) { this.setState({ hasArticle: e.currentTarget.getAttribute('data-arv') === 'yes' }); }
+  setContrib(e) { this.setState({ contribCase: parseInt(e.currentTarget.getAttribute('data-contrib'), 10) }); }
+  toggleClap() { this.setState(s => ({ clapped: !s.clapped })); }
+  toggleFav() { this.setState(s => ({ faved: !s.faved })); }
+  toggleBook() { this.setState(s => ({ booked: !s.booked })); }
+  toggleChapM1() { this.setState(s => ({ chapM1Open: !s.chapM1Open })); }
+  setChapter(e) {
+    const g = e.currentTarget.getAttribute('data-grp');
+    const i = parseInt(e.currentTarget.getAttribute('data-idx'), 10);
+    this.setState(s => ({ chap: Object.assign({}, s.chap, { [g]: i }) }));
+  }
+
+  renderVals() {
+    const isM = this.state.format === 'mobile';
+    const stageClass = 'stage ' + (isM ? 'format-mobile' : 'format-desktop') + ' mock-' + this.state.activeMock + ' role-' + this.state.role + (this.state.showNotes ? ' show-notes' : '') + (this.state.showAcf ? ' show-acf' : '') + ' arv-' + (this.state.hasArticle ? 'yes' : 'no') + ' contrib-' + this.state.contribCase;
+    const roleRank = { public: 0, gratuit: 1, atelier: 2 }[this.state.role];
+    const reqRank = { public: 0, gratuit: 1, payant: 2 };
+    const roleLabel = { public: 'Visiteur anonyme', gratuit: 'Membre gratuit', atelier: 'Membre Atelier' }[this.state.role];
+    const ha = this.state.hasArticle;
+    const cc = this.state.contribCase;
+    const mkLock = (access) => ({ locked: reqRank[access] > roleRank, lockLabel: access === 'payant' ? 'Réservé à l’Atelier' : 'Compte gratuit requis' });
+
+    const chapStyle = (active) => active
+      ? 'background:#EAF2EA;box-shadow:inset 3px 0 0 #4A7C59;'
+      : '';
+
+    const m1 = [
+      { time: '00:00', label: 'Introduction : pourquoi couvrir le sol' },
+      { time: '02:15', label: 'Les grandes familles de paillage' },
+      { time: '05:42', label: 'Le BRF : bois raméal fragmenté' },
+      { time: '09:30', label: 'Choisir son broyeur de végétaux' },
+      { time: '13:18', label: 'Erreurs fréquentes à éviter' },
+    ].map((c, i) => ({ time: c.time, label: c.label, idx: i, style: chapStyle(i === this.state.chap.m1) }));
+
+    const m2 = [
+      { time: '00:00', label: 'Introduction' },
+      { time: '01:48', label: 'Comprendre le rôle du mulch' },
+      { time: '04:12', label: 'BRF : fabrication et maturation' },
+      { time: '08:05', label: 'Le broyeur : critères de choix' },
+      { time: '12:20', label: 'Paillage vivant et paillage sec' },
+      { time: '16:40', label: 'Entretenir son sol toute l\u2019année' },
+    ].map((c, i) => ({ time: c.time, label: c.label, idx: i, style: chapStyle(i === this.state.chap.m2) }));
+
+    const G = {
+      green: 'linear-gradient(135deg,#4A7C59,#243B2A)',
+      olive: 'linear-gradient(135deg,#6E8B4A,#3D5230)',
+      teal: 'linear-gradient(135deg,#3D6B6B,#22403E)',
+      earth: 'linear-gradient(135deg,#8A6A4A,#4A2E1A)',
+      moss: 'linear-gradient(135deg,#5E7C4A,#33471F)',
+      clay: 'linear-gradient(135deg,#A86A48,#5A3520)',
+      sage: 'linear-gradient(135deg,#4A7C6B,#22403A)',
+      bark: 'linear-gradient(135deg,#6B5A3C,#3B301C)',
+      pine: 'linear-gradient(135deg,#3E6B4E,#1E3A28)',
+    };
+    const bPublic = '<span class="badge badge-public">🆓 Public</span>';
+    const bGratuit = '<span class="badge badge-gratuit">🔐 Gratuit</span>';
+    const bPayant = '<span class="badge badge-payant">💎 Payant</span>';
+    // badges rendered as strings won't parse HTML in template holes — use element refs instead
+    const badge = (t) => {
+      const cls = t === 'public' ? 'badge badge-public' : t === 'gratuit' ? 'badge badge-gratuit' : 'badge badge-payant';
+      const label = t === 'public' ? '🆓 Public' : t === 'gratuit' ? '🔐 Gratuit' : '💎 Payant';
+      return React.createElement('span', { className: cls }, label);
+    };
+
+    const similar = [
+      { title: 'Le BRF de A à Z : fabriquer son bois raméal fragmenté', dur: '12:07', author: 'Permaculture Design', isPD: true, grad: G.olive, access: 'public', badge: badge('public') },
+      { title: 'Compost thermophile : monter à 60\u00a0°C en 4 jours', dur: '15:33', author: 'Franck Nathié', isPD: false, grad: G.earth, access: 'gratuit', badge: badge('gratuit') },
+      { title: 'Nourrir un sol vivant : couverts et mycorhizes', dur: '19:57', author: 'Gilles Leblais', isPD: false, grad: G.moss, access: 'public', badge: badge('public') },
+      { title: 'Buttes de culture : lasagnes et hügelkultur', dur: '27:46', author: 'Permaculture Design', isPD: true, grad: G.bark, access: 'gratuit', badge: badge('gratuit') },
+    ];
+    similar.forEach(v => { v.locked = v.access !== 'public'; });
+
+    const library = [
+      { title: 'Le mulch en permaculture : BRF, paillage et broyeur', dur: '18:24', cat: 'Sol & fertilité', author: 'Permaculture Design', grad: G.green, access: 'gratuit', badge: badge('gratuit') },
+      { title: 'Le BRF de A à Z : fabriquer son bois raméal fragmenté', dur: '12:07', cat: 'Sol & fertilité', author: 'Franck Nathié', grad: G.olive, access: 'public', badge: badge('public') },
+      { title: 'Gérer l\u2019eau au jardin : noues, baissières et récupération', dur: '24:51', cat: 'Gestion de l\u2019eau', author: 'Gilles Leblais', grad: G.teal, access: 'payant', badge: badge('payant') },
+      { title: 'Créer une forêt comestible en 7 étapes', dur: '31:15', cat: 'Vergers & jardin-forêt', author: 'Permaculture Design', grad: G.pine, access: 'payant', badge: badge('payant') },
+      { title: 'Le poulailler mobile : concevoir un tracteur à poules', dur: '09:42', cat: 'Biodiversité & faune', author: 'Invités', grad: G.bark, access: 'public', badge: badge('public') },
+      { title: 'Compost thermophile : monter à 60\u00a0°C en 4 jours', dur: '15:33', cat: 'Sol & fertilité', author: 'Franck Nathié', grad: G.earth, access: 'gratuit', badge: badge('gratuit') },
+      { title: 'Les guildes végétales autour du pommier', dur: '21:08', cat: 'Vergers & jardin-forêt', author: 'Gilles Leblais', grad: G.moss, access: 'payant', badge: badge('payant') },
+      { title: 'Buttes de culture : lasagnes, hügelkultur, plessis', dur: '27:46', cat: 'Potager & maraîchage', author: 'Permaculture Design', grad: G.sage, access: 'gratuit', badge: badge('gratuit') },
+      { title: 'Nourrir un sol vivant : couverts, mycorhizes, vers', dur: '19:57', cat: 'Sol & fertilité', author: 'Invités', grad: G.clay, access: 'public', badge: badge('public') },
+    ];
+    library.forEach(v => Object.assign(v, mkLock(v.access)));
+
+    const playlists = [
+      { title: 'La Minute PCD', desc: 'Des gestes clés en moins de 3 minutes.', count: 42, grad: G.pine, isYt: true, srcLabel: 'YouTube' },
+      { title: 'Projets inspirants', desc: 'Des lieux réels visités et décryptés.', count: 18, grad: G.earth, isYt: true, srcLabel: 'YouTube' },
+      { title: 'Gestion de l\u2019eau', desc: 'Noues, mares, récupération, irrigation.', count: 12, grad: G.teal, isYt: false, srcLabel: 'PD' },
+      { title: 'Design & conception', desc: 'Méthode, zonage, secteurs, plans.', count: 24, grad: G.olive, isYt: false, srcLabel: 'PD' },
+    ];
+
+    const sortDefs = [
+      { key: 'recent', label: 'Plus récentes' },
+      { key: 'longues', label: 'Plus longues' },
+      { key: 'courtes', label: 'Plus courtes' },
+      { key: 'az', label: 'A → Z' },
+    ];
+    const sorts = sortDefs.map(s => ({ key: s.key, label: s.label, on: this.state.sort === s.key ? 'on' : '' }));
+
+    // Cluster : 11 des 12 clusters SEO PCD confirmés ; 12e cluster à confirmer sur la BDD Cluster/Thèmes (non affiché tant que non validé)
+    const facetDefs = [
+      { title: 'Format', opts: [['Tutoriel', 128, true], ['Formation', 62, false], ['Inédit', 41, false], ['Conférence', 24, false], ['Témoignage', 13, false], ['Short', 5, false]] },
+      { title: 'Cluster', opts: [['Découvrir la permaculture', 19, false], ['Design & conception', 47, false], ['Sol & fertilité', 54, false], ['Gestion de l\u2019eau', 33, false], ['Potager & maraîchage', 38, false], ['Vergers & jardin-forêt', 22, false], ['Aménager son jardin', 16, false], ['Biodiversité & faune', 21, false], ['Maison écologique', 9, false], ['Modes de vie durables', 8, false], ['Low-tech & autonomie', 6, false]] },
+      { title: 'Niveau', opts: [['Débutant', 96, false], ['Intermédiaire', 118, false], ['Expert', 59, false]] },
+      { title: 'Durée', opts: [['< 10 min', 88, false], ['10 à 30 min', 142, false], ['> 30 min', 43, false]] },
+      { title: 'Intervenant', opts: [['Permaculture Design', 74, false], ['Franck Nathié', 58, false], ['Gilles Leblais', 41, false], ['Invités', 100, false]] },
+    ];
+    const facets = facetDefs.map(f => ({
+      title: f.title,
+      opts: f.opts.map(o => ({ label: o[0], count: o[1], checked: o[2], on: o[2] ? 'on' : '' })),
+    }));
+
+    return {
+      stageClass,
+      setFormat: this.setFormat.bind(this),
+      toggleNotes: this.toggleNotes.bind(this),
+      noop: this.noop.bind(this),
+      stopProp: this.stopProp.bind(this),
+      openSheet: this.openSheet.bind(this),
+      closeSheet: this.closeSheet.bind(this),
+      setSort: this.setSort.bind(this),
+      setChapter: this.setChapter.bind(this),
+      setMock: this.setMock.bind(this),
+      setRole: this.setRole.bind(this),
+      toggleAcf: this.toggleAcf.bind(this),
+      roleLabel,
+      toggleChapM1: this.toggleChapM1.bind(this),
+      chapM1Open: this.state.chapM1Open,
+      chapM1Label: this.state.chapM1Open ? 'Masquer les chapitres' : 'Voir les chapitres (5)',
+      chapM1Icon: this.state.chapM1Open ? 'chevron-up' : 'chevron-down',
+      chapM1WrapStyle: 'overflow:hidden;transition:max-height .2s ease,opacity .2s ease;' + (this.state.chapM1Open ? 'max-height:520px;opacity:1' : 'max-height:0;opacity:0'),
+      col2Style: isM ? 'display:block' : 'display:grid;grid-template-columns:1.9fr 1fr;gap:30px;align-items:start',
+      chaptersM1: m1,
+      chaptersM2: m2,
+      similar, library, playlists, sorts, facets,
+      setArv: this.setArv.bind(this),
+      setContrib: this.setContrib.bind(this),
+      toggleClap: this.toggleClap.bind(this),
+      toggleFav: this.toggleFav.bind(this),
+      toggleBook: this.toggleBook.bind(this),
+      hasArticle: ha,
+      contrib1: cc === 1,
+      contrib2: cc === 2,
+      seoCls: ha ? 'seo-noindex' : 'seo-index',
+      seoIcon: ha ? 'eye-off' : 'eye',
+      seoText: ha ? '<meta robots="noindex, follow"> · Vidéo canonique = ARV' : '<meta robots="index, follow"> · Fiche vidéo indexable',
+      schemaText: ha ? 'VideoObject basique' : 'VideoObject complet avec transcript',
+      clapOn: this.state.clapped ? 'on' : '',
+      clapCount: this.state.clapped ? 13 : 12,
+      favOn: this.state.faved ? 'on' : '',
+      bookOn: this.state.booked ? 'on' : '',
+      sheetOpen: this.state.sheetOpen,
+    };
+  }
+}
+</script>
+</body>
+</html>
