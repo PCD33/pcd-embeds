@@ -17,6 +17,7 @@ ses images dans `assets/`.
 | Fiche recette — *Crukies* | https://pcd33.github.io/pcd-embeds/fiche-recette.html |
 | Contributeur | https://pcd33.github.io/pcd-embeds/contributeur.html |
 | Glossaire | https://pcd33.github.io/pcd-embeds/glossaire/ |
+| Fiche plante — *Tomate* (3 colonnes) | https://pcd33.github.io/pcd-embeds/plante/ |
 
 > ⚙️ Le **Glossaire** utilise le nouveau format « design system » de Claude design
 > (composants React chargés depuis le CDN unpkg au runtime). Il vit dans son propre
