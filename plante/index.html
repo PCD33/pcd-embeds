@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&amp;display=swap">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#ECEEEA}
+  .lucide{stroke-width:1.5!important}
+  .cols-scroll{scrollbar-width:thin}
+  .acf-switch,.notes-switch{width:42px;height:24px;border-radius:999px;border:none;cursor:pointer;position:relative;background:#CBD2C9;transition:background .2s;flex:0 0 auto}
+  .acf-knob,.notes-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .2s}
+  .stage.show-acf .acf-switch{background:#2F663B}
+  .stage.show-acf .acf-knob{transform:translateX(18px)}
+  .stage.show-notes .notes-switch{background:#C77B26}
+  .stage.show-notes .notes-knob{transform:translateX(18px)}
+  .lock-chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:600;line-height:1.5}
+</style>
+</helmet>
+<div class="{{ stageClass }}" style="min-height:100vh;background:#ECEEEA;font-family:'Satoshi',system-ui,sans-serif">
+
+  <!-- CONTROL BAR -->
+  <div style="position:fixed;top:0;left:0;right:0;z-index:200;background:#F8F9FA;border-bottom:1px solid #E2E8E0;padding:12px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:9px;margin-right:auto">
+      <i data-lucide="sprout" style="width:19px;height:19px;color:#2F663B"></i>
+      <span style="font-size:14px;font-weight:700;color:#1A3A0F">Fiche plante — Tomate</span>
+      <span style="font-size:12px;color:#9aa39a">3 niveaux d'accès</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button onClick="{{ toggleAcf }}" aria-label="Afficher les champs ACF" class="acf-switch"><span class="acf-knob"></span></button>
+      <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#3A4A33"><i data-lucide="tag" style="width:16px;height:16px;color:#3A4A33"></i>Champs ACF</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button onClick="{{ toggleNotes }}" aria-label="Afficher les annotations" class="notes-switch"><span class="notes-knob"></span></button>
+      <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#3A4A33"><i data-lucide="message-square-text" style="width:16px;height:16px;color:#3A4A33"></i>Annotations</span>
+    </div>
+  </div>
+
+  <!-- COLUMNS -->
+  <div class="cols-scroll" style="overflow-x:auto;padding:82px 0 56px">
+    <div style="display:flex;gap:28px;width:max-content;margin:0 auto;padding:0 32px;align-items:flex-start">
+
+      <!-- PUBLIC -->
+      <div style="display:flex;flex-direction:column;gap:16px;width:390px;flex:0 0 auto">
+        <header style="background:#fff;border:1px solid #E2E8E0;border-radius:14px;padding:15px 16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px">
+            <span style="display:inline-flex;align-items:center;gap:6px;background:#EDEFEA;color:#5A6B52;border-radius:999px;padding:5px 11px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase"><i data-lucide="globe" style="width:13px;height:13px"></i>Public</span>
+            <span style="font-size:11.5px;font-weight:600;color:#9aa39a">SEO &amp; acquisition</span>
+          </div>
+          <div style="font-weight:700;font-size:16px;color:#1A3A0F;margin-bottom:5px">Visiteur non connecté</div>
+          <p style="margin:0 0 10px;font-size:12.5px;line-height:1.5;color:#6B7768">Contenu d'accroche libre. Les blocs d'engagement et de culture sont teasés pour inciter à créer un compte.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="lock-chip" style="background:#EAF3E4;color:#2F663B"><i data-lucide="unlock" style="width:12px;height:12px"></i>Hero · Essentiel · Botanique</span>
+            <span class="lock-chip" style="background:#FBEBEA;color:#9A3A2E"><i data-lucide="lock" style="width:12px;height:12px"></i>Compagnonnage · Culture · Usages</span>
+            <span class="lock-chip" style="background:#FDF1E3;color:#9A5B16"><i data-lucide="images" style="width:12px;height:12px"></i>Variétés 3/4</span>
+          </div>
+        </header>
+        <dc-import name="Fiche Tomate Colonne" role="public" acf="{{ acf }}" notes="{{ notes }}" hint-size="390px,810px"></dc-import>
+      </div>
+
+      <!-- GRATUIT -->
+      <div style="display:flex;flex-direction:column;gap:16px;width:390px;flex:0 0 auto">
+        <header style="background:#fff;border:1px solid #E2E8E0;border-radius:14px;padding:15px 16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px">
+            <span style="display:inline-flex;align-items:center;gap:6px;background:#E4F4E6;color:#2F663B;border-radius:999px;padding:5px 11px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase"><i data-lucide="user-round" style="width:13px;height:13px"></i>Membre gratuit</span>
+            <span style="font-size:11.5px;font-weight:600;color:#9aa39a">Engagement</span>
+          </div>
+          <div style="font-weight:700;font-size:16px;color:#1A3A0F;margin-bottom:5px">Compte FluentCommunity</div>
+          <p style="margin:0 0 10px;font-size:12.5px;line-height:1.5;color:#6B7768">Fiche complète et communauté ouvertes. Seules les pépinières restent réservées à l'Atelier.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="lock-chip" style="background:#EAF3E4;color:#2F663B"><i data-lucide="unlock" style="width:12px;height:12px"></i>Fiche complète · Variétés 4/4 · Avis + formulaire</span>
+            <span class="lock-chip" style="background:#FBEBEA;color:#9A3A2E"><i data-lucide="lock" style="width:12px;height:12px"></i>Pépinières (Atelier)</span>
+          </div>
+        </header>
+        <dc-import name="Fiche Tomate Colonne" role="gratuit" acf="{{ acf }}" notes="{{ notes }}" hint-size="390px,810px"></dc-import>
+      </div>
+
+      <!-- ATELIER -->
+      <div style="display:flex;flex-direction:column;gap:16px;width:390px;flex:0 0 auto">
+        <header style="background:#fff;border:1px solid #E2E8E0;border-radius:14px;padding:15px 16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px">
+            <span style="display:inline-flex;align-items:center;gap:6px;background:#FFF3CE;color:#8A5A12;border-radius:999px;padding:5px 11px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase"><i data-lucide="gem" style="width:13px;height:13px"></i>Membre Atelier</span>
+            <span style="font-size:11.5px;font-weight:600;color:#9aa39a">89 €/an</span>
+          </div>
+          <div style="font-weight:700;font-size:16px;color:#1A3A0F;margin-bottom:5px">Abonné payant</div>
+          <p style="margin:0 0 10px;font-size:12.5px;line-height:1.5;color:#6B7768">Tout est débloqué. Pépinières visibles, assistant ATG flottant, et le CTA d'adhésion est remplacé par un message de fidélité.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="lock-chip" style="background:#EAF3E4;color:#2F663B"><i data-lucide="unlock" style="width:12px;height:12px"></i>Pépinières &amp; graines</span>
+            <span class="lock-chip" style="background:#E4F4E6;color:#2F663B"><i data-lucide="message-circle" style="width:12px;height:12px"></i>Assistant ATG</span>
+            <span class="lock-chip" style="background:#EDEFEA;color:#5A6B52"><i data-lucide="eye-off" style="width:12px;height:12px"></i>CTA d'adhésion masqué</span>
+          </div>
+        </header>
+        <dc-import name="Fiche Tomate Colonne" role="atelier" acf="{{ acf }}" notes="{{ notes }}" hint-size="390px,810px"></dc-import>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { acf: false, notes: false };
+
+  componentDidMount() { this._mounted = true; this.renderIcons(); }
+  componentDidUpdate() { this.renderIcons(); }
+  componentWillUnmount() { this._mounted = false; }
+
+  renderIcons() {
+    const tick = () => {
+      if (!this._mounted) return;
+      if (window.lucide && window.lucide.createIcons) { try { window.lucide.createIcons(); } catch (e) {} }
+      else setTimeout(tick, 150);
+    };
+    tick();
+  }
+
+  toggleAcf() { this.setState(s => ({ acf: !s.acf })); }
+  toggleNotes() { this.setState(s => ({ notes: !s.notes })); }
+
+  renderVals() {
+    return {
+      stageClass: 'stage' + (this.state.acf ? ' show-acf' : '') + (this.state.notes ? ' show-notes' : ''),
+      acf: this.state.acf,
+      notes: this.state.notes,
+      toggleAcf: this.toggleAcf.bind(this),
+      toggleNotes: this.toggleNotes.bind(this),
+    };
+  }
+}
+</script>
+</body>
+</html>

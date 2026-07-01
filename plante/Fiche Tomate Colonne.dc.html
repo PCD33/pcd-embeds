@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&amp;display=swap">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  *{box-sizing:border-box}
+  .lucide{stroke-width:1.5!important}
+  .scrollx{scrollbar-width:none;-ms-overflow-style:none}
+  .scrollx::-webkit-scrollbar{display:none;height:0}
+
+  .device{width:390px;background:#333;border:12px solid #333;border-radius:40px;overflow:hidden;position:relative;box-shadow:0 24px 60px rgba(15,36,20,.18)}
+  .screen{height:780px;overflow-y:auto;border-radius:28px;background:#F5F7F3;position:relative}
+  .notch{display:block;position:absolute;top:0;left:50%;transform:translateX(-50%);width:150px;height:26px;background:#333;border-bottom-left-radius:16px;border-bottom-right-radius:16px;z-index:90}
+  .fiche-wrap{max-width:100%;padding:0 12px 8px}
+  .ravageurs-grid{grid-template-columns:1fr}
+
+  .lien-vert,.lien-vert i{transition:color .15s}
+  .lien-vert:hover,.lien-vert:hover i{color:#2A4B2A!important}
+  .recette-mini-card{display:flex;align-items:center;gap:12px;padding:8px;border:1px solid #E2E8E0;border-radius:10px;margin-bottom:8px;text-decoration:none;color:inherit;transition:background .2s}
+  .recette-mini-card:hover{background:#F4FAF0}
+  .recette-ugc-btn{margin-top:6px;background:#2F663B;border:none;color:#fff;border-radius:8px;padding:13px;width:100%;text-align:center;font-weight:700;font-size:0.9rem;font-family:'Satoshi',system-ui,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s}
+  .recette-ugc-btn:hover{filter:brightness(.94)}
+
+  /* sommaire sticky (apparaît après le hero) */
+  .desktop-tabs{display:none}
+  .scrolled .desktop-tabs{display:flex!important}
+
+  /* engagement bar */
+  .engagement-bar{position:absolute;left:50%;bottom:84px;transform:translateX(-50%);z-index:120;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #E2E8E0;border-radius:50px;box-shadow:0 10px 25px rgba(0,0,0,.1);padding:9px 14px;font-family:'Satoshi',system-ui,sans-serif;white-space:nowrap}
+  .eng-item,.eng-icon{display:inline-flex;align-items:center;gap:6px;border:none;background:transparent;cursor:pointer;padding:0;color:#4A7C2F;transition:transform .12s}
+  .eng-item:active,.eng-icon:active{transform:translateY(1px)}
+  .eng-count{font-size:13px;font-weight:700;color:#1A3A0F}
+  .share-label{display:none}
+  .eng-sep{width:1px;height:22px;background:#E2E8E0;flex:0 0 auto}
+
+  /* sticky mobile CTA */
+  .sticky-cta{position:sticky;bottom:0;z-index:55;background:rgba(245,247,243,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid #E2E8E0;padding:10px 12px 12px}
+  .sticky-cta button{width:100%;border:none;border-radius:10px;padding:14px;font:700 15px 'Satoshi';cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s}
+  .sticky-cta button:hover{filter:brightness(.95)}
+  .cta-join{background:#FFDE67;color:#461B02}
+  .cta-garden{background:#2F663B;color:#fff}
+  .role-atelier .cta-join{display:none}
+  .role-public .cta-garden,.role-gratuit .cta-garden{display:none}
+
+  /* role-based visibility */
+  .role-public .gate-member{display:none!important}
+  .role-gratuit .encart-a,.role-atelier .encart-a{display:none!important}
+  .role-atelier .encart-b{display:none!important}
+  .encart-atelier{display:none}
+  .role-atelier .encart-atelier{display:block}
+
+  /* variety regwall (public) */
+  .varietes-cards{display:block}
+  .role-public .varietes-container{position:relative;overflow:hidden;padding-bottom:20px}
+  .role-public .varietes-cards .variete-card:nth-child(n+4){filter:blur(4px);opacity:.55;pointer-events:none}
+  .role-public .encart-a{position:absolute;bottom:0;left:16px;right:16px;z-index:10;box-shadow:0 -30px 40px 20px rgba(255,255,255,.9)}
+
+  /* culture regwall (public) */
+  .encart-culture{display:none}
+  .role-public .culture-teaser{position:relative;overflow:hidden}
+  .role-public .culture-locked{filter:blur(5px);opacity:.5;pointer-events:none}
+  .role-public .encart-culture{display:block;position:absolute;bottom:0;left:0;right:0;z-index:10;box-shadow:0 -30px 40px 25px rgba(255,255,255,.92)}
+
+  /* lock-public : bloc réservé aux non-public (médicinales → visible dès gratuit) */
+  .lock-public{position:relative}
+  .lock-public > .lock-overlay{display:none}
+  .role-public .lock-public > .lock-body{filter:blur(5px);opacity:.55;pointer-events:none;-webkit-user-select:none;user-select:none}
+  .role-public .lock-public > .lock-overlay{display:flex;position:absolute;inset:0;align-items:center;justify-content:center;padding:8px;z-index:10}
+
+  /* lock-atelier : bloc réservé Atelier (pépinières → verrouillé public ET gratuit) */
+  .lock-atelier{position:relative}
+  .lock-atelier > .lock-overlay{display:none}
+  .role-public .lock-atelier > .lock-body,.role-gratuit .lock-atelier > .lock-body{filter:blur(5px);opacity:.55;pointer-events:none;-webkit-user-select:none;user-select:none}
+  .role-public .lock-atelier > .lock-overlay,.role-gratuit .lock-atelier > .lock-overlay{display:flex;position:absolute;inset:0;align-items:center;justify-content:center;padding:8px;z-index:10}
+
+  .pep-badge{display:none}
+  .role-atelier .pep-badge{display:inline-flex;align-items:center;gap:5px;background:#EAF3E4;color:#2F663B;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700}
+
+  /* compagnonnage — chips cliquables */
+  .compagnon-chip{display:inline-flex;align-items:center;gap:5px;text-decoration:none;border-radius:8px;padding:6px 11px;font-size:13px;font-weight:600;cursor:pointer;transition:filter .15s}
+  .compagnon-chip:hover{filter:brightness(.96);text-decoration:underline}
+  .chip-benef{background:#E4F4E6;border:1px solid #CDE8D2;color:#1A5A2A}
+  .chip-evit{background:#FBEBEA;border:1px solid #E9C4BF;color:#8A3A2E}
+
+  .variete-card{display:flex;align-items:center;gap:14px;padding:12px;border:1px solid #E2E8E0;border-radius:10px;margin-bottom:8px;text-decoration:none;color:inherit;transition:background .2s}
+  .variete-card:hover{background:#F4FAF0}
+  .variete-img{width:48px;height:48px;border-radius:50%;object-fit:cover;flex:0 0 auto;background:#E4F4E6}
+  .variete-info{display:flex;flex-direction:column;gap:6px;flex-grow:1;min-width:0}
+  .variete-nom{font-weight:700;color:#1A3A0F;font-size:14px}
+  .variete-statline{display:flex;flex-wrap:wrap;gap:6px}
+  .variete-stat{display:inline-flex;align-items:center;gap:4px;background:#F1F3EF;color:#1A3A0F;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700}
+  .variete-stat .k{color:#888;font-weight:600}
+
+  .diag-card{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #E2E8E0;border-radius:10px;padding:10px;text-decoration:none;color:inherit;transition:background .2s,border-color .2s}
+  .diag-card:hover{background:#F4FAF0;border-color:#CDE8D2}
+
+  /* hero carousel */
+  .hero-carousel{position:relative;width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;margin-bottom:16px;background:#dfe6da;-webkit-user-select:none;user-select:none}
+  .hero-track{display:flex;height:100%;will-change:transform}
+  .hero-slide{flex:0 0 100%;height:100%;position:relative}
+  .hero-slide img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none}
+  .hero-ctrl{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:none;background:rgba(26,58,15,.5);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:6;transition:background .15s}
+  .hero-ctrl:hover{background:rgba(26,58,15,.8)}
+  .hero-seeall{position:absolute;right:12px;bottom:14px;z-index:6;display:inline-flex;align-items:center;gap:6px;background:rgba(18,28,12,.6);color:#fff;border:none;border-radius:999px;padding:7px 13px;font:600 12px 'Satoshi';cursor:pointer;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);transition:background .15s}
+  .hero-seeall:hover{background:rgba(18,28,12,.82)}
+  .hero-caption{position:absolute;left:14px;right:14px;bottom:48px;z-index:5;color:#fff;font:500 13px 'Satoshi';line-height:1.4;text-shadow:0 1px 4px rgba(0,0,0,.55);text-wrap:pretty}
+  .hero-credit{position:absolute;left:12px;bottom:16px;z-index:6;display:inline-flex;align-items:center;gap:4px;background:rgba(18,28,12,.55);color:rgba(255,255,255,.92);border-radius:999px;padding:3px 9px 3px 8px;font:600 10.5px 'Satoshi';-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+  .hero-dots{position:absolute;left:0;right:0;bottom:18px;z-index:5;display:flex;justify-content:center;gap:6px}
+  .hero-dot{height:7px;border-radius:999px;border:none;cursor:pointer;padding:0;transition:width .2s,background .2s}
+  .lightbox{position:fixed;inset:0;z-index:400;background:rgba(12,18,9,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 18px}
+  .lb-track{transition:transform .35s cubic-bezier(.22,1,.36,1)}
+  .lb-track img{flex:0 0 100%;width:100%;height:68vh;object-fit:contain}
+  .lb-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .lb-ctrl{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .lb-ctrl:hover,.lb-close:hover{background:rgba(255,255,255,.26)}
+
+  /* ATG floating assistant (Atelier only) */
+  .atg{display:none}
+  .role-atelier .atg{display:block}
+  .atg-bubble{position:absolute;right:16px;bottom:150px;z-index:130;width:56px;height:56px;border-radius:50%;background:#23442A;color:#fff;border:none;box-shadow:0 10px 26px rgba(15,36,20,.35);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:filter .15s,transform .12s}
+  .atg-bubble:hover{filter:brightness(1.12)}
+  .atg-bubble:active{transform:scale(.95)}
+  .atg-open .atg-bubble{display:none}
+  .atg-panel{display:none}
+  .role-atelier.atg-open .atg-panel{display:flex;flex-direction:column;position:absolute;right:16px;bottom:118px;z-index:131;width:300px;background:#fff;border:1px solid #E2E8E0;border-radius:16px;box-shadow:0 16px 40px rgba(15,36,20,.24);overflow:hidden}
+
+  /* ACF field tags */
+  .acf-tag{display:none;background:#1A3A0F;color:#FFF;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10px;padding:2px 6px;border-radius:4px;margin-left:6px;vertical-align:middle;line-height:1.5;letter-spacing:0;font-weight:400}
+  .show-acf .acf-tag{display:inline-block}
+
+  /* annotations */
+  .anno{display:none}
+  .show-notes .anno{display:inline-flex;align-items:center;gap:5px;background:#FDF1E3;border:1px solid #F0C896;color:#9A5B16;border-radius:6px;padding:3px 8px;font:600 11px 'Satoshi';margin-top:8px}
+  .notes-legend{display:none}
+  .show-notes .notes-legend{display:block;position:absolute;left:16px;bottom:96px;z-index:140;width:252px;background:#1A3A0F;color:#fff;border-radius:12px;padding:14px 15px;box-shadow:0 14px 34px rgba(0,0,0,.28);font-family:'Satoshi',system-ui,sans-serif}
+  .notes-legend h4{margin:0 0 10px;font-size:13px;font-weight:700}
+  .notes-legend .nrow{display:flex;gap:9px;margin-bottom:9px}
+  .notes-legend .nrow:last-child{margin-bottom:0}
+  .notes-legend .ndot{flex:0 0 auto;width:18px;height:18px;border-radius:50%;background:#FFDE67;color:#461B02;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .notes-legend .ntx{font-size:11.5px;line-height:1.42;color:rgba(255,255,255,.86)}
+  .notes-legend .ntx b{color:#fff}
+</style>
+</helmet>
+<div class="{{ rootClass }}" style="font-family:'Satoshi',system-ui,sans-serif">
+  <div class="device">
+    <div class="screen scrollx" ref="{{ screenRef }}">
+      <div class="notch"></div>
+
+      <div class="fiche-wrap" style="color:#2D3A26;-webkit-font-smoothing:antialiased;padding-top:14px">
+
+        <!-- 1. HERO -->
+        <div class="hero-carousel">
+          <div class="hero-track" style="{{ trackStyle }}" onTouchStart="{{ heroTouchStart }}" onTouchEnd="{{ heroTouchEnd }}">
+            <div class="hero-slide"><img src="https://www.permaculturedesign.fr/wp-content/uploads/2021/05/Gilles-DEVIC-506x490.jpeg" alt="Tomates mûres en grappe"></div>
+            <div class="hero-slide"><img src="https://www.permaculturedesign.fr/wp-content/uploads/2021/05/R%C3%A9mi-Knaff-836x490.jpeg" alt="Jeune plant de tomate"></div>
+            <div class="hero-slide"><img src="https://www.permaculturedesign.fr/wp-content/uploads/2021/05/michelle-cherun-675x490.jpeg" alt="Feuillage de la tomate"></div>
+            <div class="hero-slide"><img src="https://www.permaculturedesign.fr/wp-content/uploads/2021/05/Malina-Malina-675x490.jpeg" alt="Fleurs jaunes de tomate"></div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;height:118px;background:linear-gradient(to top,rgba(18,28,12,.78),rgba(18,28,12,0));pointer-events:none;z-index:4"></div>
+          <p class="hero-caption">{{ curCaption }}<span class="acf-tag">galerie · legende</span></p>
+          <sc-if value="{{ curCredit }}" hint-placeholder-val="x">
+            <span class="hero-credit"><i data-lucide="camera" style="width:11px;height:11px"></i>{{ curCredit }}</span>
+          </sc-if>
+          <button class="hero-ctrl" style="left:10px" onClick="{{ heroPrev }}" aria-label="Photo précédente"><i data-lucide="chevron-left" style="width:18px;height:18px"></i></button>
+          <button class="hero-ctrl" style="right:10px" onClick="{{ heroNext }}" aria-label="Photo suivante"><i data-lucide="chevron-right" style="width:18px;height:18px"></i></button>
+          <button class="hero-seeall" onClick="{{ openLightbox }}" aria-label="Voir toutes les photos"><i data-lucide="camera" style="width:14px;height:14px"></i>Voir les 4 photos</button>
+          <div class="hero-dots">
+            <sc-for list="{{ dots }}" as="d" hint-placeholder-count="4"><button class="hero-dot" data-idx="{{ d.idx }}" style="{{ d.style }}" onClick="{{ goHero }}" aria-label="Aller à la photo"></button></sc-for>
+          </div>
+        </div>
+        <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="">
+          <div class="lightbox" onClick="{{ closeLightbox }}">
+            <button class="lb-close" onClick="{{ closeLightbox }}" aria-label="Fermer"><i data-lucide="x" style="width:20px;height:20px"></i></button>
+            <button class="lb-ctrl" style="left:16px" onClick="{{ heroPrev }}" aria-label="Photo précédente"><i data-lucide="chevron-left" style="width:22px;height:22px"></i></button>
+            <button class="lb-ctrl" style="right:16px" onClick="{{ heroNext }}" aria-label="Photo suivante"><i data-lucide="chevron-right" style="width:22px;height:22px"></i></button>
+            <div onClick="{{ stopProp }}" style="display:flex;flex-direction:column;align-items:center;max-width:640px;width:100%">
+              <div style="width:100%;overflow:hidden;border-radius:8px">
+                <div class="lb-track" style="{{ trackStyle }};display:flex">
+                  <img src="https://www.permaculturedesign.fr/wp-content/uploads/2021/05/Gilles-DEVIC-506x490.jpeg" alt="Tomates mûres en grappe">
+                  <img src="https://www.permaculturedesign.fr/wp-content/uploads/2021/05/R%C3%A9mi-Knaff-836x490.jpeg" alt="Jeune plant de tomate">
+                  <img src="https://www.permaculturedesign.fr/wp-content/uploads/2021/05/michelle-cherun-675x490.jpeg" alt="Feuillage de la tomate">
+                  <img src="https://www.permaculturedesign.fr/wp-content/uploads/2021/05/Malina-Malina-675x490.jpeg" alt="Fleurs jaunes de tomate">
+                </div>
+              </div>
+              <div style="margin-top:16px;text-align:center;color:#fff">
+                <p style="margin:0;font:500 14px 'Satoshi';line-height:1.45">{{ curCaption }}</p>
+                <sc-if value="{{ curCredit }}" hint-placeholder-val="x"><p style="margin:7px 0 0;font-size:12px;color:rgba(255,255,255,.6);display:inline-flex;align-items:center;gap:5px"><i data-lucide="camera" style="width:12px;height:12px"></i>{{ curCredit }}</p></sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- TITRE + chapô + auteur + toxicité -->
+        <section class="sec" data-screen-label="Tomate" id="sec-identite" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h1 style="margin:0;font-size:28px;font-weight:700;color:#1A3A0F;letter-spacing:-0.02em;line-height:1.15">Tomate <span style="font-weight:500;font-style:italic;color:#6B7768;font-size:19px">(Solanum lycopersicum)</span><span class="acf-tag">post_title · nom_scientifique</span></h1>
+          <p style="margin:10px 0 0;font-size:14px;line-height:1.6;color:#3A4A33;text-wrap:pretty">Incontournable du potager, la tomate se cultive en climat tempéré comme une plante annuelle. Retrouvez ses besoins, ses meilleures variétés, le calendrier de semis et de récolte, et les bons gestes pour une récolte généreuse.<span class="acf-tag">chapo_seo</span></p>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:12px;font-size:12.5px;color:#888"><i data-lucide="sprout" style="width:14px;height:14px;color:#7A9A5B;flex:0 0 auto"></i>Par Permaculture Design · Mis à jour le 12 mars 2026<span class="acf-tag">date_maj</span></div>
+          <div style="display:flex;align-items:flex-start;gap:9px;background:#FDF1E3;border:1px solid #F0C896;color:#9A5B16;padding:12px 13px;border-radius:10px;font-size:13px;font-weight:600;line-height:1.4;margin-top:14px">
+            <i data-lucide="triangle-alert" style="width:18px;height:18px;color:#C77B26;flex:0 0 auto;margin-top:1px"></i>
+            <span>Parties vertes toxiques : les feuilles et les tiges ne doivent pas être ingérées.<span class="acf-tag">risques_toxicite</span></span>
+          </div>
+        </section>
+
+        <!-- SOMMAIRE STICKY -->
+        <nav class="desktop-tabs scrollx" aria-label="Sommaire" style="display:none;position:sticky;top:0;z-index:30;gap:6px;overflow-x:auto;background:rgba(245,247,243,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:10px 0;margin-bottom:16px;border-bottom:1px solid #E2E8E0">
+          <button onClick="{{ scrollTo }}" data-target="sec-culture" style="flex:0 0 auto;border:1px solid #E2E8E0;background:#fff;border-radius:999px;padding:8px 15px;font:600 13px 'Satoshi';color:#1A3A0F;cursor:pointer">Culture</button>
+          <button onClick="{{ scrollTo }}" data-target="sec-varietes" style="flex:0 0 auto;border:1px solid #E2E8E0;background:#fff;border-radius:999px;padding:8px 15px;font:600 13px 'Satoshi';color:#1A3A0F;cursor:pointer">Variétés</button>
+          <button onClick="{{ scrollTo }}" data-target="sec-avis" style="flex:0 0 auto;border:1px solid #E2E8E0;background:#fff;border-radius:999px;padding:8px 15px;font:600 13px 'Satoshi';color:#1A3A0F;cursor:pointer">Avis</button>
+        </nav>
+
+        <!-- 2. L'ESSENTIEL -->
+        <section class="sec" data-screen-label="L'essentiel" id="sec-essentiel" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 16px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">L'essentiel</h2>
+          <div class="summary-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px 8px">
+            <sc-for list="{{ summary }}" as="s" hint-placeholder-count="6">
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px">
+                <i data-lucide="{{ s.icon }}" style="width:24px;height:24px;color:#4A7C2F;margin-bottom:2px"></i>
+                <div style="font-size:15px;font-weight:700;color:#1A3A0F;line-height:1.15">{{ s.value }}</div>
+                <div style="font-size:11px;color:#888">{{ s.label }}</div>
+                <span class="acf-tag">{{ s.acf }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- 3. DESCRIPTION -->
+        <section class="sec" data-screen-label="Description" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 12px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Description</h2>
+          <p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#3A4A33;text-wrap:pretty">Plante de la famille des Solanacées, la tomate forme un arbuste pouvant atteindre 3&nbsp;m de haut. Elle produit de petites fleurs jaunes avant d'offrir ses gros fruits charnus.<span class="acf-tag">description</span></p>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:10px 0 0;border-top:1px solid #EEF1EC">
+            <span style="color:#888;font-size:13px">Origine</span><span style="color:#1A3A0F;font-size:13px;font-weight:600;text-align:right">Amérique du Sud (Andes)<span class="acf-tag">origine</span></span>
+          </div>
+        </section>
+
+        <!-- 4. BOTANIQUE & BESOINS -->
+        <section class="sec" data-screen-label="Botanique &amp; besoins" id="sec-botanique" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 8px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Botanique &amp; besoins</h2>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid #EEF1EC"><span style="color:#888;font-size:13px">Famille</span><span style="color:#1A3A0F;font-size:13px;font-weight:600;text-align:right;font-style:italic">Solanaceae<span class="acf-tag" style="font-style:normal">famille</span></span></div>
+          <sc-if value="{{ hasSynonyme }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid #EEF1EC"><span style="color:#888;font-size:13px">Synonyme</span><span style="color:#1A3A0F;font-size:13px;font-weight:600;text-align:right">Pomme d'amour<span class="acf-tag">synonymes_francais</span></span></div>
+          </sc-if>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid #EEF1EC"><span style="color:#888;font-size:13px">Sol · pH</span><span style="color:#1A3A0F;font-size:13px;font-weight:600;text-align:right">Acide à basique<span class="acf-tag">ph</span></span></div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid #EEF1EC"><span style="color:#888;font-size:13px">Fertilité</span><span style="color:#1A3A0F;font-size:13px;font-weight:600;text-align:right">Élevée<span class="acf-tag">fertilite_sol</span></span></div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid #EEF1EC">
+            <span style="color:#888;font-size:13px;display:inline-flex;align-items:center;gap:4px">Texture<span data-tip="texture" onClick="{{ toggleTip }}" style="position:relative;display:inline-flex;cursor:pointer"><i data-lucide="info" style="width:14px;height:14px;color:#888"></i><sc-if value="{{ tipTexture }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;bottom:135%;left:-8px;z-index:40;background:#1A3A0F;color:#fff;font:500 12px/1.45 'Satoshi';padding:9px 11px;border-radius:8px;width:210px;box-shadow:0 8px 22px rgba(0,0,0,.2)">La texture décrit la proportion de sable, limon et argile qui compose le sol.</span></sc-if></span></span>
+            <span style="color:#1A3A0F;font-size:13px;font-weight:600;text-align:right">Limoneux, sableux, argileux<span class="acf-tag">texture_sol</span></span>
+          </div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid #EEF1EC">
+            <span style="color:#888;font-size:13px;display:inline-flex;align-items:center;gap:4px">Feuillage<span data-tip="caduc" onClick="{{ toggleTip }}" style="position:relative;display:inline-flex;cursor:pointer"><i data-lucide="info" style="width:14px;height:14px;color:#888"></i><sc-if value="{{ tipCaduc }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;bottom:135%;left:-8px;z-index:40;background:#1A3A0F;color:#fff;font:500 12px/1.45 'Satoshi';padding:9px 11px;border-radius:8px;width:210px;box-shadow:0 8px 22px rgba(0,0,0,.2)">Feuillage caduc : la plante perd ses feuilles à la mauvaise saison.</span></sc-if></span></span>
+            <span style="color:#1A3A0F;font-size:13px;font-weight:600;text-align:right">Caduc<span class="acf-tag">feuillage</span></span>
+          </div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-top:1px solid #EEF1EC">
+            <span style="color:#888;font-size:13px;display:inline-flex;align-items:center;gap:4px">Racines<span data-tip="racines" onClick="{{ toggleTip }}" style="position:relative;display:inline-flex;cursor:pointer"><i data-lucide="info" style="width:14px;height:14px;color:#888"></i><sc-if value="{{ tipRacines }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;bottom:135%;left:-8px;z-index:40;background:#1A3A0F;color:#fff;font:500 12px/1.45 'Satoshi';padding:9px 11px;border-radius:8px;width:210px;box-shadow:0 8px 22px rgba(0,0,0,.2)">Racines traçantes : elles s'étendent horizontalement, près de la surface du sol.</span></sc-if></span></span>
+            <span style="color:#1A3A0F;font-size:13px;font-weight:600;text-align:right">Traçantes<span class="acf-tag">systeme_racinaire</span></span>
+          </div>
+        </section>
+
+        <!-- 5. DESIGN & FONCTIONS ÉCOLOGIQUES -->
+        <section class="sec" data-screen-label="Design &amp; fonctions écologiques" id="sec-design" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 12px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Design &amp; fonctions écologiques</h2>
+          <sc-if value="{{ hasStrate }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:0 0 14px">
+            <span style="color:#888;font-size:13px;display:inline-flex;align-items:center;gap:4px">Strates<span data-tip="strate" onClick="{{ toggleTip }}" style="position:relative;display:inline-flex;cursor:pointer"><i data-lucide="info" style="width:14px;height:14px;color:#888"></i><sc-if value="{{ tipStrate }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;bottom:135%;left:-8px;z-index:40;background:#1A3A0F;color:#fff;font:500 12px/1.45 'Satoshi';padding:9px 11px;border-radius:8px;width:210px;box-shadow:0 8px 22px rgba(0,0,0,.2)">Strate arbustive : végétation intermédiaire entre le sol et les arbres, de 0,5 à 7&nbsp;m.</span></sc-if></span></span>
+            <span style="color:#1A3A0F;font-size:13px;font-weight:600;text-align:right">Strate arbustive<span class="acf-tag">strate</span></span>
+          </div>
+          </sc-if>
+          <sc-if value="{{ hasFonctions }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size:12px;color:#888;margin-bottom:8px">Fonctions écologiques</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <span style="display:inline-flex;align-items:center;gap:6px;background:#F1F3EF;color:#3A4A33;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600"><i data-lucide="flower" style="width:15px;height:15px;color:#888"></i>Mellifère<span class="acf-tag">particularites</span></span>
+            <span style="display:inline-flex;align-items:center;gap:6px;background:#F1F3EF;color:#3A4A33;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600"><i data-lucide="bug" style="width:15px;height:15px;color:#888"></i>Attire les papillons<span class="acf-tag">pollinisateur</span></span>
+          </div>
+          </sc-if>
+        </section>
+
+        <!-- 6. COMPAGNONNAGE -->
+        <section class="sec gate-member" data-screen-label="Compagnonnage" id="sec-compagnonnage" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 14px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Compagnonnage</h2>
+          <div style="background:#F4FAF0;border-radius:10px;padding:14px;margin-bottom:10px">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px"><i data-lucide="check" style="width:17px;height:17px;color:#4A7C2F"></i><span style="font-size:13px;font-weight:700;color:#1A3A0F">Associations bénéfiques</span><span class="acf-tag">assoc_benefiques</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <a href="#" class="compagnon-chip chip-benef">Asperge</a>
+              <a href="#" class="compagnon-chip chip-benef">Persil</a>
+              <a href="#" class="compagnon-chip chip-benef">Groseilles</a>
+            </div>
+          </div>
+          <div style="background:#FFF5F5;border-radius:10px;padding:14px;margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px"><i data-lucide="x" style="width:17px;height:17px;color:#C0392B"></i><span style="font-size:13px;font-weight:700;color:#1A3A0F">À éviter</span><span class="acf-tag">assoc_eviter</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <a href="#" class="compagnon-chip chip-evit">Fenouil</a>
+              <a href="#" class="compagnon-chip chip-evit">Pomme de terre</a>
+              <a href="#" class="compagnon-chip chip-evit">Chou-rave</a>
+            </div>
+          </div>
+          <details style="border-top:1px solid #EEF1EC;padding-top:12px">
+            <summary style="display:flex;align-items:center;gap:7px;list-style:none;cursor:pointer;font-size:13px;font-weight:600;color:#3A4A33"><i data-lucide="info" style="width:16px;height:16px;color:#888"></i>Données empiriques · certaines associations restent à valider</summary>
+            <p style="margin:10px 0 0;font-size:13px;line-height:1.6;color:#6B7768">Les associations de cultures reposent en grande partie sur l'observation et la tradition. Les effets varient selon le sol, le climat et les variétés. Considérez ces indications comme des pistes à expérimenter dans votre propre jardin plutôt que comme des règles absolues.</p>
+          </details>
+        </section>
+
+        <!-- INCITATION COMMUNAUTAIRE -->
+        <div class="gate-member" style="display:flex;align-items:center;gap:14px;background:#E4F4E6;border:1px solid #CDE8D2;border-radius:12px;padding:16px;margin-bottom:16px">
+          <i data-lucide="users-round" style="width:26px;height:26px;color:#2F663B;flex:0 0 auto"></i>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:14px;font-weight:700;color:#1A3A0F;margin-bottom:2px">Cultivez la tomate avec la communauté</div>
+            <p style="margin:0;font-size:13px;line-height:1.45;color:#3A4A33">Posez vos questions, partagez vos réussites et trouvez des jardiniers près de chez vous.</p>
+          </div>
+          <button style="flex:0 0 auto;border:none;background:#2F663B;color:#fff;border-radius:8px;padding:10px 16px;font:700 13px 'Satoshi';cursor:pointer">Rejoindre</button>
+        </div>
+
+        <!-- 7. VARIÉTÉS -->
+        <section class="sec" data-screen-label="Variétés" id="sec-varietes" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 12px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Variétés</h2>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:#EAF3E4;color:#2F663B;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:700;margin-bottom:14px"><i data-lucide="apple" style="width:15px;height:15px;color:#4A7C2F"></i>12 variétés référencées</span>
+          <div class="varietes-container">
+          <div class="varietes-cards">
+            <a href="#" class="variete-card">
+              <img src="https://images.unsplash.com/photo-1582284540020-8acbe03f4924?w=96&amp;h=96&amp;fit=crop&amp;q=80" alt="Cœur de Bœuf" class="variete-img">
+              <div class="variete-info">
+                <span class="variete-nom">Cœur de Bœuf</span>
+                <div class="variete-statline">
+                  <span class="variete-stat"><span class="k">Rusticité</span>-10&nbsp;°C</span>
+                  <span class="variete-stat"><span class="k">Note</span>4,5/5</span>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#9aa39a;flex:0 0 auto"></i>
+            </a>
+            <a href="#" class="variete-card">
+              <img src="https://images.unsplash.com/photo-1607305387299-a3d9611cd469?w=96&amp;h=96&amp;fit=crop&amp;q=80" alt="Marmande" class="variete-img">
+              <div class="variete-info">
+                <span class="variete-nom">Marmande</span>
+                <div class="variete-statline">
+                  <span class="variete-stat"><span class="k">Rusticité</span>-8&nbsp;°C</span>
+                  <span class="variete-stat"><span class="k">Note</span>4/5</span>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#9aa39a;flex:0 0 auto"></i>
+            </a>
+            <a href="#" class="variete-card">
+              <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=96&amp;h=96&amp;fit=crop&amp;q=80" alt="Green Zebra" class="variete-img">
+              <div class="variete-info">
+                <span class="variete-nom">Green Zebra</span>
+                <div class="variete-statline">
+                  <span class="variete-stat"><span class="k">Rusticité</span>-6&nbsp;°C</span>
+                  <span class="variete-stat"><span class="k">Note</span>4/5</span>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#9aa39a;flex:0 0 auto"></i>
+            </a>
+            <a href="#" class="variete-card">
+              <img src="https://images.unsplash.com/photo-1561136594-7f68413baa99?w=96&amp;h=96&amp;fit=crop&amp;q=80" alt="Noire de Crimée" class="variete-img">
+              <div class="variete-info">
+                <span class="variete-nom">Noire de Crimée</span>
+                <div class="variete-statline">
+                  <span class="variete-stat"><span class="k">Rusticité</span>-8&nbsp;°C</span>
+                  <span class="variete-stat"><span class="k">Note</span>4,5/5</span>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#9aa39a;flex:0 0 auto"></i>
+            </a>
+          </div>
+          <div class="encart-a" style="background:#F9FAF8;border:1px solid #E2E8E0;border-radius:8px;padding:14px 16px">
+            <div style="font-size:14px;font-weight:700;color:#1A3A0F;margin-bottom:10px;line-height:1.3">Découvrez les 12 variétés de tomate testées par nos jardiniers</div>
+            <button style="border:none;background:#2A4B2A;color:#fff;border-radius:8px;padding:11px 18px;font:600 14px 'Satoshi';cursor:pointer">Voir gratuitement les 12 variétés</button>
+          </div>
+          </div>
+        </section>
+
+        <!-- 8. COMESTIBILITÉ + RECETTES -->
+        <section class="sec" data-screen-label="Comestibilité" id="sec-comest" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 12px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Comestibilité</h2>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="display:flex;gap:2px"><sc-for list="{{ starsComest }}" as="s" hint-placeholder-count="5"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="{{ s.fill }}"></path></svg></sc-for></div>
+            <span style="font-size:13px;font-weight:700;color:#1A3A0F">5/5<span class="acf-tag">note_comestibilite</span></span>
+          </div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:8px 0 12px"><span style="color:#888;font-size:13px">Parties comestibles</span><span style="color:#1A3A0F;font-size:13px;font-weight:600">Fruits<span class="acf-tag">parties_comestibles</span></span></div>
+          <p style="margin:0;font-size:14px;line-height:1.6;color:#3A4A33">La tomate se mange crue ou cuite et s'accommode de toutes les façons possibles : salades, tartes, coulis, farcies…<span class="acf-tag">comestibilite</span></p>
+
+          <div class="gate-member" style="border-top:1px solid #EEF1EC;margin-top:16px;padding-top:4px">
+            <h3 style="margin:12px 0 12px;font-size:1rem;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Recettes avec cette plante</h3>
+            <a href="#" class="recette-mini-card">
+              <img src="https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=112&amp;h=112&amp;fit=crop&amp;q=80" alt="Coulis de tomates anciennes" style="width:56px;height:56px;border-radius:8px;object-fit:cover;flex:0 0 auto;background:#E4F4E6">
+              <div style="flex:1;min-width:0">
+                <div style="font-size:0.9rem;font-weight:700;color:#1A3A0F">Coulis de tomates anciennes</div>
+                <div style="font-size:0.75rem;color:#888;margin-top:2px">Par Camille · 15 min</div>
+              </div>
+            </a>
+            <a href="#" class="recette-mini-card">
+              <img src="https://images.unsplash.com/photo-1601000938259-9e92002320b2?w=112&amp;h=112&amp;fit=crop&amp;q=80" alt="Gaspacho rafraîchissant" style="width:56px;height:56px;border-radius:8px;object-fit:cover;flex:0 0 auto;background:#E4F4E6">
+              <div style="flex:1;min-width:0">
+                <div style="font-size:0.9rem;font-weight:700;color:#1A3A0F">Gaspacho rafraîchissant</div>
+                <div style="font-size:0.75rem;color:#888;margin-top:2px">Par Yann · 20 min</div>
+              </div>
+            </a>
+            <button class="recette-ugc-btn"><i data-lucide="plus" style="width:18px;height:18px"></i>Partager ma recette de tomate</button>
+          </div>
+        </section>
+
+        <!-- 9. CULTURE & RÉCOLTES -->
+        <section class="sec" data-screen-label="Culture &amp; récoltes" id="sec-culture" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 12px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Culture &amp; récoltes</h2>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-top:1px solid #EEF1EC"><span style="color:#888;font-size:13px">Semis sous abri</span><span style="color:#1A3A0F;font-size:13px;font-weight:600">Facile<span class="acf-tag">semis_sous_abris</span></span></div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-top:1px solid #EEF1EC"><span style="color:#888;font-size:13px">Bouturage</span><span style="color:#1A3A0F;font-size:13px;font-weight:600">Possible<span class="acf-tag">bouturage</span></span></div>
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:8px 0 16px;border-top:1px solid #EEF1EC">
+            <span style="color:#888;font-size:13px;display:inline-flex;align-items:center;gap:4px">Entretien<span data-tip="entretien" onClick="{{ toggleTip }}" style="position:relative;display:inline-flex;cursor:pointer"><i data-lucide="info" style="width:14px;height:14px;color:#888"></i><sc-if value="{{ tipEntretien }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;bottom:150%;left:-8px;z-index:40;background:#1A3A0F;color:#fff;font:500 12px/1.45 'Satoshi';padding:9px 11px;border-radius:8px;width:210px;box-shadow:0 8px 22px rgba(0,0,0,.2)">Demande une attention régulière : tuteurage, taille des gourmands, arrosage et paillage.</span></sc-if></span></span>
+            <span style="color:#1A3A0F;font-size:13px;font-weight:600">Fréquent<span class="acf-tag">entretien</span></span>
+          </div>
+
+          <div class="culture-teaser">
+          <div class="culture-locked">
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="width:78px"></div>
+              <div style="flex:1;display:grid;grid-template-columns:repeat(12,1fr);gap:3px">
+                <sc-for list="{{ months }}" as="m" hint-placeholder-count="12"><div style="text-align:center;font-size:10px;color:#888;font-weight:600">{{ m }}</div></sc-for>
+              </div>
+            </div>
+            <sc-for list="{{ cal }}" as="row" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:6px">
+                <div style="width:78px;font-size:12px;color:#3A4A33;font-weight:600">{{ row.label }}<span class="acf-tag">{{ row.acf }}</span></div>
+                <div style="flex:1;display:grid;grid-template-columns:repeat(12,1fr);gap:3px">
+                  <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="12"><div title="{{ c.tip }}" style="height:22px;border-radius:4px;background:{{ c.bg }}"></div></sc-for>
+                </div>
+              </div>
+            </sc-for>
+            <div style="display:flex;gap:16px;margin-top:4px;font-size:11px;color:#888">
+              <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:11px;height:11px;border-radius:3px;background:#4A7C2F"></span>Semis &amp; plantation</span>
+              <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:11px;height:11px;border-radius:3px;background:rgb(224,138,43)"></span>Récoltes</span>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid #EEF1EC;padding-top:12px">
+            <p style="margin:0 0 8px;font-size:14px;line-height:1.55;color:#3A4A33"><strong style="color:#1A3A0F">Semis</strong> : 2 mois avant plantation, au chaud (20&nbsp;°C).</p>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:#3A4A33"><strong style="color:#1A3A0F">Plantation</strong> : en sol enrichi, après les gelées (&gt;&nbsp;10&nbsp;°C). Enterrez la tige profondément. Tuteurez et paillez.<span class="acf-tag">conseils_culture</span></p>
+          </div>
+          </div><!-- /culture-locked -->
+          <div class="encart-culture" style="background:#F9FAF8;border:1px solid #E2E8E0;border-radius:10px;padding:18px 16px;text-align:center">
+            <div style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:#E4F4E6;margin-bottom:10px"><i data-lucide="lock" style="width:20px;height:20px;color:#2A4B2A"></i></div>
+            <div style="font-size:15px;font-weight:700;color:#1A3A0F;margin-bottom:6px">Quand semer, planter, récolter votre tomate&nbsp;?</div>
+            <p style="margin:0 0 14px;font-size:13px;line-height:1.5;color:#6B7768">Calendrier mensuel, conseils de plantation et fiches maladies. Gratuit.</p>
+            <button style="border:none;background:#2A4B2A;color:#fff;border-radius:8px;padding:11px 20px;font:600 14px 'Satoshi';cursor:pointer;display:inline-flex;align-items:center;gap:6px">Voir le calendrier (gratuit)<i data-lucide="arrow-right" style="width:16px;height:16px"></i></button>
+          </div>
+          </div><!-- /culture-teaser -->
+        </section>
+
+        <!-- 11. RAVAGEURS & MALADIES -->
+        <section class="sec gate-member" data-screen-label="Ravageurs &amp; maladies" id="sec-ravageurs" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 14px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Ravageurs &amp; maladies</h2>
+          <div class="ravageurs-grid" style="display:grid;gap:10px">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:12px;font-weight:600;color:#888">Ravageurs<span class="acf-tag">ravageurs_frequents → ravageur</span></div>
+              <a href="#" class="diag-card">
+                <img src="https://images.unsplash.com/photo-1634467524884-897d0af5e104?w=96&amp;h=96&amp;fit=crop&amp;q=80" alt="Aleurodes" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex:0 0 auto;background:#E4F4E6">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:14px;font-weight:700;color:#1A3A0F;margin-bottom:2px">Aleurodes</div>
+                  <div style="font-size:12px;color:#888">Mouches blanches · feuilles collantes</div>
+                </div>
+                <i data-lucide="chevron-right" style="width:18px;height:18px;color:#9aa39a;flex:0 0 auto"></i>
+              </a>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:12px;font-weight:600;color:#888">Maladies<span class="acf-tag">maladies_frequentes → maladie</span></div>
+              <a href="#" class="diag-card">
+                <img src="https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=96&amp;h=96&amp;fit=crop&amp;q=80" alt="Mildiou" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex:0 0 auto;background:#E4F4E6">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:14px;font-weight:700;color:#1A3A0F;margin-bottom:2px">Mildiou</div>
+                  <div style="font-size:12px;color:#888">Taches brunes</div>
+                </div>
+                <i data-lucide="chevron-right" style="width:18px;height:18px;color:#9aa39a;flex:0 0 auto"></i>
+              </a>
+              <a href="#" class="diag-card">
+                <img src="https://images.unsplash.com/photo-1607305387299-a3d9611cd469?w=96&amp;h=96&amp;fit=crop&amp;q=80" alt="Cul noir" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex:0 0 auto;background:#E4F4E6">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:14px;font-weight:700;color:#1A3A0F">Cul noir</div>
+                  <div style="font-size:12px;color:#888">Nécrose de l'apex</div>
+                </div>
+                <i data-lucide="chevron-right" style="width:18px;height:18px;color:#9aa39a;flex:0 0 auto"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- 12. USAGES & PROPRIÉTÉS -->
+        <section class="sec" data-screen-label="Usages &amp; propriétés" id="sec-usages" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 12px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Usages &amp; propriétés</h2>
+          <div class="gate-member">
+          <div style="font-size:12px;font-weight:600;color:#888;margin-bottom:8px">Usages au jardin &amp; maison<span class="acf-tag">usages</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+            <span style="border:1px solid #E2E8E0;color:#3A4A33;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600">Insecticide</span>
+            <span style="border:1px solid #E2E8E0;color:#3A4A33;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600">Engrais liquide</span>
+            <span style="border:1px solid #E2E8E0;color:#3A4A33;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600">Cosmétique</span>
+          </div>
+          <p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:#3A4A33;text-wrap:pretty">Le purin de tomate possède différents effets : insecticide contre les pucerons, répulsif, et engrais pour les cultures gourmandes. La pulpe du fruit est aussi utilisée en cosmétique.<span class="acf-tag">usages_description</span></p>
+          </div>
+          <div class="lock-public">
+          <div class="lock-body" style="border-top:1px solid #EEF1EC;padding-top:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px">
+              <span style="font-size:14px;font-weight:700;color:#1A3A0F">Propriétés médicinales</span>
+              <div style="display:flex;align-items:center;gap:6px"><div style="display:flex;gap:2px"><sc-for list="{{ starsMed }}" as="s" hint-placeholder-count="5"><svg viewBox="0 0 24 24" width="15" height="15"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="{{ s.fill }}"></path></svg></sc-for></div><span style="font-size:12px;font-weight:700;color:#1A3A0F">3/5<span class="acf-tag">note_medicinale</span></span></div>
+            </div>
+            <div style="display:flex;gap:9px;background:#FDF1E3;border:1px solid #F0C896;border-radius:10px;padding:12px;margin-bottom:10px">
+              <i data-lucide="triangle-alert" style="width:18px;height:18px;color:#C77B26;flex:0 0 auto;margin-top:1px"></i>
+              <p style="margin:0;font-size:13px;line-height:1.5;color:#9A5B16">L'usage médicinal des plantes n'est pas anodin. Demandez conseil à un professionnel de santé avant tout usage.</p>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.6;color:#3A4A33;text-wrap:pretty">La consommation de la tomate serait bénéfique pour protéger le cœur et réguler certains problèmes de prostate.<span class="acf-tag">medicinales_description</span></p>
+          </div>
+          <div class="lock-overlay">
+            <div style="background:#fff;border:1px solid #E2E8E0;border-radius:10px;box-shadow:0 6px 24px rgba(15,36,20,.12);padding:12px 15px;display:inline-flex;align-items:center;gap:9px;max-width:300px">
+              <i data-lucide="lock" style="width:16px;height:16px;color:#2A4B2A;flex:0 0 auto"></i>
+              <span style="font-size:13px;font-weight:700;color:#1A3A0F;line-height:1.35">Propriétés médicinales · créez un compte gratuit</span>
+            </div>
+          </div>
+          </div>
+        </section>
+
+        <!-- 13. RELATIONS & PÉPINIÈRES -->
+        <section class="sec" data-screen-label="Relations &amp; pépinières" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 12px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Relations &amp; pépinières</h2>
+          <div style="margin-bottom:6px">
+            <div style="font-size:12px;font-weight:600;color:#888;margin:6px 0 8px">Palettes végétales<span class="acf-tag">palettes_vegetales → palette_vegetale</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <a href="#" style="display:inline-flex;align-items:center;gap:7px;background:#F4FAF0;border:1px solid #E0EFD7;color:#1A3A0F;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;text-decoration:none">Guilde du potager d'été<i data-lucide="arrow-right" style="width:14px;height:14px;color:#4A7C2F"></i></a>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:#888;margin:14px 0 8px">Techniques associées<span class="acf-tag">techniques_associees → technique</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <a href="#" style="display:inline-flex;align-items:center;gap:7px;background:#F4FAF0;border:1px solid #E0EFD7;color:#1A3A0F;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;text-decoration:none">Paillage<i data-lucide="arrow-right" style="width:14px;height:14px;color:#4A7C2F"></i></a>
+              <a href="#" style="display:inline-flex;align-items:center;gap:7px;background:#F4FAF0;border:1px solid #E0EFD7;color:#1A3A0F;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;text-decoration:none">Tuteurage<i data-lucide="arrow-right" style="width:14px;height:14px;color:#4A7C2F"></i></a>
+            </div>
+            <div style="font-size:12px;font-weight:600;color:#888;margin:14px 0 8px">Formations<span class="acf-tag">formations_associees → formation</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+              <a href="#" style="display:inline-flex;align-items:center;gap:7px;background:#F4FAF0;border:1px solid #E0EFD7;color:#1A3A0F;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;text-decoration:none">Le potager naturel<i data-lucide="arrow-right" style="width:14px;height:14px;color:#4A7C2F"></i></a>
+            </div>
+          </div>
+          <sc-if value="{{ hasPepinieres }}" hint-placeholder-val="{{ true }}">
+          <div class="lock-atelier">
+            <div class="lock-body">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px"><span style="font-size:12px;font-weight:600;color:#888">Pépinières</span><span class="pep-badge"><i data-lucide="gem" style="width:12px;height:12px"></i>Réservé aux membres Atelier</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid #E2E8E0;border-radius:10px;padding:11px 13px">
+                <span style="font-size:14px;font-weight:600;color:#1A3A0F">Kokopelli</span>
+                <button style="display:inline-flex;align-items:center;gap:5px;border:1px solid #4A7C2F;background:#fff;color:#4A7C2F;border-radius:8px;padding:6px 14px;font:700 13px 'Satoshi';cursor:pointer">Voir<i data-lucide="arrow-right" style="width:14px;height:14px"></i></button>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid #E2E8E0;border-radius:10px;padding:11px 13px">
+                <span style="font-size:14px;font-weight:600;color:#1A3A0F">Ferme de Sainte Marthe</span>
+                <button style="display:inline-flex;align-items:center;gap:5px;border:1px solid #4A7C2F;background:#fff;color:#4A7C2F;border-radius:8px;padding:6px 14px;font:700 13px 'Satoshi';cursor:pointer">Voir<i data-lucide="arrow-right" style="width:14px;height:14px"></i></button>
+              </div>
+            </div>
+            </div>
+            <div class="lock-overlay">
+              <div style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;box-shadow:0 6px 24px rgba(15,36,20,.12);padding:16px;text-align:center;max-width:300px">
+                <div style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:#E4F4E6;margin-bottom:9px"><i data-lucide="lock" style="width:18px;height:18px;color:#2A4B2A"></i></div>
+                <div style="font-size:14px;font-weight:700;color:#1A3A0F;margin-bottom:4px">Où acheter vos graines de tomate&nbsp;?</div>
+                <div style="font-size:12.5px;color:#6B7768;margin-bottom:12px">Réservé aux membres Atelier</div>
+                <button style="border:none;background:#2A4B2A;color:#fff;border-radius:8px;padding:9px 16px;font:700 13px 'Satoshi';cursor:pointer">Rejoindre l'Atelier</button>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+        </section>
+
+        <!-- 14. AVIS -->
+        <section class="sec" data-screen-label="Avis &amp; notes" id="sec-avis" style="background:#fff;border:1px solid #E2E8E0;border-radius:12px;padding:16px;margin-bottom:16px">
+          <h2 style="margin:0 0 14px;font-size:17px;font-weight:700;color:#1A3A0F;letter-spacing:-0.01em">Avis de la communauté</h2>
+          <div style="font-size:11px;font-weight:600;color:#9aa39a;margin-bottom:2px">Moyennes de la communauté · lecture seule</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0">
+            <span style="font-size:14px;color:#3A4A33">Facilité de culture<span class="acf-tag">note_facilite</span></span>
+            <span style="display:inline-flex;align-items:center;gap:8px;flex:0 0 auto">
+              <span style="display:flex;gap:2px"><sc-for list="{{ roFacilite }}" as="s" hint-placeholder-count="5"><svg viewBox="0 0 24 24" width="19" height="19"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="{{ s.fill }}"></path></svg></sc-for></span>
+              <span style="font-size:13px;font-weight:700;color:#1A3A0F;white-space:nowrap">4,6<span style="color:#9aa39a;font-weight:600">/5</span></span>
+            </span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0 14px;border-top:1px solid #EEF1EC">
+            <span style="font-size:14px;color:#3A4A33">Satisfaction globale<span class="acf-tag">note_satisfaction</span></span>
+            <span style="display:inline-flex;align-items:center;gap:8px;flex:0 0 auto">
+              <span style="display:flex;gap:2px"><sc-for list="{{ roSatisfaction }}" as="s" hint-placeholder-count="5"><svg viewBox="0 0 24 24" width="19" height="19"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="{{ s.fill }}"></path></svg></sc-for></span>
+              <span style="font-size:13px;font-weight:700;color:#1A3A0F;white-space:nowrap">4,7<span style="color:#9aa39a;font-weight:600">/5</span></span>
+            </span>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;border-top:1px solid #EEF1EC;padding-top:14px;margin-top:6px;margin-bottom:10px">
+            <span style="display:inline-flex;align-items:center;gap:6px;background:#EAF3E4;color:#2F663B;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700"><i data-lucide="message-circle" style="width:14px;height:14px"></i>47 avis de membres</span>
+            <span style="font-size:12px;font-weight:600;color:#888">Retours de la communauté</span>
+          </div>
+          <div style="padding-bottom:14px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+              <span style="font-size:14px;font-weight:700;color:#1A3A0F">Camille</span>
+              <div style="display:flex;gap:1px"><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="#E8B931"></path></svg><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="#E8B931"></path></svg><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="#E8B931"></path></svg><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="#E8B931"></path></svg><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="#E8B931"></path></svg></div>
+            </div>
+            <p style="margin:0;font-size:13px;line-height:1.55;color:#6B7768">Premières récoltes généreuses même en pot sur le balcon. Le paillage a tout changé pour l'arrosage.<span class="acf-tag">texte · auteur</span></p>
+          </div>
+          <div style="border-top:1px solid #EEF1EC;padding-top:14px;margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+              <span style="font-size:14px;font-weight:700;color:#1A3A0F">Yann</span>
+              <div style="display:flex;gap:1px"><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="#E8B931"></path></svg><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="#E8B931"></path></svg><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="#E8B931"></path></svg><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="#E8B931"></path></svg><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="#D9DED4"></path></svg></div>
+            </div>
+            <p style="margin:0;font-size:13px;line-height:1.55;color:#6B7768">Attention au mildiou en région humide : abritez les pieds de la pluie si possible.</p>
+          </div>
+          <div class="gate-member" style="border-top:1px solid #EEF1EC;padding-top:14px">
+            <div style="font-size:13px;font-weight:700;color:#1A3A0F;margin-bottom:10px">Partagez votre expérience</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <span style="font-size:13px;color:#3A4A33;width:120px">Facilité de culture<span class="acf-tag">note_facilite</span></span>
+              <div style="display:flex;gap:3px"><sc-for list="{{ formFacilite }}" as="s" hint-placeholder-count="5"><svg viewBox="0 0 24 24" width="22" height="22" style="cursor:pointer" data-crit="{{ s.crit }}" data-val="{{ s.n }}" onClick="{{ setRating }}"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="{{ s.fill }}"></path></svg></sc-for></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+              <span style="font-size:13px;color:#3A4A33;width:120px">Satisfaction globale<span class="acf-tag">note_satisfaction</span></span>
+              <div style="display:flex;gap:3px"><sc-for list="{{ formSatisfaction }}" as="s" hint-placeholder-count="5"><svg viewBox="0 0 24 24" width="22" height="22" style="cursor:pointer" data-crit="{{ s.crit }}" data-val="{{ s.n }}" onClick="{{ setRating }}"><path d="M12 2.6l2.6 5.27 5.82.85-4.21 4.1 1 5.79L12 16.9l-5.2 2.71 1-5.79-4.21-4.1 5.82-.85z" fill="{{ s.fill }}"></path></svg></sc-for></div>
+            </div>
+            <textarea placeholder="Votre retour sur la culture de la tomate…" style="width:100%;border:1px solid #E2E8E0;border-radius:10px;padding:11px 12px;font:500 13px 'Satoshi';color:#3A4A33;resize:none;height:66px;outline:none"></textarea>
+            <button style="margin-top:10px;border:none;background:#2F663B;color:#fff;border-radius:8px;padding:11px 16px;font:700 13px 'Satoshi';cursor:pointer">Publier mon avis</button>
+          </div>
+        </section>
+
+        <!-- 15. CTA FINAL -->
+        <div class="encart-b" style="background:#2A4B2A;border-radius:12px;padding:22px 18px;margin-bottom:16px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:#FFFFFF;margin-bottom:6px;line-height:1.25;letter-spacing:-0.01em">Vous voulez aller plus loin que la tomate&nbsp;?</div>
+          <p style="margin:0 0 16px;font-size:13px;line-height:1.5;color:rgba(255,255,255,.8)">300 fiches plantes, calendriers complets, communauté de jardiniers passionnés et l'ATG qui répond à toutes vos questions.</p>
+          <button style="border:none;background:#FFDE67;color:#461B02;border-radius:8px;padding:13px 22px;font:700 14px 'Satoshi';cursor:pointer">Rejoindre l'Atelier · 89&nbsp;€/an</button>
+        </div>
+
+        <!-- 15b. CTA FINAL ATELIER (déjà membre) -->
+        <div class="encart-atelier" style="background:#F4FAF0;border:1px solid #CDE8D2;border-radius:12px;padding:20px 18px;margin-bottom:16px;text-align:center">
+          <div style="display:inline-flex;align-items:center;gap:7px;color:#2F663B;font-weight:700;font-size:13px;margin-bottom:8px"><i data-lucide="gem" style="width:16px;height:16px"></i>Merci de faire partie de l'Atelier</div>
+          <p style="margin:0 0 14px;font-size:13px;line-height:1.5;color:#3A4A33">300 fiches plantes vous attendent. Continuez à explorer le vivant.</p>
+          <button style="border:1px solid #2F663B;background:#fff;color:#2F663B;border-radius:8px;padding:11px 20px;font:700 14px 'Satoshi';cursor:pointer;display:inline-flex;align-items:center;gap:6px">Explorer les autres plantes<i data-lucide="arrow-right" style="width:16px;height:16px"></i></button>
+        </div>
+
+      </div>
+
+      <!-- STICKY MOBILE CTA -->
+      <div class="sticky-cta">
+        <button class="cta-join"><i data-lucide="sparkles" style="width:18px;height:18px"></i>Rejoindre l'Atelier</button>
+        <button class="cta-garden"><i data-lucide="plus" style="width:18px;height:18px"></i>Ajouter à mon jardin</button>
+      </div>
+    </div>
+
+    <!-- ENGAGEMENT BAR -->
+    <div class="engagement-bar">
+      <button class="eng-item" aria-label="Applaudir"><i data-lucide="hand" style="width:20px;height:20px"></i><span class="eng-count">42</span></button>
+      <button class="eng-item" aria-label="Commentaires"><i data-lucide="message-circle" style="width:20px;height:20px"></i><span class="eng-count">8</span></button>
+      <span class="eng-sep"></span>
+      <button class="eng-icon" aria-label="J'aime"><i data-lucide="heart" style="width:20px;height:20px"></i></button>
+      <button class="eng-icon" aria-label="Enregistrer"><i data-lucide="bookmark" style="width:20px;height:20px"></i></button>
+      <button class="eng-item" aria-label="Partager"><i data-lucide="share-2" style="width:20px;height:20px"></i><span class="share-label">Partager</span></button>
+      <span class="eng-sep"></span>
+      <button class="eng-icon" style="color:#9aa39a" title="Signaler une erreur" data-fb="bug" onClick="{{ openFeedback }}" aria-label="Signaler une erreur"><i data-lucide="bug" style="width:20px;height:20px"></i></button>
+      <button class="eng-icon" style="color:#9aa39a" title="Suggérer une amélioration" data-fb="suggest" onClick="{{ openFeedback }}" aria-label="Suggérer une amélioration"><i data-lucide="lightbulb" style="width:20px;height:20px"></i></button>
+    </div>
+
+    <!-- FEEDBACK MODAL (tous profils) -->
+    <sc-if value="{{ feedbackOpen }}" hint-placeholder-val="">
+      <div style="position:absolute;inset:0;z-index:300;background:rgba(12,18,9,.55);display:flex;align-items:center;justify-content:center;padding:20px" onClick="{{ closeFeedback }}">
+        <div onClick="{{ stopProp }}" style="width:300px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(15,36,20,.35)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #EEF1EC">
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#1A3A0F"><i data-lucide="{{ fbIcon }}" style="width:17px;height:17px;color:#2F663B"></i>{{ fbTitle }}</div>
+            <button onClick="{{ closeFeedback }}" style="background:transparent;border:none;cursor:pointer;color:#888;display:flex" aria-label="Fermer"><i data-lucide="x" style="width:18px;height:18px"></i></button>
+          </div>
+          <div style="padding:16px">
+            <p style="margin:0 0 12px;font-size:13px;line-height:1.5;color:#6B7768">{{ fbDesc }}</p>
+            <textarea placeholder="{{ fbPlaceholder }}" style="width:100%;border:1px solid #E2E8E0;border-radius:10px;padding:11px 12px;font:500 13px 'Satoshi';color:#3A4A33;resize:none;height:80px;outline:none"></textarea>
+            <button onClick="{{ closeFeedback }}" style="margin-top:12px;width:100%;border:none;background:#2F663B;color:#fff;border-radius:8px;padding:12px;font:700 13px 'Satoshi';cursor:pointer">Envoyer</button>
+            <div style="margin-top:8px;font-size:11px;color:#9aa39a;text-align:center">Formulaire FluentForms</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ATG (Atelier) -->
+    <div class="atg">
+      <button class="atg-bubble" onClick="{{ toggleAtg }}" aria-label="Assistant Tomate"><i data-lucide="message-circle" style="width:24px;height:24px"></i></button>
+      <div class="atg-panel">
+        <div style="background:#23442A;color:#fff;padding:13px 15px;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px"><i data-lucide="sparkles" style="width:16px;height:16px"></i><span style="font-weight:700;font-size:13px">Assistant Tomate</span></div>
+          <button onClick="{{ toggleAtg }}" style="background:transparent;border:none;color:#fff;cursor:pointer;display:flex" aria-label="Fermer"><i data-lucide="x" style="width:18px;height:18px"></i></button>
+        </div>
+        <div style="padding:14px 15px;display:flex;flex-direction:column;gap:10px;max-height:230px;overflow-y:auto">
+          <div style="background:#F1F3EF;border-radius:12px;border-top-left-radius:3px;padding:10px 12px;font-size:13px;line-height:1.5;color:#3A4A33">Bonjour&nbsp;! Posez votre question sur la culture de la tomate, je puise dans les 300 fiches de l'Atelier.</div>
+          <div style="align-self:flex-end;background:#E4F4E6;border-radius:12px;border-top-right-radius:3px;padding:10px 12px;font-size:13px;line-height:1.5;color:#1A3A0F;max-width:85%">Pourquoi mes tomates ont-elles le cul noir&nbsp;?</div>
+          <div style="background:#F1F3EF;border-radius:12px;border-top-left-radius:3px;padding:10px 12px;font-size:13px;line-height:1.5;color:#3A4A33">Le cul noir vient d'un manque de calcium lié à des arrosages irréguliers. Paillez le pied et arrosez régulièrement au goutte-à-goutte…</div>
+        </div>
+        <div style="border-top:1px solid #EEF1EC;padding:10px 12px;display:flex;align-items:center;gap:8px">
+          <input placeholder="Posez votre question…" style="flex:1;border:1px solid #E2E8E0;border-radius:999px;padding:9px 13px;font:500 13px 'Satoshi';outline:none;min-width:0">
+          <button style="width:36px;height:36px;border-radius:50%;background:#23442A;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto" aria-label="Envoyer"><i data-lucide="arrow-up" style="width:16px;height:16px"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANNOTATIONS -->
+    <div class="notes-legend">
+      <h4>Comportements interactifs</h4>
+      <div class="nrow"><span class="ndot">1</span><span class="ntx"><b>Sommaire sticky</b> · apparaît après le hero puis reste collé en haut. Ancres cliquables.</span></div>
+      <div class="nrow"><span class="ndot">2</span><span class="ntx"><b>CTA sticky</b> · varie selon le profil (Atelier → « Ajouter à mon jardin »).</span></div>
+      <div class="nrow"><span class="ndot">3</span><span class="ntx"><b>Regwall</b> · blocs floutés + cadenas selon le niveau d'accès.</span></div>
+      <div class="nrow"><span class="ndot">4</span><span class="ntx"><b>ATG</b> · assistant conversationnel flottant, réservé Atelier.</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:810},&quot;role&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;public&quot;,&quot;gratuit&quot;,&quot;atelier&quot;],&quot;default&quot;:&quot;gratuit&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;acf&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;notes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { openTip: null, heroIndex: 0, lightboxOpen: false, scrolled: false, atgOpen: false, feedback: null, ratings: { facilite: 0, satisfaction: 0 } };
+
+  handleScroll = () => {
+    const sc = !!(this._screen && this._screen.scrollTop > 300);
+    if (sc !== this.state.scrolled) this.setState({ scrolled: sc });
+  };
+  screenRef = (el) => {
+    if (el && el !== this._screen) {
+      if (this._screen) this._screen.removeEventListener('scroll', this.handleScroll);
+      this._screen = el;
+      el.addEventListener('scroll', this.handleScroll, { passive: true });
+    }
+  };
+
+  componentDidMount() { this._mounted = true; this.renderIcons(); }
+  componentDidUpdate() { this.renderIcons(); }
+  componentWillUnmount() { this._mounted = false; if (this._screen) this._screen.removeEventListener('scroll', this.handleScroll); }
+
+  renderIcons() {
+    const tick = () => {
+      if (!this._mounted) return;
+      if (window.lucide && window.lucide.createIcons) { try { window.lucide.createIcons(); } catch (e) {} }
+      else setTimeout(tick, 150);
+    };
+    tick();
+  }
+
+  heroNext(e) { if (e && e.stopPropagation) e.stopPropagation(); this.setState(s => ({ heroIndex: Math.min((s.heroIndex || 0) + 1, 3) })); }
+  heroPrev(e) { if (e && e.stopPropagation) e.stopPropagation(); this.setState(s => ({ heroIndex: Math.max((s.heroIndex || 0) - 1, 0) })); }
+  goHero(e) { e.stopPropagation(); this.setState({ heroIndex: parseInt(e.currentTarget.getAttribute('data-idx'), 10) }); }
+  openLightbox(e) { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ lightboxOpen: true }); }
+  closeLightbox() { this.setState({ lightboxOpen: false }); }
+  stopProp(e) { e.stopPropagation(); }
+  heroTouchStart(e) { this._tx = e.touches[0].clientX; }
+  heroTouchEnd(e) { if (this._tx == null) return; const dx = e.changedTouches[0].clientX - this._tx; this._tx = null; if (Math.abs(dx) < 40) return; if (dx < 0) this.heroNext(); else this.heroPrev(); }
+
+  toggleTip(e) { const id = e.currentTarget.getAttribute('data-tip'); this.setState(s => ({ openTip: s.openTip === id ? null : id })); }
+  toggleAtg(e) { if (e && e.stopPropagation) e.stopPropagation(); this.setState(s => ({ atgOpen: !s.atgOpen })); }
+  openFeedback(e) { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ feedback: e.currentTarget.getAttribute('data-fb') }); }
+  closeFeedback(e) { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ feedback: null }); }
+
+  setRating(e) {
+    const c = e.currentTarget.getAttribute('data-crit');
+    const v = parseInt(e.currentTarget.getAttribute('data-val'), 10);
+    this.setState(s => ({ ratings: Object.assign({}, s.ratings, { [c]: v }) }));
+  }
+
+  scrollTo(e) {
+    const t = e.currentTarget.getAttribute('data-target');
+    const screen = e.currentTarget.closest('.screen');
+    if (!screen) return;
+    const el = screen.querySelector('#' + t);
+    if (!el) return;
+    const top = el.offsetTop - 8;
+    screen.scrollTo({ top: top < 0 ? 0 : top, behavior: 'smooth' });
+  }
+
+  renderVals() {
+    const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+    const mk = (active, col, tips) => months.map((m, i) => ({ bg: active.indexOf(i) >= 0 ? col : '#EEF1EC', tip: (tips && tips[i]) ? tips[i] : '' }));
+    const plantTip = 'Mai : période idéale pour planter la tomate en pleine terre.';
+    const cal = [
+      { label: 'Semis', acf: 'periode_semis', cells: mk([1, 2, 3], '#4A7C2F') },
+      { label: 'Plantation', acf: 'periode_plantation', cells: mk([4, 5], '#4A7C2F', { 4: plantTip, 5: plantTip }) },
+      { label: 'Récoltes', acf: 'floraison', cells: mk([6, 7, 8, 9], '#E08A2B') },
+    ];
+    const fixed = (v) => [1, 2, 3, 4, 5].map(n => ({ fill: n <= v ? '#E8B931' : '#D9DED4' }));
+    const r = this.state.ratings;
+    const crit = (key) => [1, 2, 3, 4, 5].map(n => ({ crit: key, n: n, fill: n <= r[key] ? '#E8B931' : '#D9DED4' }));
+    const op = this.state.openTip;
+
+    const summary = [
+      { icon: 'thermometer-snowflake', value: '-10\u00a0°C', label: 'Rusticité', acf: 'rusticite' },
+      { icon: 'sun', value: 'Plein soleil', label: 'Exposition', acf: 'exposition' },
+      { icon: 'droplets', value: 'Moyen', label: 'Arrosage', acf: 'humidite_sol' },
+      { icon: 'move-vertical', value: '3\u00a0m', label: 'Hauteur', acf: 'taille_m' },
+      { icon: 'move-horizontal', value: '1,5\u00a0m', label: 'Diamètre', acf: 'diametre_m' },
+      { icon: 'sprout', value: 'Rapide', label: 'Croissance', acf: 'croissance' },
+    ];
+
+    const photosAll = [
+      { cap: 'Tomates mûres en grappe, prêtes à récolter en plein été.', credit: '' },
+      { cap: 'Jeune plant repiqué en pleine terre, début mai.', credit: '' },
+      { cap: 'Feuillage découpé et duveteux, typique de l\u2019espèce.', credit: 'Léa · Bretagne' },
+      { cap: 'Fleurs jaunes en cyme, auto-fertiles.', credit: '' },
+    ];
+    let pidx = this.state.heroIndex || 0;
+    if (pidx > 3) pidx = 3;
+    if (pidx < 0) pidx = 0;
+    const dotBase = 'height:7px;border-radius:999px;border:none;cursor:pointer;padding:0;transition:width .2s,background .2s;';
+    const dots = photosAll.map((p, i) => ({ idx: i, style: dotBase + (i === pidx ? 'width:22px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.35);' : 'width:7px;background:rgba(255,255,255,.6);box-shadow:0 1px 3px rgba(0,0,0,.3);') }));
+    const cur = photosAll[pidx];
+
+    const fb = this.state.feedback;
+    const fbMap = {
+      bug: { icon: 'bug', title: 'Signaler une erreur', desc: 'Une donnée inexacte, un lien cassé, une faute ? Dites-nous où.', ph: 'Décrivez l\u2019erreur repérée…' },
+      suggest: { icon: 'lightbulb', title: 'Suggérer une amélioration', desc: 'Une variété, une astuce ou une photo à ajouter ? Proposez-la.', ph: 'Votre suggestion…' },
+    };
+    const fbc = fbMap[fb] || fbMap.bug;
+
+    const role = this.props.role || 'gratuit';
+    const rootClass = 'fiche-col role-' + role
+      + (this.props.acf ? ' show-acf' : '')
+      + (this.props.notes ? ' show-notes' : '')
+      + (this.state.scrolled ? ' scrolled' : '')
+      + (this.state.atgOpen ? ' atg-open' : '');
+
+    return {
+      rootClass: rootClass,
+      screenRef: this.screenRef,
+      months: months,
+      cal: cal,
+      summary: summary,
+      dots: dots,
+      trackStyle: 'transition:transform .35s cubic-bezier(.22,1,.36,1);transform:translateX(-' + (pidx * 100) + '%)',
+      curCaption: cur.cap,
+      curCredit: cur.credit,
+      lightboxOpen: this.state.lightboxOpen,
+      heroNext: this.heroNext.bind(this),
+      heroPrev: this.heroPrev.bind(this),
+      goHero: this.goHero.bind(this),
+      openLightbox: this.openLightbox.bind(this),
+      closeLightbox: this.closeLightbox.bind(this),
+      stopProp: this.stopProp.bind(this),
+      heroTouchStart: this.heroTouchStart.bind(this),
+      heroTouchEnd: this.heroTouchEnd.bind(this),
+      toggleTip: this.toggleTip.bind(this),
+      toggleAtg: this.toggleAtg.bind(this),
+      openFeedback: this.openFeedback.bind(this),
+      closeFeedback: this.closeFeedback.bind(this),
+      feedbackOpen: !!fb,
+      fbIcon: fbc.icon,
+      fbTitle: fbc.title,
+      fbDesc: fbc.desc,
+      fbPlaceholder: fbc.ph,
+      setRating: this.setRating.bind(this),
+      scrollTo: this.scrollTo.bind(this),
+      hasSynonyme: true,
+      hasStrate: true,
+      hasFonctions: true,
+      hasPepinieres: true,
+      tipTexture: op === 'texture',
+      tipCaduc: op === 'caduc',
+      tipRacines: op === 'racines',
+      tipStrate: op === 'strate',
+      tipEntretien: op === 'entretien',
+      starsComest: fixed(5),
+      starsMed: fixed(3),
+      roFacilite: fixed(5),
+      roSatisfaction: fixed(5),
+      formFacilite: crit('facilite'),
+      formSatisfaction: crit('satisfaction'),
+    };
+  }
+}
+</script>
+</body>
+</html>
