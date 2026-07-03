@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/tokens/base.css">
+  <link rel="stylesheet" href="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/styles.css">
+  <script src="_ds/permaculture-design-design-system-20f97342-3a6a-4055-9f60-b8b800551c36/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--paper); }
+    .pcd-toi table { border-collapse: collapse; width: 100%; }
+    .pcd-toi th, .pcd-toi td { text-align: left; padding: 14px 16px; font-family: var(--font-sans); font-size: var(--fs-body-s); vertical-align: top; }
+    .pcd-toi .ctrl-pill { border: none; cursor: pointer; font-family: var(--font-sans); font-size: 12.5px; font-weight: 700; padding: 7px 14px; border-radius: 999px; transition: background .15s; }
+    .pcd-toi .ctrl-switch { display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-family: var(--font-sans); font-size: 12.5px; font-weight: 600; color:#5b5f5c; user-select:none; }
+    .pcd-toi h1 { overflow-wrap: break-word; word-break: normal; }
+    .pcd-toi .row-link { transition: background .12s; }
+    .pcd-toi .row-link:hover { background: var(--green-50) !important; }
+    .pcd-toi .fld { width:100%; box-sizing:border-box; font-family: var(--font-sans); font-size: var(--fs-body-s); color: var(--green-900); background: var(--white); border: 1.5px solid var(--green-200); border-radius: 8px; padding: 11px 13px; }
+    .pcd-toi .fld:focus { outline:none; border-color: var(--green-700); }
+    .pcd-toi .fld-lbl { display:block; font-family: var(--font-sans); font-size: 12.5px; font-weight: 700; color: var(--green-800); margin-bottom: 6px; }
+  </style>
+</helmet>
+
+<div class="pcd-toi" style="font-family: var(--font-sans); color: var(--text-primary); --text-secondary: var(--green-900); background: #FBFAF9; min-height: 100vh; padding-bottom: 180px;">
+
+  <!-- ============ BARRE DE CONTRÔLE DE MAQUETTE ============ -->
+  <div style="position: sticky; top: 0; z-index: 50; background: #FBFAF7; border-bottom: 1px solid #E5E1D6; padding: 10px 24px; display:flex; flex-wrap:wrap; align-items:center; gap:18px;">
+    <div style="display:flex; align-items:center; gap:6px; background:#F0EEE5; padding:4px; border-radius:999px;">
+      <button class="ctrl-pill" onClick="{{ setDesktop }}" style="background:{{ bgDesktop }}; color:{{ fgDesktop }};">Desktop</button>
+      <button class="ctrl-pill" onClick="{{ setMobile }}" style="background:{{ bgMobile }}; color:{{ fgMobile }};">Mobile</button>
+    </div>
+    <div style="display:flex; align-items:center; gap:6px; background:#F0EEE5; padding:4px; border-radius:999px;">
+      <button class="ctrl-pill" onClick="{{ setPublic }}" style="background:{{ bgPublic }}; color:{{ fgPublic }};">Public</button>
+      <button class="ctrl-pill" onClick="{{ setGratuit }}" style="background:{{ bgGratuit }}; color:{{ fgGratuit }};">Membre gratuit</button>
+      <button class="ctrl-pill" onClick="{{ setPayant }}" style="background:{{ bgPayant }}; color:{{ fgPayant }};">Membre payant</button>
+    </div>
+    <label class="ctrl-switch"><input type="checkbox" checked="{{ showACF }}" onChange="{{ toggleACF }}" style="accent-color: var(--green-700);">Champs ACF</label>
+    <label class="ctrl-switch"><input type="checkbox" checked="{{ showAnnotations }}" onChange="{{ toggleAnnotations }}" style="accent-color: var(--green-700);">Annotations &amp; accès</label>
+    <div style="flex:1;"></div>
+    <div style="font-family: var(--font-sans); font-size: 12.5px; font-weight: 700; color: var(--green-900); background: var(--green-100); padding: 6px 14px; border-radius: 999px;">Vu comme : {{ viewedAsLabel }}</div>
+  </div>
+
+  <div style="max-width: {{ deviceOuterMax }}; margin: {{ deviceOuterMargin }}; position: relative; background: {{ deviceFrameBg }}; padding: {{ deviceFramePad }}; border-radius: {{ deviceFrameRadius }}; box-shadow: {{ deviceFrameShadow }}; box-sizing: border-box; transition: max-width .2s ease;">
+    <div style="display: {{ notchDisplay }}; position: absolute; top: {{ deviceFramePad }}; left: 50%; transform: translateX(-50%); width: 130px; height: 26px; background: #0F1512; border-radius: 0 0 16px 16px; z-index: 6;"></div>
+    <div style="position: {{ screenPosition }}; height: {{ screenHeight }}; overflow-y: {{ screenOverflowY }}; overflow-x: hidden; border-radius: {{ screenRadius }}; background: #FBFAF9;">
+
+  <!-- ================= ACTE 1 ================= -->
+  <div style="max-width: 1080px; margin: 0 auto; padding: 30px 24px 0;">
+    <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Breadcrumb" items="{{ breadcrumbItems }}" hint-size="auto,20px"></x-import>
+
+    <div style="display:{{ annotationDisplay }}; align-items:center; gap:8px; margin-top: 16px; background: #F0EEE5; border: 1px dashed #B9B4A2; border-radius: 8px; padding: 5px 12px; width: fit-content;">
+      <span style="font-family: var(--font-sans); font-size: 10px; font-weight: var(--fw-bold); letter-spacing: 0.06em; text-transform: uppercase; color: #8a8574; padding-right: 4px; border-right: 1px solid #C9C4B4;">Acte 1</span>
+      <span style="font-family: var(--font-sans); font-size: 11.5px; font-weight: var(--fw-bold); color: #5f5b4d;">Est-ce pour moi ?</span>
+      {{ annBadge }}
+    </div>
+
+    <h1 style="font-family: var(--font-display); font-size: {{ h1Size }}; line-height: 1.07; color: var(--green-900); margin: 18px 0 0;">Toilettes à Litière Biomaîtrisée (TLB)</h1>
+
+    <div style="display:flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+      <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Badge" variant="success" hint-size="auto,32px">Difficulté : facile</x-import>
+      <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Badge" variant="neutral" hint-size="auto,32px">Coût : moins de 500 €</x-import>
+      <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Badge" variant="success" hint-size="auto,32px">SPANC : autorisées (arrêté du 7 sept. 2009)</x-import>
+      <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Badge" variant="outline" hint-size="auto,32px">Acquisition : autoconstruction ou achat</x-import>
+    </div><p style="font-size: {{ chapoSize }}; color: var(--green-900); margin: 22px 0 0; line-height: 1.5; max-width: 64ch;">Des toilettes sèches simples et sans eau : un seau, une litière de sciure qui bloque les odeurs, et des matières valorisées en compost au jardin.</p>
+
+    
+  </div>
+
+  <!-- IMAGE HÉRO -->
+  <div style="max-width: 1080px; margin: 28px auto 0; padding: 0 24px;">
+    <div style="position:relative; border-radius: 12px; background: var(--white) url('uploads/TOI001-01-toilettes-litiere-biomaitrisee-TLB.png') center/cover no-repeat; aspect-ratio: 16/9; border: 1px solid var(--green-200); overflow:hidden;"></div>
+  </div>
+
+  <!-- C'EST POUR QUI ? -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 18px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">C'est pour qui ?</h2>
+      {{ annBadge }}
+    </div>
+    <div style="background: var(--green-50); border-radius: 12px; padding: 30px 32px; display:flex; flex-direction:column; gap: 14px;">
+      <p style="font-size: var(--fs-body-l); color: var(--green-900); line-height: var(--lh-body); margin: 0; max-width: 82ch;"><strong>Les toilettes à litière biomaîtrisée (TLB) s'adressent à celles et ceux qui veulent des toilettes sèches simples, économiques et sans raccordement</strong> : logement non raccordé au tout-à-l'égout ou à réseau d'eau limité, rénovation, résidence secondaire, tiny house, cabane ou atelier de jardin, <strong>ou simplement une démarche de sobriété en eau</strong> (≈ 10 000 L d'eau potable/an/personne économisés).</p>
+      <p style="font-size: var(--fs-body-l); color: var(--green-900); line-height: var(--lh-body); margin: 0; max-width: 82ch;"><strong>C'est le modèle le plus accessible pour débuter</strong>, adapté à un foyer de 1 à 7 personnes disposant d'un espace de compostage extérieur.</p>
+    </div>
+  </div>
+
+  <!-- PRINCIPE DE FONCTIONNEMENT -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 18px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Principe de fonctionnement</h2>
+      {{ annBadge }}
+    </div>
+    <div style="display:flex; flex-direction:column; gap: 8px; margin: 0 0 28px; max-width: 84ch;">
+      <p style="font-size: var(--fs-body-m); color: var(--text-secondary); line-height: var(--lh-body); margin: 0;">Ces toilettes sèches (à litière biomaîtrisée, ou toilettes à sciure) sont les plus courantes.</p>
+      <p style="font-size: var(--fs-body-m); color: var(--text-secondary); line-height: var(--lh-body); margin: 0;">Les excréments (urines et matières fécales) tombent par gravité dans un seau <strong style="color:var(--green-800);">(1)</strong> ou un sac biodégradable.</p>
+      <p style="font-size: var(--fs-body-m); color: var(--text-secondary); line-height: var(--lh-body); margin: 0;">L'ajout de litière (matière carbonée) avant la mise en service, puis après chaque utilisation, absorbe les liquides et bloque les odeurs.</p>
+      <p style="font-size: var(--fs-body-m); color: var(--text-secondary); line-height: var(--lh-body); margin: 0;">Elles peuvent être facilement auto-construites ou achetées, de nombreux modèles existant sur le marché.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: {{ gridPrinciple }}; gap: 32px; align-items:stretch;">
+      <div style="position:relative; border-radius: 12px; background: var(--white) url('uploads/TOI001-02-schema-principe-toilettes-litiere-biomaitrisee-TLB.png') center/contain no-repeat; aspect-ratio: 4/3; border: 1px solid var(--green-200); overflow:hidden;"></div>
+      <div style="background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 26px 28px;">
+        <span style="font-family: var(--font-sans); font-size: var(--fs-body-xs); font-weight: var(--fw-bold); letter-spacing:.06em; text-transform:uppercase; color: var(--green-600);">Légende</span>
+        <ul style="list-style:none; margin: 16px 0 0; padding: 0; display:flex; flex-direction:column; gap:14px;">
+          <sc-for list="{{ legende }}" as="l" hint-placeholder-count="6">
+            <li style="display:flex; align-items:flex-start; gap:12px;">
+              <span style="flex:none; width:30px; height:30px; border-radius:50%; background:#FFDE67; border:3px solid #23442A; color:#23442A; font-weight:800; font-size:15px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,.2);">{{ l.n }}</span>
+              <span style="font-size: var(--fs-body-s); color: var(--green-900); line-height:1.4; padding-top:3px;">{{ l.txt }}</span>
+            </li>
+          </sc-for>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- LES VARIANTES -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 20px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Les variantes</h2>
+      {{ annBadge }}
+    </div>
+    <div style="display:{{ annotationDisplay }}; background:#FFF6D8; border:1px dashed #D8B94A; border-radius: var(--radius-md); padding: 9px 15px; font-size: 12px; color:#6b5100; margin-bottom: 18px;">Répéteur ACF <span style="font-family:monospace;">variantes</span> { titre, description, galerie_images[], credit_image (optionnel) }.</div>
+    <div style="display:grid; grid-template-columns: {{ gridCards2 }}; gap: 20px; align-items:stretch;">
+      <sc-for list="{{ variantes }}" as="v" hint-placeholder-count="4">
+        <div style="display:flex; flex-direction:column; background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px; box-shadow: 0 6px 24px rgba(15,36,20,.05); height:100%; box-sizing:border-box;">
+          <sc-if value="{{ v.galleryEl }}" hint-placeholder-val="{{ false }}">{{ v.galleryEl }}</sc-if>
+          <sc-if value="{{ v.photoEl }}" hint-placeholder-val="{{ false }}">{{ v.photoEl }}</sc-if>
+          <sc-if value="{{ v.placeholder }}" hint-placeholder-val="{{ true }}">
+            <div style="position:relative; aspect-ratio:16/9; border-radius: 12px; background: var(--white); border:1px solid var(--green-200); display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom: 16px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="8.5" cy="10" r="1.5"></circle><path d="M21 15l-5-5-9 9"></path></svg>
+              <sc-if value="{{ v.credit }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute; right:0; bottom:0; background:rgba(15,36,20,.72); color:#fff; font-size:11px; padding:3px 9px; font-family:var(--font-sans); border-top-left-radius:8px;">© {{ v.credit }}</div>
+              </sc-if>
+            </div>
+          </sc-if>
+          <h3 style="font-family: var(--font-display); font-size: var(--fs-h5); color: var(--green-900); margin: 0 0 10px;">{{ v.title }}</h3>
+          <p style="font-size: var(--fs-body-s); color: var(--text-secondary); margin: 0; line-height: var(--lh-body);">{{ v.desc }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- QUE DEVIENNENT LES MATIÈRES ? -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 18px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Que deviennent les matières ?</h2>
+      {{ annBadge }}
+    </div>
+    <div style="background: var(--green-100); border-radius: var(--radius-lg); padding: 30px 32px;">
+      <p style="font-size: var(--fs-body-m); color: var(--green-900); line-height: var(--lh-body); margin: 0; max-width: 84ch;">Le traitement des matières se fait par compostage sur une aire de compostage extérieure dédiée, protégée des intempéries. Il est nécessaire de s'assurer d'un équilibre du ratio carbone/azote (C/N), d'une bonne humidité et d'une bonne oxygénation du compost. La durée de compostage conseillée avant utilisation est de 18 mois à 2 ans selon les sources (RAE : 18 mois · ADEME / « Chier Sec » : 2 ans avec aération régulière pour une hygiénisation complète).</p>
+      <div style="display:flex; align-items:center; gap:8px; margin-top: 18px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green-700)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 0 1 2-2h12a1 1 0 0 1 1 1v13"></path><path d="M6 17h13"></path></svg>
+        <span style="font-size: var(--fs-body-xs); font-weight: var(--fw-bold); color: var(--green-700);">Source : Guide du compostage RAE / ADEME</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SA FILIÈRE DE TRAITEMENT (nouvelle section) -->
+  <div style="max-width: 1080px; margin: 40px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 8px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Sa filière de traitement</h2>
+      {{ annBadge }}
+    </div>
+    <p style="font-size: var(--fs-body-m); color: var(--text-secondary); margin: 0 0 22px; max-width: 78ch; line-height: var(--lh-body);">Une toilette n'est pas une solution complète : chaque flux a sa filière. La TLB se combine avec le traitement de vos matières et de vos eaux ménagères.</p>
+    <div style="display:{{ annotationDisplay }}; background:#FFF6D8; border:1px dashed #D8B94A; border-radius: var(--radius-md); padding: 9px 15px; font-size: 12px; color:#6b5100; margin-bottom: 18px;">Relation ACF <span style="font-family:monospace;">systemes_lies</span> — la carte principale se remplit depuis la relation.</div>
+
+    <!-- Carte principale unique et large : la seule filière de la TLB -->
+    <a href="#" style="text-decoration:none; display:block; background: var(--green-50); border: 1.5px solid var(--green-300); border-radius: var(--radius-lg); padding: 30px 32px; transition: transform .15s;" style-hover="transform:translateY(-3px);">
+      <div style="display:flex; align-items:center; gap:11px; margin-bottom: 16px;">
+        <span style="flex:none; width:44px; height:44px; border-radius:12px; background: var(--white); border:1px solid var(--green-200); color: var(--green-700); display:flex; align-items:center; justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 9-10 0 5-1 10-2 12"></path><path d="M11 20c0-3 1-6 3-8"></path></svg></span>
+        <span style="font-size: 10.5px; font-weight: var(--fw-bold); letter-spacing:.05em; text-transform:uppercase; color: var(--green-600);">Sa filière de traitement</span>
+      </div>
+      <h3 style="font-family: var(--font-display); font-size: var(--fs-h4); color: var(--green-900); margin: 0 0 8px; max-width: 30ch;">Aire de compostage — le compagnon obligatoire de la TLB</h3>
+      <p style="font-size: var(--fs-body-m); color: var(--text-secondary); margin: 0; line-height: var(--lh-body); max-width: 78ch;">Les matières collectées sont valorisées par compostage sur une aire extérieure dédiée : c'est l'unique filière de traitement de la TLB, et elle est indispensable.</p>
+      <div style="margin-top: 16px; display:flex; gap:9px; align-items:flex-start; background: var(--white); border: 1px solid var(--green-200); border-radius: var(--radius-md); padding: 13px 15px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="9.5"></circle><path d="M12 8h.01"></path><path d="M11 12h1v4h1"></path></svg>
+        <p style="font-size: var(--fs-body-s); color: var(--green-900); line-height: var(--lh-body); margin: 0;">L'urine est collectée avec les matières : pas de filière séparée pour cette solution.</p>
+      </div>
+      <span style="display:inline-flex; align-items:center; gap:6px; margin-top: 16px; font-size: var(--fs-body-xs); font-weight: var(--fw-bold); color: var(--green-700);">Voir la fiche <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+    </a>
+
+    <!-- Bandeau secondaire en retrait : eaux ménagères -->
+    <div style="margin-top: 14px; display:flex; gap:13px; align-items:flex-start; border: 1px dashed var(--green-200); border-radius: var(--radius-md); padding: 16px 20px;">
+      <span style="flex:none; color: var(--green-600); margin-top:1px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4 6 7 6 10a6 6 0 0 1-12 0c0-3 2.5-6 6-10Z"></path></svg></span>
+      <p style="font-size: var(--fs-body-s); color: var(--text-secondary); line-height: var(--lh-body); margin: 0; max-width: 82ch;"><strong style="color: var(--green-900);">Et le reste de votre assainissement ?</strong> La réglementation impose de traiter vos eaux ménagères par ailleurs : <a href="#" style="color: var(--green-600); font-weight: var(--fw-bold);">phytoépuration</a> ou <a href="#" style="color: var(--green-600); font-weight: var(--fw-bold);">filtre à broyat de bois (FBB)</a>.</p>
+    </div>
+
+    <div style="margin-top: 18px; display:flex; gap:12px; align-items:center; background: var(--green-900); border-radius: var(--radius-md); padding: 18px 24px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-400)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M12 3v18"></path><path d="M5 8l7-5 7 5"></path><path d="M5 8v8l7 5 7-5V8"></path></svg>
+      <p style="font-size: var(--fs-body-s); color: var(--white); line-height: var(--lh-body); margin: 0;"><strong style="color: var(--yellow-400);">Une toilette + le traitement de chaque flux = une solution d'assainissement complète</strong>.</p>
+    </div>
+  </div>
+
+  <!-- CARACTÉRISTIQUES CLÉS -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 20px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Caractéristiques clés</h2>
+      {{ annBadge }}
+    </div>
+    <div style="border-radius: var(--radius-lg); overflow:hidden; border: 1px solid var(--border-subtle); background: var(--white);">
+      <table>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--border-subtle); background: var(--green-50);"><td style="font-weight:var(--fw-bold); color: var(--green-800); width: 38%;">Difficulté</td><td>Facile</td></tr>
+          <tr style="border-bottom: 1px solid var(--border-subtle);"><td style="font-weight:var(--fw-bold); color: var(--green-800);">Eau</td><td>Aucune (0 L)</td></tr>
+          <tr style="border-bottom: 1px solid var(--border-subtle); background: var(--green-50);"><td style="font-weight:var(--fw-bold); color: var(--green-800);">Énergie</td><td>Aucune (ventilation passive ; petit extracteur optionnel)</td></tr>
+          <tr style="border-bottom: 1px solid var(--border-subtle);"><td style="font-weight:var(--fw-bold); color: var(--green-800);">Emprise au sol</td><td>Équivalente à des WC classiques</td></tr>
+          <tr style="border-bottom: 1px solid var(--border-subtle); background: var(--green-50);"><td style="font-weight:var(--fw-bold); color: var(--green-800);">Capacité</td><td>1 à 7 personnes</td></tr>
+          <tr><td style="font-weight:var(--fw-bold); color: var(--green-800);">Fréquence de vidange</td><td>Élevée (ex. ~2 jours pour 4 pers. / réceptacle 50 L)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- COMPARATIF FAMILLES -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 8px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Comparatif des familles de toilettes</h2>
+      {{ annBadge }}
+    </div>
+    <p style="font-size: var(--fs-body-s); color: var(--text-secondary); margin: 0 0 20px;">Cliquez une ligne pour ouvrir sa fiche. Les colonnes sont issues de la base « Les toilettes » (RAE).</p>
+    <div style="border-radius: var(--radius-lg); overflow:hidden; border: 1px solid var(--border-subtle); background: var(--white); overflow-x:auto;">
+      <table>
+        <thead>
+          <tr style="background: var(--green-900);">
+            <th style="color: var(--white); font-weight: var(--fw-bold);">Solution</th>
+            <th style="color: var(--white); font-weight: var(--fw-bold);">Sépare l'urine</th>
+            <th style="color: var(--white); font-weight: var(--fw-bold);">Difficulté</th>
+            <th style="color: var(--white); font-weight: var(--fw-bold);">Prix indicatif</th>
+            <th style="color: var(--white); font-weight: var(--fw-bold);">Vidange</th>
+            <th style="color: var(--white); font-weight: var(--fw-bold);">Acquisition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background: var(--yellow-400);">
+            <td style="font-weight: var(--fw-bold); color: var(--brown-900);">TLB — cette fiche</td>
+            <td style="color: var(--brown-900);">Non</td>
+            <td style="color: var(--brown-900);">Facile</td>
+            <td style="color: var(--brown-900);">&lt; 500 €</td>
+            <td style="color: var(--brown-900);">Élevée</td>
+            <td style="color: var(--brown-900);">Autoconstruction ou achat</td>
+          </tr>
+          <tr class="row-link" style="border-top: 1px solid var(--border-subtle); cursor:pointer;">
+            <td style="font-weight: var(--fw-bold); color: var(--green-900);"><span style="display:inline-flex; align-items:center; gap:8px;">Toilettes séparatives sans eau (avec bol)<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M9 6l6 6-6 6"></path></svg></span></td>
+            <td>Oui</td><td>Facile</td><td>&lt; 500 €</td><td>Moyenne</td><td>Autoconstruction ou achat</td>
+          </tr>
+          <tr class="row-link" style="border-top: 1px solid var(--border-subtle); cursor:pointer; background: var(--green-50);">
+            <td style="font-weight: var(--fw-bold); color: var(--green-900);"><span style="display:inline-flex; align-items:center; gap:8px;">Toilettes séparatives à eau (avec bol)<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M9 6l6 6-6 6"></path></svg></span></td>
+            <td>Oui</td><td>Facile</td><td>500 à 1 000 €</td><td>Moyenne</td><td>Achat</td>
+          </tr>
+          <tr class="row-link" style="border-top: 1px solid var(--border-subtle); cursor:pointer;">
+            <td style="font-weight: var(--fw-bold); color: var(--green-900);"><span style="display:inline-flex; align-items:center; gap:8px;">Toilettes séparatives (avec tapis)<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M9 6l6 6-6 6"></path></svg></span></td>
+            <td>Oui</td><td>Difficile</td><td>&gt; 2 000 €</td><td>Faible</td><td>Achat</td>
+          </tr>
+          <tr class="row-link" style="border-top: 1px solid var(--border-subtle); cursor:pointer; background: var(--green-50);">
+            <td style="font-weight: var(--fw-bold); color: var(--green-900);"><span style="display:inline-flex; align-items:center; gap:8px;">Toilettes à composteur relié<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M9 6l6 6-6 6"></path></svg></span></td>
+            <td>Non</td><td>Difficile</td><td>1 000 à 2 000 €</td><td>Faible</td><td>Autoconstruction ou achat</td>
+          </tr>
+          <tr class="row-link" style="border-top: 1px solid var(--border-subtle); cursor:pointer;">
+            <td style="font-weight: var(--fw-bold); color: var(--green-900);"><span style="display:inline-flex; align-items:center; gap:8px;">Urinoirs secs (féminin et mixte)<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M9 6l6 6-6 6"></path></svg></span></td>
+            <td>Urine seule</td><td>Moyen</td><td>–</td><td>–</td><td>Équipement complémentaire, pas une toilette complète</td>
+          </tr>
+          <tr style="border-top: 1px solid var(--border-subtle); background: var(--sand-50);">
+            <td style="font-weight: var(--fw-bold); color: var(--sand-600);">WC à eau classique <span style="font-weight: var(--fw-medium);">(référence)</span></td>
+            <td style="color: var(--sand-600);">Non</td>
+            <td style="color: var(--sand-600);">–</td>
+            <td style="color: var(--sand-600);">Variable</td>
+            <td style="color: var(--sand-600);">–</td>
+            <td style="color: var(--sand-600);">–</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- AVANTAGES / INCONVÉNIENTS -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px; display:grid; grid-template-columns: {{ gridCards2 }}; gap: 20px;">
+    <div style="background: var(--green-50); border-radius: var(--radius-lg); padding: 30px 32px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom: 18px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green-700)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"></circle><path d="M8 12.5l2.5 2.5L16 9"></path></svg>
+        <h3 style="font-family: var(--font-display); font-size: var(--fs-h5); color: var(--green-800); margin: 0;">Avantages</h3>
+      </div>
+      <ul style="margin:0; padding: 0 0 0 20px; display:flex; flex-direction:column; gap:12px;">
+        <li style="font-size: var(--fs-body-m); color: var(--green-900); line-height: var(--lh-body);">Installation simple, aisément réalisable dans le cas d'une rénovation.</li>
+        <li style="font-size: var(--fs-body-m); color: var(--green-900); line-height: var(--lh-body);">Permet d'ajouter rapidement un toilette n'importe où, sans souci de raccordement.</li>
+        <li style="font-size: var(--fs-body-m); color: var(--green-900); line-height: var(--lh-body);">Emprise au sol similaire à des toilettes à eau.</li>
+        <li style="font-size: var(--fs-body-m); color: var(--green-900); line-height: var(--lh-body);">Peu coûteux.</li>
+      </ul>
+    </div>
+    <div style="background: var(--sand-50); border-radius: var(--radius-lg); padding: 30px 32px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom: 18px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 22 20H2L12 3.5Z"></path><path d="M12 10v4.5"></path><circle cx="12" cy="17.6" r="0.2" stroke-width="2.6"></circle></svg>
+        <h3 style="font-family: var(--font-display); font-size: var(--fs-h5); color: var(--green-800); margin: 0;">Inconvénients</h3>
+      </div>
+      <ul style="margin:0; padding: 0 0 0 20px; display:flex; flex-direction:column; gap:14px;">
+        <li style="font-size: var(--fs-body-m); color: var(--green-900); line-height: var(--lh-body);"><strong>Stockage des matières court et fréquence de vidange élevée</strong> – dépend du volume du réceptacle (ex. tous les 2 jours pour une famille de 4 personnes et un réceptacle de 50 L).</li>
+        <li style="font-size: var(--fs-body-m); color: var(--green-900); line-height: var(--lh-body);"><strong>Nécessité de disposer d'une source de matières carbonées</strong> – privilégier les bois non traités, non exotiques, secs, en copeaux plutôt qu'en sciure.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ASTUCES -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 20px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Astuces</h2>
+      {{ annBadge }}
+    </div>
+    <div style="display:grid; grid-template-columns: {{ gridCards2 }}; gap: 14px; align-items:start;">
+      <sc-for list="{{ astuces }}" as="a" hint-placeholder-count="7">
+        <div style="display:flex; gap:14px; align-items:flex-start; background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px 18px;">
+          <sc-if value="{{ a.img }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ a.open }}" style="position:relative; flex:none; width:72px; height:72px; border-radius:10px; background: var(--green-100); border:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:center; overflow:hidden; cursor:zoom-in;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="8.5" cy="10" r="1.5"></circle><path d="M21 15l-5-5-9 9"></path></svg>
+              <sc-if value="{{ a.thumbImg }}" hint-placeholder-val="{{ false }}">{{ a.thumbImg }}</sc-if>
+              <div style="position:absolute; right:3px; bottom:3px; width:20px; height:20px; border-radius:6px; background:rgba(15,36,20,.72); color:#fff; display:flex; align-items:center; justify-content:center; z-index:2;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path><path d="M11 8v6M8 11h6"></path></svg></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ a.noImg }}" hint-placeholder-val="{{ true }}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none; margin-top:1px;"><path d="M9 18h6"></path><path d="M10 21h4"></path><path d="M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.5h6c0-1.1.4-1.9 1-2.5A6 6 0 0 0 12 3Z"></path></svg>
+          </sc-if>
+          <span style="font-size: var(--fs-body-s); color: var(--green-900); line-height: var(--lh-body); align-self:center;">{{ a.txt }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- REPÈRES COÛT -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 18px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Repères coût &amp; eau</h2>
+      {{ annBadge }}
+    </div>
+    <div style="display:grid; grid-template-columns: {{ gridCost }}; gap: 20px;">
+      <div style="background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 28px 30px;">
+        <span style="font-family: var(--font-sans); font-size: var(--fs-body-xs); font-weight: var(--fw-bold); letter-spacing:.06em; text-transform:uppercase; color: var(--green-600);">Fourchette de prix</span>
+        <div style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 6px 0 16px;">Moins de 500 €</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; justify-content:space-between; gap:16px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;"><span style="font-size:var(--fs-body-s); color:var(--green-900);"><strong>Autoconstruction</strong><br><span style="color:var(--text-muted);">seau inox, planches, abattant, bavette ; sciure souvent gratuite</span></span><span style="font-size:var(--fs-body-s); font-weight:var(--fw-bold); color:var(--green-700); white-space:nowrap;">~30 à 150 €</span></div>
+          <div style="display:flex; justify-content:space-between; gap:16px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px;"><span style="font-size:var(--fs-body-s); color:var(--green-900);"><strong>Manufacturé</strong><br><span style="color:var(--text-muted);">selon finitions et ventilation</span></span><span style="font-size:var(--fs-body-s); font-weight:var(--fw-bold); color:var(--green-700); white-space:nowrap;">~150 à 500 €</span></div>
+          <div style="display:flex; justify-content:space-between; gap:16px;"><span style="font-size:var(--fs-body-s); color:var(--green-900);"><strong>Entretien annuel</strong></span><span style="font-size:var(--fs-body-s); font-weight:var(--fw-bold); color:var(--green-700); white-space:nowrap;">Quasi nul</span></div>
+        </div>
+        <div style="margin-top: 20px; display:flex; gap:10px; align-items:flex-start; border-top:1px solid var(--border-subtle); padding-top:18px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none; margin-top:1px;"><path d="M9 18h6"></path><path d="M3 9h4l2-2h6l2 2h4"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          <p style="font-size: var(--fs-body-s); color: var(--green-900); margin: 0; line-height: var(--lh-body);"><strong>Où en trouver ?</strong> Consultez la <a href="#" style="color: var(--green-600); font-weight: var(--fw-bold);">liste des fabricants et distributeurs de toilettes sèches (Ceseau)</a>.</p>
+        </div>
+      </div>
+      <div style="background: var(--green-900); border-radius: var(--radius-lg); padding: 32px 30px; display:flex; flex-direction:column; justify-content:center;">
+        <span style="font-family: var(--font-sans); font-size: var(--fs-body-xs); font-weight: var(--fw-bold); letter-spacing:.06em; text-transform:uppercase; color: var(--green-300);">Économie d'eau réalisée</span>
+        <div style="font-family: var(--font-display); font-size: 64px; color: var(--yellow-400); line-height: 1; margin-top: 12px;">≈ 10 000 L</div>
+        <div style="font-size: var(--fs-body-s); font-weight: var(--fw-bold); color: var(--green-200); margin-top: 8px;">d'eau potable par an et par personne</div>
+        <p style="font-size: var(--fs-body-s); color: var(--green-300); margin-top: 14px; line-height: var(--lh-body); max-width: 40ch;">Par rapport à un WC à chasse d'eau classique.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARTE DE CONVERSION UNIQUE — Public -->
+  <div style="display:{{ convUniqueDisplay }}; max-width: 1080px; margin: 80px auto 0; padding: 0 24px;">
+    <div style="display:{{ annotationDisplay }}; background:#FFF6D8; border:1px dashed #D8B94A; border-radius: var(--radius-md); padding: 10px 16px; font-size: 12px; color:#6b5100; margin-bottom: 16px;">Note maquette : textes servis par l'Options Page ACF · liens en champs Page Link · composant <span style="font-family:monospace;">/rejoindre-atelier/</span>.</div>
+    <div style="border-radius: var(--radius-xl); border: 1.5px solid var(--green-300); background: var(--green-50); box-shadow: 0 14px 44px rgba(15,36,20,.08); padding: 44px;">
+      <div style="text-align:center; max-width: 60ch; margin: 0 auto;">
+        <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Quelles toilettes et quel assainissement pour vous ?</h2>
+        <p style="font-size: var(--fs-body-m); color: var(--text-secondary); margin: 14px 0 0; line-height: var(--lh-body);">Faites le test gratuit : 3 minutes pour identifier la solution adaptée à votre situation.</p>
+      </div>
+      <div style="display:grid; grid-template-columns: {{ gridCards2 }}; gap: 16px; margin-top: 32px;">
+        <div style="background: var(--white); border: 1px solid var(--green-200); border-radius: var(--radius-lg); padding: 24px 26px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom: 16px;">{{ badgeFreeOpen }}<span style="font-family: var(--font-sans); font-size: var(--fs-body-xs); font-weight: var(--fw-bold); letter-spacing:.06em; text-transform:uppercase; color: var(--green-600);">Compte gratuit</span></div>
+          <ul style="list-style:none; margin: 0; padding: 0; display:flex; flex-direction:column; gap:12px;">
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:var(--fs-body-s); color: var(--green-900); line-height:1.4;">{{ dotFree }}Réglementation détaillée</li>
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:var(--fs-body-s); color: var(--green-900); line-height:1.4;">{{ dotFree }}Décomposition des coûts</li>
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:var(--fs-body-s); color: var(--green-900); line-height:1.4;">{{ dotFree }}Calendrier d'entretien &amp; erreurs courantes</li>
+          </ul>
+        </div>
+        <div style="background: var(--white); border: 2px solid var(--yellow-400); border-radius: var(--radius-lg); padding: 24px 26px; box-shadow: 0 12px 34px rgba(255,222,103,.4);">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom: 16px;">{{ badgePaidInline }}<span style="font-family: var(--font-sans); font-size: var(--fs-body-xs); font-weight: var(--fw-bold); letter-spacing:.06em; text-transform:uppercase; color: var(--green-700);">L'Atelier</span></div>
+          <ul style="list-style:none; margin: 0; padding: 0; display:flex; flex-direction:column; gap:12px;">
+            <li style="display:flex; align-items:flex-start; gap:10px; font-size:var(--fs-body-s); color: var(--green-900); line-height:1.4;">{{ dotPaid }}<span><strong>Feuille de route personnalisée</strong> : dimensionnement pour votre cas, chiffrage, procédure SPANC de votre commune, mise en relation installateurs.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap: 14px; justify-content:center; margin-top: 32px;">
+        <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Button" variant="secondary" size="m" hint-size="auto,52px">Créer un compte gratuit</x-import>
+        <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Button" variant="accent" size="xl" hint-size="auto,60px">Rejoindre L'Atelier — 89 €/an</x-import>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ACTE 2 ================= -->
+  <div style="display:{{ annotationDisplay }}; max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; align-items:center; gap:8px; background: #F0EEE5; border: 1px dashed #B9B4A2; border-radius: 8px; padding: 5px 12px; width: fit-content;">
+      <span style="font-family: var(--font-sans); font-size: 10px; font-weight: var(--fw-bold); letter-spacing: 0.06em; text-transform: uppercase; color: #8a8574; padding-right: 4px; border-right: 1px solid #C9C4B4;">Acte 2</span>
+      <span style="font-family: var(--font-sans); font-size: 11.5px; font-weight: var(--fw-bold); color: #5f5b4d;">Est-ce faisable chez moi ?</span>
+    </div>
+  </div>
+
+  <!-- Réglementation détaillée 🔓 -->
+  <div style="max-width: 1080px; margin: 40px auto 0; padding: 0 24px;">
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+      <div>
+        <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Réglementation détaillée</h2>
+        <p style="font-size: var(--fs-body-s); color: var(--text-secondary); margin: 8px 0 0; max-width: 60ch;">Ce que dit la loi française pour les toilettes sèches.</p>
+      </div>
+      {{ badgeFree }}
+    </div>
+    <div style="position:relative; margin-top:20px; max-height:{{ a2MaxHeight }}; overflow:hidden;">
+      <div style="filter:{{ a2Filter }}; opacity:{{ a2Opacity }}; pointer-events:{{ a2PE }};">
+        <p style="font-size: var(--fs-body-m); color: var(--green-900); line-height: var(--lh-body); margin: 0; max-width: 84ch;">Les toilettes sèches sont autorisées en France par l'arrêté du 7 septembre 2009 (art. 17), à condition de ne générer aucune nuisance pour le voisinage, aucun rejet liquide hors de la parcelle ni pollution des eaux ; les sous-produits sont valorisés sur la parcelle et les eaux ménagères traitées par ailleurs. Une aire de compostage étanche n'est exigée qu'en zones à enjeu sanitaire / environnemental ou sur sols imperméables ; sinon l'infiltration des lixiviats est admise.</p>
+        <div style="margin-top: 20px; display:flex; gap:12px; align-items:flex-start; background: var(--green-100); border: 1px solid var(--green-200); border-radius: var(--radius-md); padding: 18px 20px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green-700)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="9.5"></circle><path d="M8 12.5l2.5 2.5L16 9"></path></svg>
+          <div>
+            <p style="font-size: var(--fs-body-s); color: var(--green-900); line-height: var(--lh-body); margin: 0;"><strong>Aucune démarche préalable n'est requise pour installer des TLB.</strong></p>
+            <p style="font-size: var(--fs-body-s); color: var(--green-900); line-height: var(--lh-body); margin: 6px 0 0;">Le SPANC intervient seulement lors du contrôle périodique : il vérifie l'absence de nuisances et que vos eaux ménagères sont traitées par ailleurs.</p>
+            <span style="display:{{ annotationDisplay }}; margin-top:8px; font-family:var(--font-sans); font-size:11px; font-weight:700; color:#6b5100; background:#FFF6D8; border:1px dashed #D8B94A; border-radius:6px; padding:3px 8px; width:fit-content;">à valider Vincent / RAE · bloc ACF procedure_spanc conditionnel</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:{{ a2Fade }}; position:absolute; left:0; right:0; bottom:0; height:110px; background:linear-gradient(180deg, rgba(251,250,249,0), var(--paper)); pointer-events:none;"></div>
+    </div>
+  </div>
+
+  <!-- Décomposition des coûts 🔓 -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+      <div>
+        <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Décomposition des coûts</h2>
+        <p style="font-size: var(--fs-body-s); color: var(--text-secondary); margin: 8px 0 0; max-width: 60ch;">Budget réaliste, poste par poste.</p>
+      </div>
+      {{ badgeFree }}
+    </div>
+    <div style="position:relative; margin-top:20px; max-height:{{ a2MaxHeight }}; overflow:hidden;">
+      <div style="filter:{{ a2Filter }}; opacity:{{ a2Opacity }}; pointer-events:{{ a2PE }};">
+        <div style="border-radius: var(--radius-lg); overflow:hidden; border: 1px solid var(--border-subtle); background: var(--white);">
+          <table>
+            <thead><tr style="background: var(--green-50);"><th style="color: var(--green-800); font-weight:var(--fw-bold); width:60%;">Poste</th><th style="color: var(--green-800); font-weight:var(--fw-bold);">Montant</th></tr></thead>
+            <tbody>
+              <tr style="border-top: 1px solid var(--border-subtle);"><td style="font-weight:var(--fw-bold); color: var(--green-800);">Autoconstruction <span style="font-weight:var(--fw-medium); color:var(--text-muted);">(seau inox, planches, abattant, bavette)</span></td><td>~30 à 150 €</td></tr>
+              <tr style="border-top: 1px solid var(--border-subtle); background: var(--green-50);"><td style="font-weight:var(--fw-bold); color: var(--green-800);">Modèle manufacturé prêt à poser</td><td>~150 à 500 €</td></tr>
+              <tr style="border-top: 1px solid var(--border-subtle);"><td style="font-weight:var(--fw-bold); color: var(--green-800);">Litière : sciure / copeaux</td><td>Souvent gratuite (ébénistes, scieries)</td></tr>
+              <tr style="border-top: 1px solid var(--border-subtle); background: var(--green-50);"><td style="font-weight:var(--fw-bold); color: var(--green-800);">Entretien annuel</td><td>Quasi nul</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="display:{{ a2Fade }}; position:absolute; left:0; right:0; bottom:0; height:110px; background:linear-gradient(180deg, rgba(251,250,249,0), var(--paper)); pointer-events:none;"></div>
+    </div>
+  </div>
+
+  <!-- Calendrier d'entretien 🔓 -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+      <div>
+        <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Calendrier d'entretien &amp; erreurs courantes</h2>
+        <p style="font-size: var(--fs-body-s); color: var(--text-secondary); margin: 8px 0 0; max-width: 60ch;">Le rythme à tenir et le piège principal à éviter.</p>
+      </div>
+      {{ badgeFree }}
+    </div>
+    <div style="position:relative; margin-top:20px; max-height:{{ a2MaxHeight }}; overflow:hidden;">
+      <div style="filter:{{ a2Filter }}; opacity:{{ a2Opacity }}; pointer-events:{{ a2PE }};">
+        <div style="display:grid; grid-template-columns: {{ gridCards2 }}; gap: 16px;">
+          <div style="background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px 22px;"><strong style="color: var(--green-900); font-size: var(--fs-body-m);">Vidange</strong><p style="margin:8px 0 0; color: var(--text-secondary); font-size: var(--fs-body-s); line-height: var(--lh-body);">Fréquence élevée, dépend du volume du réceptacle et du foyer (ex. ~2 jours pour 4 personnes / réceptacle 50 L).</p></div>
+          <div style="background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px 22px;"><strong style="color: var(--green-900); font-size: var(--fs-body-m);">Entretien usuel</strong><p style="margin:8px 0 0; color: var(--text-secondary); font-size: var(--fs-body-s); line-height: var(--lh-body);">Nettoyage à l'eau 1 fois par semaine, lors du vidage du seau. Pas de maintenance particulière.</p></div>
+        </div>
+        <div style="margin-top: 16px; display:flex; gap:12px; align-items:flex-start; background: var(--sand-50); border: 1px solid var(--sand-300); border-radius: var(--radius-md); padding: 18px 20px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex:none; margin-top:1px;"><path d="M12 3.5 22 20H2L12 3.5Z"></path><path d="M12 10v4.5"></path><circle cx="12" cy="17.6" r="0.2" stroke-width="2.6"></circle></svg>
+          <p style="font-size: var(--fs-body-s); color: var(--green-900); line-height: var(--lh-body); margin: 0;"><strong>Erreur courante à éviter :</strong> laisser un espace entre l'assise et le réceptacle de collecte – sinon l'installation d'une bavette est nécessaire.</p>
+        </div>
+      </div>
+      <div style="display:{{ a2Fade }}; position:absolute; left:0; right:0; bottom:0; height:110px; background:linear-gradient(180deg, rgba(251,250,249,0), var(--paper)); pointer-events:none;"></div>
+    </div>
+  </div>
+
+  <!-- CARTE DE CONVERSION — Membre gratuit -->
+  <div style="display:{{ convLightDisplay }}; max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="border-radius: var(--radius-xl); border: 1.5px solid var(--green-300); background: var(--green-50); padding: 30px 32px; display:grid; grid-template-columns: {{ gridConvLight }}; gap: 24px; align-items:center;">
+      <div style="display:flex; align-items:flex-start; gap:14px;">
+        <div style="flex:none; width:44px; height:44px; border-radius:13px; background: var(--green-700); display:flex; align-items:center; justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--white)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="11" width="15" height="9.5" rx="2"></rect><path d="M8 11V7.2a4 4 0 0 1 8 0V11"></path></svg>
+        </div>
+        <div>
+          <h3 style="font-family: var(--font-display); font-size: var(--fs-h5); color: var(--green-900); margin: 0;">Passez à la feuille de route personnalisée</h3>
+          <p style="font-size: var(--fs-body-s); color: var(--text-secondary); margin: 6px 0 0; max-width: 58ch;">Dimensionnement pour votre cas, chiffrage, SPANC de votre commune, installateurs.</p>
+        </div>
+      </div>
+      <div>
+        <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Button" variant="accent" size="m" hint-size="auto,52px">Rejoindre L'Atelier — 89 €/an</x-import>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ACTE 3 ================= -->
+  <div style="max-width: 1080px; margin: 80px auto 0; padding: 0 24px;">
+    <div style="display:{{ annotationDisplay }}; align-items:center; gap:8px; background: #F0EEE5; border: 1px dashed #B9B4A2; border-radius: 8px; padding: 5px 12px; width: fit-content; margin-bottom: 24px;">
+      <span style="font-family: var(--font-sans); font-size: 10px; font-weight: var(--fw-bold); letter-spacing: 0.06em; text-transform: uppercase; color: #8a8574; padding-right: 4px; border-right: 1px solid #C9C4B4;">Acte 3</span>
+      <span style="font-family: var(--font-sans); font-size: 11.5px; font-weight: var(--fw-bold); color: #5f5b4d;">Aller plus loin</span>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 18px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Témoignages terrain</h2>
+      {{ annBadge }}
+    </div>
+
+    <!-- exemples fictifs -->
+    <div style="display:grid; grid-template-columns: {{ gridCards2 }}; gap: 16px;">
+      <div style="background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px 26px; position:relative;">
+        <div style="position:absolute; top:16px; right:16px;"><span style="font-size:10px; font-weight:700; color:#6b5100; background:#FFF6D8; border:1px dashed #D8B94A; border-radius:999px; padding:3px 10px;">Exemple fictif</span></div>
+        <p style="font-size: var(--fs-body-m); color: var(--green-900); line-height: var(--lh-body); margin: 30px 0 0;">« Installées dans notre longère en rénovation, zéro odeur grâce à la ventilation. La corvée de seau est vite devenue une routine de 5 minutes. »</p>
+        <p style="margin:16px 0 0; font-size: var(--fs-body-xs); font-weight: var(--fw-bold); color: var(--green-700);">Prénom, dépt · TLB autoconstruite · foyer de 4 · depuis 2 ans</p>
+      </div>
+      <div style="background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px 26px; position:relative;">
+        <div style="position:absolute; top:16px; right:16px;"><span style="font-size:10px; font-weight:700; color:#6b5100; background:#FFF6D8; border:1px dashed #D8B94A; border-radius:999px; padding:3px 10px;">Exemple fictif</span></div>
+        <p style="font-size: var(--fs-body-m); color: var(--green-900); line-height: var(--lh-body); margin: 30px 0 0;">« En tiny house, c'était la seule option simple. Le plus dur a été de trouver un bon fournisseur de copeaux, pas l'entretien. »</p>
+        <p style="margin:16px 0 0; font-size: var(--fs-body-xs); font-weight: var(--fw-bold); color: var(--green-700);">Prénom, dépt · TLB manufacturée · foyer de 2 · depuis 8 mois</p>
+      </div>
+    </div>
+
+    <!-- formulaire de soumission -->
+    <div style="margin-top: 20px; background: var(--green-50); border: 1.5px solid var(--green-200); border-radius: var(--radius-lg); padding: 30px 32px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom: 6px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green-700)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"></path></svg>
+        <h3 style="font-family: var(--font-display); font-size: var(--fs-h5); color: var(--green-900); margin: 0;">Vous utilisez des TLB ? Partagez votre retour d'expérience</h3>
+      </div>
+      <p style="font-size: var(--fs-body-s); color: var(--text-secondary); margin: 0 0 22px; max-width: 62ch;">Votre expérience aidera d'autres visiteurs à se lancer. Les champs marqués d'un astérisque sont obligatoires.</p>
+
+      <div style="display:grid; grid-template-columns: {{ gridForm }}; gap: 16px;">
+        <div><label class="fld-lbl">Prénom ou pseudo *</label><input class="fld" type="text" placeholder="Ex. Camille"></div>
+        <div><label class="fld-lbl">Département *</label><input class="fld" type="text" placeholder="Ex. 56 – Morbihan"></div>
+        <div><label class="fld-lbl">Solution installée *</label><input class="fld" type="text" value="TLB – Toilettes à Litière Biomaîtrisée" readonly="{{ true }}" style="background: var(--green-100); color: var(--green-800); font-weight:700;"></div>
+        <div><label class="fld-lbl">Autoconstruite ou achetée</label><select class="fld"><option>Autoconstruite</option><option>Achetée (manufacturée)</option></select></div>
+        <div><label class="fld-lbl">Taille du foyer</label><input class="fld" type="text" placeholder="Ex. 4 personnes"></div>
+        <div><label class="fld-lbl">Depuis quand</label><input class="fld" type="text" placeholder="Ex. 2 ans"></div>
+        <div style="grid-column: 1 / -1;"><label class="fld-lbl">Votre retour * <span style="font-weight:400; color:var(--text-muted);">(ce qui marche, points de vigilance)</span></label><textarea class="fld" rows="4" placeholder="Partagez votre expérience concrète…"></textarea></div>
+        <div><label class="fld-lbl">Photo (optionnelle)</label><input class="fld" type="file" style="padding:9px 12px;"></div>
+        <div><label class="fld-lbl">E-mail * <span style="font-weight:400; color:var(--text-muted);">(non publié, pour modération)</span></label><input class="fld" type="email" placeholder="vous@exemple.fr"></div>
+      </div>
+
+      <label style="display:flex; align-items:flex-start; gap:10px; margin-top: 18px; cursor:pointer;">
+        <input type="checkbox" style="accent-color: var(--green-700); margin-top:3px;">
+        <span style="font-size: var(--fs-body-s); color: var(--green-900); line-height: var(--lh-body);">J'autorise la publication de mon retour sur cette fiche. *</span>
+      </label>
+
+      <div style="display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin-top: 22px;">
+        <x-import component-from-global-scope="PermacultureDesignDesignSystem_20f973.Button" variant="primary" size="m" hint-size="auto,48px">Envoyer mon témoignage</x-import>
+        <span style="display:flex; align-items:center; gap:7px; font-size: var(--fs-body-xs); color: var(--text-muted);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="9.5"></circle></svg>Retours modérés avant publication.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plans PDF / tuto 🔒 -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); background: var(--white); padding: 26px 30px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
+      <div style="flex:none; width:48px; height:48px; border-radius:13px; background: var(--green-900); display:flex; align-items:center; justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--white)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="11" width="15" height="9.5" rx="2"></rect><path d="M8 11V7.2a4 4 0 0 1 8 0V11"></path></svg>
+      </div>
+      <div style="flex:1; min-width: 220px;">
+        <h3 style="font-family: var(--font-display); font-size: var(--fs-h5); color: var(--green-900); margin: 0;">Plans et tutoriels</h3>
+        <p style="font-size: var(--fs-body-s); color: var(--text-secondary); margin: 6px 0 0;">Disponibles dans L'Atelier.</p>
+      </div>
+      {{ badgePaidRow }}
+    </div>
+  </div>
+
+  <!-- OÙ EN TROUVER ? (fabricants / revendeurs) -->
+  <div style="display:{{ fabricantsDisplay }}; max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 18px;">
+      <span style="flex:none; color: var(--green-600); display:flex;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg></span>
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Où en trouver ?</h2>
+      {{ annBadge }}
+    </div>
+    <p style="font-size: var(--fs-body-m); color: var(--text-secondary); margin: 0 0 18px; max-width: 74ch; line-height: var(--lh-body);">Quelques fabricants et revendeurs de TLB. Cette rubrique ne remplace pas la mise en relation avec un installateur.</p>
+    <div style="display:{{ annotationDisplay }}; background:#FFF6D8; border:1px dashed #D8B94A; border-radius: var(--radius-md); padding: 9px 15px; font-size: 12px; color:#6b5100; margin-bottom: 18px;">Répéteur ACF <span style="font-family:monospace;">fabricants</span> { nom, type, region, lien } — la section ne s'affiche que si ≥ 1 entrée.</div>
+
+    <div style="display:grid; grid-template-columns: {{ gridFlux }}; gap: 16px; align-items:stretch;">
+      <sc-for list="{{ fabricants }}" as="f" hint-placeholder-count="3">
+        <a href="#" style="text-decoration:none; display:flex; flex-direction:column; height:100%; box-sizing:border-box; background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px 22px; box-shadow: 0 6px 24px rgba(15,36,20,.05); transition: transform .15s;" style-hover="transform:translateY(-3px);">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom: 12px;">
+            <span style="font-size: 10px; font-weight: var(--fw-bold); letter-spacing:.05em; text-transform:uppercase; color: var(--green-700); background: var(--green-100); border-radius: 999px; padding: 3px 10px;">{{ f.type }}</span>
+          </div>
+          <h3 style="font-family: var(--font-display); font-size: var(--fs-h5); color: var(--green-900); margin: 0 0 6px;">{{ f.nom }}</h3>
+          <p style="font-size: var(--fs-body-s); color: var(--text-secondary); margin: 0 0 16px; line-height: var(--lh-body); flex:1;">Région : {{ f.region }}</p>
+          <span style="display:inline-flex; align-items:center; gap:6px; font-size: var(--fs-body-xs); font-weight: var(--fw-bold); color: var(--green-700);">Visiter le site <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></span>
+        </a>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 16px; display:flex; gap:11px; align-items:flex-start; background: var(--sand-50); border: 1px solid var(--sand-300); border-radius: var(--radius-md); padding: 16px 20px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sand-600)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex:none; margin-top:1px;"><circle cx="12" cy="12" r="9.5"></circle><path d="M12 8h.01"></path><path d="M11 12h1v4h1"></path></svg>
+      <p style="font-size: var(--fs-body-s); color: var(--green-900); line-height: var(--lh-body); margin: 0; max-width: 80ch;">Vous cherchez un <strong>installateur</strong> près de chez vous ? La mise en relation fait partie de la feuille de route personnalisée de L'Atelier — elle ne figure pas dans cette liste.</p>
+    </div>
+
+    <p style="font-size: var(--fs-body-s); color: var(--text-muted); margin: 16px 0 0; line-height: var(--lh-body);">Liste non exhaustive et non sponsorisée. <a href="#" style="color: var(--green-600); font-weight: var(--fw-bold);">Voir aussi la liste des fabricants et distributeurs (Ceseau).</a></p>
+  </div>
+
+  <!-- ALLER PLUS LOIN (transversal CPT) 🌍 -->
+  <div style="max-width: 1080px; margin: 72px auto 0; padding: 0 24px;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom: 8px;">
+      <h2 style="font-family: var(--font-display); font-size: var(--fs-h3); color: var(--green-900); margin: 0;">Aller plus loin</h2>
+      {{ annBadge }}
+    </div>
+    <p style="font-size: var(--fs-body-m); color: var(--green-900); margin: 0 0 28px; max-width: 74ch; line-height: var(--lh-body);">Ressources et contenus pour approfondir. Cette rubrique est commune à tous les types de toilettes.</p>
+
+    <div style="display:{{ annotationDisplay }}; background:#FFF6D8; border:1px dashed #D8B94A; border-radius: var(--radius-md); padding: 9px 15px; font-size: 12px; color:#6b5100; margin-bottom: 22px;">Champs ACF <span style="font-family:monospace;">livres</span>, <span style="font-family:monospace;">guides_pdf</span>, <span style="font-family:monospace;">articles_lies</span>, <span style="font-family:monospace;">videos_associees</span>, <span style="font-family:monospace;">systemes_lies</span> — chaque sous-bloc s'affiche seulement s'il est rempli.</div>
+
+    <div style="display:flex; flex-direction:column; gap: 36px;">
+
+      <!-- 1. Livres -->
+      <div style="display:{{ livresDisplay }};">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom: 14px;">
+          <span style="flex:none; width:30px; height:30px; border-radius:8px; background: var(--green-100); color: var(--green-700); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 0 1 2-2h12v13H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h12"></path></svg></span>
+          <span style="font-family: var(--font-sans); font-size: 12px; font-weight: var(--fw-bold); letter-spacing:.06em; text-transform:uppercase; color: var(--green-800);">Livres</span>
+        </div>
+        <div style="display:grid; grid-template-columns: {{ gridCards2 }}; gap: 16px; align-items:stretch;">
+          <sc-for list="{{ livres }}" as="b" hint-placeholder-count="1">
+            <a href="#" style="text-decoration:none; display:flex; gap:16px; align-items:stretch; background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 16px 18px; box-shadow: 0 6px 24px rgba(15,36,20,.05); transition: transform .15s;" style-hover="transform:translateY(-3px);">
+              <div style="flex:none; width:66px; height:94px; border-radius:8px; background: var(--green-100); border:1px solid var(--green-200); display:flex; align-items:center; justify-content:center; overflow:hidden;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 0 1 2-2h12v13H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h12"></path></svg></div>
+              <div style="display:flex; flex-direction:column; justify-content:center;">
+                <h3 style="font-family: var(--font-display); font-size: var(--fs-h5); color: var(--green-900); margin: 0 0 3px;">{{ b.titre }}</h3>
+                <sc-if value="{{ b.sous }}" hint-placeholder-val="{{ false }}"><p style="font-size: var(--fs-body-s); color: var(--green-900); margin: 0 0 6px; line-height: 1.35;">{{ b.sous }}</p></sc-if>
+                <p style="font-size: var(--fs-body-xs); font-weight: var(--fw-bold); color: var(--green-700); margin: 0 0 9px;">{{ b.auteur }}</p>
+                <span style="display:inline-flex; align-items:center; gap:6px; font-size: var(--fs-body-xs); font-weight: var(--fw-bold); color: var(--green-700);">Voir le livre <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></span>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- 2. Guides & PDF -->
+      <div style="display:{{ guidesPdfDisplay }};">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom: 14px;">
+          <span style="flex:none; width:30px; height:30px; border-radius:8px; background: var(--green-100); color: var(--green-700); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path></svg></span>
+          <span style="font-family: var(--font-sans); font-size: 12px; font-weight: var(--fw-bold); letter-spacing:.06em; text-transform:uppercase; color: var(--green-800);">Guides &amp; PDF</span>
+        </div>
+        <div style="display:grid; grid-template-columns: {{ gridCards2 }}; gap: 16px; align-items:stretch;">
+          <sc-for list="{{ guidesPdf }}" as="g" hint-placeholder-count="3">
+            <a href="#" style="text-decoration:none; display:flex; gap:14px; align-items:flex-start; background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: 0 6px 24px rgba(15,36,20,.05); transition: transform .15s;" style-hover="transform:translateY(-3px);">
+              <span style="flex:none; width:38px; height:38px; border-radius:9px; background: var(--green-100); color: var(--green-700); display:flex; align-items:center; justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path></svg></span>
+              <div style="flex:1;">
+                <h3 style="font-family: var(--font-sans); font-size: var(--fs-body-m); font-weight: var(--fw-bold); color: var(--green-900); margin: 0 0 4px; line-height: 1.3;">{{ g.titre }}</h3>
+                <p style="font-size: var(--fs-body-s); color: var(--green-900); margin: 0; line-height: 1.4;">{{ g.source }}</p>
+                <sc-if value="{{ g.licence }}" hint-placeholder-val="{{ false }}"><span style="display:inline-block; margin-top:8px; font-size: 10.5px; font-weight: var(--fw-bold); letter-spacing:.04em; text-transform:uppercase; color: var(--green-700); background: var(--green-100); border-radius: 999px; padding: 3px 10px;">{{ g.licence }}</span></sc-if>
+                <span style="display:inline-flex; align-items:center; gap:6px; margin-top:10px; font-size: var(--fs-body-xs); font-weight: var(--fw-bold); color: var(--green-700);">Ouvrir <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></span>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- 3. Articles -->
+      <div style="display:{{ articlesLiesDisplay }};">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom: 14px;">
+          <span style="flex:none; width:30px; height:30px; border-radius:8px; background: var(--green-100); color: var(--green-700); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a2 2 0 0 1 2 2v12a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2Z"></path><path d="M8 8h7"></path><path d="M8 12h7"></path><path d="M8 16h4"></path></svg></span>
+          <span style="font-family: var(--font-sans); font-size: 12px; font-weight: var(--fw-bold); letter-spacing:.06em; text-transform:uppercase; color: var(--green-800);">Articles</span>
+        </div>
+        <div style="display:grid; grid-template-columns: {{ gridCards2 }}; gap: 16px; align-items:stretch;">
+          <sc-for list="{{ articlesLies }}" as="a2" hint-placeholder-count="1">
+            <a href="#" style="text-decoration:none; display:flex; gap:14px; align-items:flex-start; background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: 0 6px 24px rgba(15,36,20,.05); transition: transform .15s;" style-hover="transform:translateY(-3px);">
+              <span style="flex:none; width:38px; height:38px; border-radius:9px; background: var(--green-100); color: var(--green-700); display:flex; align-items:center; justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a2 2 0 0 1 2 2v12a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2Z"></path><path d="M8 8h7"></path><path d="M8 12h7"></path><path d="M8 16h4"></path></svg></span>
+              <div style="flex:1;">
+                <h3 style="font-family: var(--font-sans); font-size: var(--fs-body-m); font-weight: var(--fw-bold); color: var(--green-900); margin: 0 0 4px; line-height: 1.3;">{{ a2.titre }}</h3>
+                <p style="font-size: var(--fs-body-s); color: var(--green-900); margin: 0; line-height: 1.4;">Source : {{ a2.source }}</p>
+                <span style="display:inline-flex; align-items:center; gap:6px; margin-top:10px; font-size: var(--fs-body-xs); font-weight: var(--fw-bold); color: var(--green-700);">Lire l'article <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></span>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- 4. Vidéos -->
+      <div style="display:{{ videosAssocieesDisplay }};">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom: 14px;">
+          <span style="flex:none; width:30px; height:30px; border-radius:8px; background: var(--green-100); color: var(--green-700); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M10 9l5 3-5 3Z"></path></svg></span>
+          <span style="font-family: var(--font-sans); font-size: 12px; font-weight: var(--fw-bold); letter-spacing:.06em; text-transform:uppercase; color: var(--green-800);">Vidéos</span>
+        </div>
+        <div style="display:grid; grid-template-columns: {{ gridCards2 }}; gap: 16px; align-items:stretch;">
+          <sc-for list="{{ videosAssociees }}" as="vd" hint-placeholder-count="1">
+            <a href="#" style="text-decoration:none; display:flex; flex-direction:column; background: var(--white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow:hidden; box-shadow: 0 6px 24px rgba(15,36,20,.05); transition: transform .15s;" style-hover="transform:translateY(-3px);">
+              <div style="position:relative; aspect-ratio:16/9; background: var(--green-100); display:flex; align-items:center; justify-content:center;">
+                <span style="width:48px; height:48px; border-radius:50%; background:rgba(15,36,20,.72); display:flex; align-items:center; justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="M8 5v14l11-7Z"></path></svg></span>
+              </div>
+              <div style="padding: 16px 18px;">
+                <h3 style="font-family: var(--font-sans); font-size: var(--fs-body-m); font-weight: var(--fw-bold); color: var(--green-900); margin: 0 0 4px; line-height: 1.3;">{{ vd.titre }}</h3>
+                <p style="font-size: var(--fs-body-s); color: var(--green-900); margin: 0; line-height: 1.4;">Source : {{ vd.source }}</p>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- 5. Contenus PCD liés -->
+      <div style="display:{{ systemesLiesDisplay }};">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom: 14px;">
+          <span style="flex:none; width:30px; height:30px; border-radius:8px; background: var(--green-100); color: var(--green-700); display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 9-10 0 5-1 10-2 12"></path><path d="M11 20c0-3 1-6 3-8"></path></svg></span>
+          <span style="font-family: var(--font-sans); font-size: 12px; font-weight: var(--fw-bold); letter-spacing:.06em; text-transform:uppercase; color: var(--green-800);">Contenus PCD liés</span>
+        </div>
+        <div style="display:grid; grid-template-columns: {{ gridFlux }}; gap: 16px; align-items:stretch;">
+          <sc-for list="{{ systemesLies }}" as="sl" hint-placeholder-count="3">
+            <a href="#" style="text-decoration:none; display:flex; align-items:center; gap:12px; background: var(--green-50); border: 1px solid var(--green-200); border-radius: var(--radius-lg); padding: 18px 20px; transition: transform .15s;" style-hover="transform:translateY(-3px);">
+              <span style="flex:none; width:38px; height:38px; border-radius:10px; background: var(--white); border:1px solid var(--green-200); color: var(--green-700); display:flex; align-items:center; justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 9-10 0 5-1 10-2 12"></path><path d="M11 20c0-3 1-6 3-8"></path></svg></span>
+              <div style="flex:1;">
+                <span style="font-size: 10px; font-weight: var(--fw-bold); letter-spacing:.05em; text-transform:uppercase; color: var(--sand-600);">{{ sl.kind }}</span>
+                <h3 style="font-family: var(--font-sans); font-size: var(--fs-body-m); font-weight: var(--fw-bold); color: var(--green-900); margin: 2px 0 0; line-height: 1.3;">{{ sl.titre }}</h3>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M9 6l6 6-6 6"></path></svg>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BARRE D'ENGAGEMENT sticky -->
+  <div style="position: {{ engagePosition }}; bottom: {{ engageBottom }}; left: 0; right: 0; z-index: 40; display: flex; justify-content: center; pointer-events: none; {{ engageExtra }}">
+    <div style="pointer-events: auto; display: flex; align-items: center; gap: 18px; background: var(--white); border: 1px solid var(--border-subtle); border-radius: 999px; padding: 11px 22px; box-shadow: 0 10px 34px rgba(15,36,20,.16);">
+      <button style="border:none; background:none; cursor:pointer; padding:0; display:flex; align-items:center; gap:7px; color: var(--text-secondary); font-family: var(--font-sans); font-size: var(--fs-body-s); font-weight: var(--fw-bold);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V6a1.5 1.5 0 0 1 3 0v5"></path><path d="M11 12V4.5a1.5 1.5 0 0 1 3 0V12"></path><path d="M14 12V6a1.5 1.5 0 0 1 3 0v8"></path><path d="M17 10a1.5 1.5 0 0 1 3 0v5a6 6 0 0 1-6 6h-2a7 7 0 0 1-6-3.5L4 14a1.4 1.4 0 0 1 2.2-1.7L8 14"></path></svg>128</button>
+      <button style="border:none; background:none; cursor:pointer; padding:0; display:flex; align-items:center; gap:7px; color: var(--text-secondary); font-family: var(--font-sans); font-size: var(--fs-body-s); font-weight: var(--fw-bold);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"></path></svg>24</button>
+      <button style="border:none; background:none; cursor:pointer; padding:0; display:flex; color: var(--text-secondary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-9.3-8.7C1.2 8.4 2.7 5 6 5c1.9 0 3.3 1 4 2.3C10.7 6 12.1 5 14 5c3.3 0 4.8 3.4 3.3 6.3C19 15.7 12 20 12 20Z"></path></svg></button>
+      <button style="border:none; background:none; cursor:pointer; padding:0; display:flex; color: var(--text-secondary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12v16l-6-4-6 4V4Z"></path></svg></button>
+      <button style="border:none; background:none; cursor:pointer; padding:0; display:flex; color: var(--text-secondary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-7"></path><path d="M16 8l-4-4-4 4"></path><path d="M12 4v13"></path></svg></button>
+      <div style="width:1px; height:22px; background: var(--border-subtle);"></div>
+      <button style="border:none; background:none; cursor:pointer; padding:0; display:flex; color: var(--text-muted);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="2"></rect><path d="M9 9V7a3 3 0 0 1 6 0v2"></path><path d="M10 14h.01M14 14h.01M12 16.5c-.6 0-1-.3-1-.5"></path></svg></button>
+      <button style="border:none; background:none; cursor:pointer; padding:0; display:flex; color: var(--text-muted);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 21h4"></path><path d="M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.5h6c0-1.1.4-1.9 1-2.5A6 6 0 0 0 12 3Z"></path></svg></button>
+    </div>
+  </div>
+
+  </div><!-- /screen -->
+  </div><!-- /device frame -->
+
+  {{ lightboxEl }}
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1280}}">
+class Component extends DCLogic {
+  state = { viewMode: "desktop", profile: "public", showACF: false, showAnnotations: false, lightbox: null, galleryIdx: {} };
+
+  setDesktop = () => this.setState({ viewMode: "desktop" });
+  setMobile = () => this.setState({ viewMode: "mobile" });
+  setPublic = () => this.setState({ profile: "public" });
+  setGratuit = () => this.setState({ profile: "gratuit" });
+  setPayant = () => this.setState({ profile: "payant" });
+  toggleACF = () => this.setState(s => ({ showACF: !s.showACF }));
+  toggleAnnotations = () => this.setState(s => ({ showAnnotations: !s.showAnnotations }));
+  openLightbox = (data) => this.setState({ lightbox: data });
+  closeLightbox = () => this.setState({ lightbox: null });
+  lbGo = (dir) => this.setState(s => {
+    const lb = s.lightbox;
+    if (!lb || !lb.gallery) return null;
+    const n = lb.gallery.length;
+    return { lightbox: { ...lb, index: ((lb.index + dir) % n + n) % n } };
+  });
+  onKeyDown = (e) => {
+    const lb = this.state.lightbox;
+    if (!lb) return;
+    if (e.key === "Escape") { this.closeLightbox(); return; }
+    if (!lb.gallery) return;
+    if (e.key === "ArrowLeft") this.lbGo(-1);
+    if (e.key === "ArrowRight") this.lbGo(1);
+  };
+  componentDidMount() { window.addEventListener("keydown", this.onKeyDown); }
+  componentWillUnmount() { window.removeEventListener("keydown", this.onKeyDown); }
+  onLbTouchStart = (e) => { this._touchX = e.touches[0].clientX; };
+  onLbTouchEnd = (e) => {
+    if (this._touchX == null) return;
+    const dx = e.changedTouches[0].clientX - this._touchX;
+    if (Math.abs(dx) > 40) this.lbGo(dx < 0 ? 1 : -1);
+    this._touchX = null;
+  };
+
+  h = (...a) => React.createElement(...a);
+
+  globeIcon(sz, col) {
+    return this.h("svg", { width: sz, height: sz, viewBox: "0 0 24 24", fill: "none", stroke: col, strokeWidth: 1.9, strokeLinecap: "round", strokeLinejoin: "round" },
+      this.h("circle", { cx: 12, cy: 12, r: 9 }),
+      this.h("path", { d: "M3 12h18" }),
+      this.h("path", { d: "M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18" }));
+  }
+  lockIcon(sz, col, open) {
+    return this.h("svg", { width: sz, height: sz, viewBox: "0 0 24 24", fill: "none", stroke: col, strokeWidth: 2.1, strokeLinecap: "round", strokeLinejoin: "round" },
+      this.h("rect", { x: 4.5, y: 11, width: 15, height: 9.5, rx: 2 }),
+      this.h("path", { d: open ? "M8 11V7.2a4 4 0 0 1 7.6-1.6" : "M8 11V7.2a4 4 0 0 1 8 0V11" }));
+  }
+  pill(bg, fg, border, icon, label) {
+    return this.h("div", { style: {
+      display: "inline-flex", alignItems: "center", gap: "6px", flex: "none",
+      background: bg, color: fg, border: border || "none", borderRadius: "999px",
+      whiteSpace: "nowrap", padding: "5px 12px 5px 9px", fontFamily: "var(--font-sans)",
+      fontSize: "11.5px", fontWeight: "var(--fw-bold)",
+    } }, icon, label);
+  }
+  badgeFreeOpen() { return this.h("span", { style: { color: "var(--green-600)", display: "inline-flex" } }, this.lockIcon(15, "currentColor", true)); }
+  badgePaidInline() { return this.h("span", { style: { color: "var(--green-700)", display: "inline-flex" } }, this.lockIcon(15, "currentColor", false)); }
+
+  pin(n) {
+    return this.h("span", { style: { width: "30px", height: "30px", borderRadius: "50%", background: "#2D5016", color: "#fff", fontWeight: 800, fontSize: "14px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 3px 10px rgba(45,80,22,.4)", fontFamily: "var(--font-sans)" } }, n);
+  }
+  dot(bg, fg) {
+    return this.h("span", { style: { flex: "none", width: "22px", height: "22px", borderRadius: "50%", background: bg, color: fg, display: "flex", alignItems: "center", justifyContent: "center", marginTop: "1px" } },
+      this.h("svg", { width: 12, height: 12, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.6, strokeLinecap: "round", strokeLinejoin: "round" }, this.h("path", { d: "M5 12.5l4 4L19 7" })));
+  }
+  resIcon(kind) {
+    if (kind === "video") return this.h("svg", { width: 17, height: 17, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" }, this.h("rect", { x: 3, y: 5, width: 18, height: 14, rx: 2 }), this.h("path", { d: "M10 9l5 3-5 3Z" }));
+    if (kind === "book") return this.h("svg", { width: 17, height: 17, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" }, this.h("path", { d: "M4 19.5V6a2 2 0 0 1 2-2h12v13H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h12" }));
+    return this.h("svg", { width: 17, height: 17, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" }, this.h("path", { d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" }), this.h("path", { d: "M14 2v6h6" }));
+  }
+
+  chevron(dir) {
+    const d = dir === "left" ? "M15 18l-6-6 6-6" : "M9 6l6 6-6 6";
+    return this.h("svg", { width: 20, height: 20, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" }, this.h("path", { d }));
+  }
+  buildGallery(id, imgs, fallbackCredit) {
+    const h = this.h;
+    const n = imgs.length;
+    const idx = (((this.state.galleryIdx[id] || 0) % n) + n) % n;
+    const cur = imgs[idx];
+    const curCredit = cur.credit || fallbackCredit || "";
+    const go = (i) => (e) => { e.stopPropagation(); this.setState(s => ({ galleryIdx: { ...s.galleryIdx, [id]: ((i % n) + n) % n } })); };
+    const openLb = () => this.openLightbox({ gallery: imgs, index: idx, credit: fallbackCredit });
+    const magnifier = h("div", { style: { position: "absolute", right: "6px", top: "6px", width: "22px", height: "22px", borderRadius: "6px", background: "rgba(15,36,20,.72)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 } },
+      h("svg", { width: 13, height: 13, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" }, h("circle", { cx: 11, cy: 11, r: 7 }), h("path", { d: "M21 21l-4.3-4.3" }), h("path", { d: "M11 8v6M8 11h6" })));
+    const imgLayer = cur.src
+      ? h("div", { onClick: openLb, style: { position: "absolute", inset: 0, backgroundImage: "url('" + cur.src + "')", backgroundSize: "contain", backgroundPosition: "center", backgroundRepeat: "no-repeat", cursor: "zoom-in" } }, magnifier)
+      : h("div", { onClick: openLb, style: { position: "absolute", inset: 0, background: "var(--green-100)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "zoom-in" } },
+          h("svg", { width: 30, height: 30, viewBox: "0 0 24 24", fill: "none", stroke: "var(--green-600)", strokeWidth: 1.6, strokeLinecap: "round", strokeLinejoin: "round" }, h("rect", { x: 3, y: 5, width: 18, height: 14, rx: 2 }), h("circle", { cx: 8.5, cy: 10, r: 1.5 }), h("path", { d: "M21 15l-5-5-9 9" })),
+          magnifier);
+    const arrow = (side, dir) => h("button", { onClick: go(dir === "left" ? idx - 1 : idx + 1), "aria-label": dir === "left" ? "Image précédente" : "Image suivante", style: { position: "absolute", top: "50%", [side]: "8px", transform: "translateY(-50%)", width: "32px", height: "32px", borderRadius: "50%", border: "none", background: "rgba(255,255,255,.92)", color: "var(--green-900)", boxShadow: "0 2px 8px rgba(15,36,20,.18)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 } }, this.chevron(dir));
+    return h("div", { style: { position: "relative", aspectRatio: "16/9", borderRadius: "var(--radius-md)", overflow: "hidden", border: "1px solid var(--border-subtle)", background: "#fff", marginBottom: "16px" } },
+      imgLayer,
+      n > 1 ? arrow("left", "left") : null,
+      n > 1 ? arrow("right", "right") : null,
+      curCredit ? h("div", { style: { position: "absolute", right: 0, bottom: 0, background: "rgba(15,36,20,.72)", color: "#fff", fontSize: "11px", padding: "4px 10px", fontFamily: "var(--font-sans)", borderTopLeftRadius: "8px", zIndex: 2 } }, "\u00A9 " + curCredit) : null,
+      n > 1 ? h("div", { style: { position: "absolute", left: 0, right: 0, bottom: "10px", display: "flex", justifyContent: "center", gap: "7px", zIndex: 2 } },
+        imgs.map((g, i) => h("button", { key: i, onClick: go(i), "aria-label": "Voir " + g.caption, style: { width: i === idx ? "22px" : "8px", height: "8px", borderRadius: "999px", border: "none", padding: 0, cursor: "pointer", background: i === idx ? "var(--green-700)" : "rgba(255,255,255,.92)", boxShadow: "0 1px 3px rgba(15,36,20,.3)", transition: "width .2s" } }))) : null
+    );
+  }
+
+  buildPhoto(src, credit) {
+    const h = this.h;
+    return h("div", { onClick: () => this.openLightbox({ src, caption: "", credit }), style: { position: "relative", aspectRatio: "16/9", borderRadius: "12px", overflow: "hidden", border: "1px solid var(--green-200)", background: "#fff", backgroundImage: "url('" + src + "')", backgroundSize: "contain", backgroundPosition: "center", backgroundRepeat: "no-repeat", cursor: "zoom-in", marginBottom: "16px" } },
+      credit ? h("div", { style: { position: "absolute", right: 0, bottom: 0, background: "rgba(15,36,20,.72)", color: "#fff", fontSize: "11px", padding: "4px 10px", fontFamily: "var(--font-sans)", borderTopLeftRadius: "8px" } }, "\u00A9 " + credit) : null);
+  }
+
+  renderVals() {
+    const { viewMode, profile, showACF, showAnnotations } = this.state;
+    const mobile = viewMode === "mobile";
+    const gratuitUnlocked = profile === "gratuit" || profile === "payant";
+    const payantUnlocked = profile === "payant";
+    const viewedAsLabel = profile === "public" ? "Visiteur anonyme" : profile === "gratuit" ? "Membre gratuit" : "Membre payant";
+    const active = { bg: "var(--green-900)", fg: "var(--white)" };
+    const inactive = { bg: "transparent", fg: "#5b5f5c" };
+
+    // ---- badges d'accès (calque annotations) ----
+    const annBadge = showAnnotations ? this.pill("var(--green-100)", "var(--green-800)", "1px solid var(--green-200)", this.globeIcon(13, "currentColor"), "Public") : null;
+    // section gratuit : visible si verrouillée (statut), sinon seulement en annotations
+    const badgeFree = (!gratuitUnlocked)
+      ? this.pill("var(--green-50)", "var(--green-700)", "1px solid var(--green-200)", this.lockIcon(13, "currentColor", false), "Membre gratuit")
+      : (showAnnotations ? this.pill("var(--green-50)", "var(--green-700)", "1px solid var(--green-200)", this.lockIcon(13, "currentColor", true), "Membre gratuit") : null);
+    // section Atelier : visible si verrouillée (statut), sinon seulement en annotations
+    const badgePaidRow = (!payantUnlocked)
+      ? this.pill("var(--green-900)", "var(--white)", "none", this.lockIcon(13, "currentColor", false), "L'Atelier")
+      : (showAnnotations ? this.pill("var(--green-900)", "var(--white)", "none", this.lockIcon(13, "currentColor", true), "L'Atelier") : null);
+
+    const variantes = [
+      { title: "Autoconstruit ou manufacturé", desc: "Autoconstruit : s'adapte à vos souhaits de formes et matériaux ; manufacturé : prêt à poser rapidement.", credit: "Sandra Martins / Chier Sec (CC BY-NC)" },
+      { title: "Réceptacle à sac biodégradable", desc: "Certaines toilettes reçoivent un sac au lieu d'un seau ; pratique pour les lieux de passage.", credit: "" },
+      { title: "Bac à litière intégré ou séparé", desc: "Inclus dans la structure, ou contenant autonome et déplaçable.", credit: "" },
+      { title: "Version grand volume / mobile", desc: "Événementiel (festivals, spectacles) ou emplacements temporaires (chantiers) ; souvent tout-en-un.", credit: "RAE — Guide Assainissement Écologique" },
+    ];
+    const galleryImgs = [
+      { src: "uploads/toilette-seche-la-coccinelle-douglas.jpg", caption: "Toilette seule" },
+      { src: "uploads/bac-copeaux-toilette-seche-ferme.jpg", caption: "Bac à litière séparé" },
+      { src: "uploads/toilette-seche-le-papillon-douglas-1.jpg", caption: "Toilettes avec bac à litière intégré" },
+    ];
+    variantes[3].credit = "";
+    variantes.forEach(v => { v.galleryEl = null; v.photoEl = null; });
+    variantes[0].galleryEl = this.buildGallery("autoconstruit", [
+      { src: "uploads/variante-autoconstruite.png", caption: "Toilettes sèches autoconstruites", credit: "" },
+      { src: "uploads/variante-manufacturee.png", caption: "Toilettes manufacturées", credit: "mes-toilettes-seches.fr" },
+    ], "");
+    variantes[1].galleryEl = this.buildGallery("sac", [
+      { src: "uploads/variante-sac-biodegradable.png", caption: "Toilette à sac biodégradable", credit: "Ziya" },
+    ], "Ziya");
+    variantes[2].galleryEl = this.buildGallery("litiere", galleryImgs, "Lecopot");
+    variantes[3].photoEl = this.buildPhoto("uploads/TROBOLO-KersaBoem-2-Look_inside.webp", "Trobolo");
+    variantes.forEach(v => { v.placeholder = !v.galleryEl && !v.photoEl; });
+
+    const legende = [
+      { n: 1, txt: "Seau inox" },
+      { n: 2, txt: "Bavette inox" },
+      { n: 3, txt: "Support bois vernis" },
+      { n: 4, txt: "Abattant toilette classique" },
+      { n: 5, txt: "Ventilation (optionnelle mais vivement recommandée)" },
+      { n: 6, txt: "Bac à sciure intégré, ou séparé avec pelle à copeaux" },
+    ];
+
+    const mk = (txt, img, credit, src, caption) => ({ txt, img: !!img, noImg: !img, credit: credit || "", src: src || "", cap: caption || "" });
+    const astuces = [
+      mk("Ventilation très fortement conseillée (bouche d'extraction au plus près du réceptacle).", true, "Trobolo", "https://trobolo.com/cdn/shop/files/TROBOLO-Exhaust-pipe-set.jpg?v=1725876913", "Kit conduit d'évacuation d'air"),
+      mk("Privilégier l'inox (seau et bavette) au plastique, qui peut provoquer des odeurs sur le long terme.", false),
+      mk("Éviter l'achat d'une bavette en calant le support bois sur la hauteur du seau.", false),
+      mk("Bien vernir les planches utilisées pour la fabrication.", false),
+      mk("Une lumière basse / rasante réduit la visibilité sur les matières.", false),
+      mk("Sciure souvent gratuite chez les ébénistes locaux.", false),
+      mk("Un deuxième seau avec couvercle espace la corvée de vidage / nettoyage.", false),
+    ];
+    astuces.forEach(a => {
+      a.thumbImg = a.src ? this.h("img", { src: a.src, alt: a.cap || "", style: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" } }) : null;
+      a.open = () => this.openLightbox(a.src ? { src: a.src, caption: a.cap, credit: a.credit } : { txt: a.txt, credit: a.credit });
+    });
+
+    const NB = "\u202F"; // narrow no-break space
+    const comparRows = [
+      { solution: "Toilettes séparatives sans eau (avec bol)", urine: "Oui", diff: "Facile", prix: "< 500" + NB + "€", vidange: "Moyenne", acq: "Autoconstruction ou achat" },
+      { solution: "Toilettes séparatives à eau (avec bol)", urine: "Oui", diff: "Facile", prix: "500 à 1" + NB + "000" + NB + "€", vidange: "Moyenne", acq: "Achat" },
+      { solution: "Toilettes séparatives (avec tapis)", urine: "Oui", diff: "Difficile", prix: "> 2" + NB + "000" + NB + "€", vidange: "Faible", acq: "Achat" },
+      { solution: "Toilettes à composteur relié", urine: "Non", diff: "Difficile", prix: "1" + NB + "000 à 2" + NB + "000" + NB + "€", vidange: "Faible", acq: "Autoconstruction ou achat" },
+      { solution: "Urinoirs secs (féminin et mixte)", urine: "Urine seule", diff: "Moyen", prix: "[à renseigner]", vidange: "[à renseigner]", acq: "Équipement complémentaire, pas une toilette complète" },
+    ];
+
+    const livres = [
+      { titre: "Installer et utiliser des toilettes sèches", sous: "Des solutions pour gagner en autonomie", auteur: "Rustica Éditions", href: "#" },
+    ];
+    const guidesPdf = [
+      { titre: "Guide du compostage", source: "RAE / ADEME", licence: "", href: "#" },
+      { titre: "Construire un modèle de toilettes à litière (p.\u202F49)", source: "Guide Assainissement Écologique 2023 (RAE)", licence: "", href: "#" },
+      { titre: "«\u202FChier Sec\u202F»", source: "S. Martins & C. Chabot", licence: "CC BY-NC 4.0", href: "#" },
+    ];
+    const articlesLies = [
+      { titre: "«\u202FToilettes sèches familiales\u202F»", source: "Low-tech Lab", href: "#" },
+    ];
+    const videosAssociees = [
+      { titre: "«\u202FToilettes sèches familiales\u202F»", source: "Low-tech Lab", href: "#" },
+    ];
+    const systemesLies = [
+      { titre: "Aire de compostage", kind: "Filière de traitement", href: "#" },
+      { titre: "Phytoépuration", kind: "Eaux ménagères", href: "#" },
+      { titre: "Filtre à broyat de bois (FBB)", kind: "Eaux ménagères", href: "#" },
+    ];
+
+    const fabricants = [
+      { nom: "[Fabricant à valider RAE]", type: "Fabricant", region: "[Région]" },
+      { nom: "[Revendeur à valider RAE]", type: "Revendeur", region: "[Région]" },
+      { nom: "[Fabricant à valider RAE]", type: "Fabricant", region: "[Région]" },
+    ];
+
+    // ---- lightbox (galerie plein écran + astuces) ----
+    const lb = this.state.lightbox;
+    let lbItems = null, lbIdx = 0, lbSrc = null, lbCaption = null, lbCredit = null;
+    if (lb) {
+      lbCredit = lb.credit || "";
+      if (lb.gallery) {
+        lbItems = lb.gallery;
+        const n = lbItems.length;
+        lbIdx = ((lb.index % n) + n) % n;
+        lbSrc = lbItems[lbIdx].src;
+        lbCaption = lbItems[lbIdx].caption;
+        lbCredit = lbItems[lbIdx].credit || lb.credit || "";
+      } else {
+        lbSrc = lb.src || null;
+        lbCaption = lb.caption || lb.txt || null;
+      }
+    }
+    const lbInner = lbSrc
+      ? this.h("div", { onClick: (e) => e.stopPropagation(), style: { background: "#fff", border: "1px solid var(--green-200)", borderRadius: "var(--radius-lg)", width: "min(860px, 92vw)", aspectRatio: "4/3", display: "flex", alignItems: "center", justifyContent: "center", cursor: "default", overflow: "hidden" } },
+          this.h("img", { src: lbSrc, alt: lbCaption || "", style: { maxWidth: "100%", maxHeight: "100%", objectFit: "contain" } }))
+      : this.h("div", { onClick: (e) => e.stopPropagation(), style: { background: "var(--green-100)", border: "1px solid var(--green-200)", borderRadius: "var(--radius-lg)", width: "min(760px, 90vw)", aspectRatio: "4/3", display: "flex", alignItems: "center", justifyContent: "center", cursor: "default", overflow: "hidden" } },
+          this.h("svg", { width: 64, height: 64, viewBox: "0 0 24 24", fill: "none", stroke: "var(--green-600)", strokeWidth: 1.4, strokeLinecap: "round", strokeLinejoin: "round" }, this.h("rect", { x: 3, y: 5, width: 18, height: 14, rx: 2 }), this.h("circle", { cx: 8.5, cy: 10, r: 1.5 }), this.h("path", { d: "M21 15l-5-5-9 9" })));
+    const lbArrow = (dir) => this.h("button", {
+      onClick: (e) => { e.stopPropagation(); this.lbGo(dir === "left" ? -1 : 1); },
+      "aria-label": dir === "left" ? "Image précédente" : "Image suivante",
+      style: { position: "absolute", top: "50%", [dir]: "clamp(10px, 4vw, 44px)", transform: "translateY(-50%)", width: "56px", height: "56px", borderRadius: "50%", border: "none", background: "rgba(255,255,255,.16)", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 3 },
+    }, this.chevron(dir));
+    const lightboxEl = lb ? this.h("div", {
+      onClick: this.closeLightbox,
+      onTouchStart: this.onLbTouchStart,
+      onTouchEnd: this.onLbTouchEnd,
+      style: { position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,26,18,.82)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 24px", cursor: "zoom-out" },
+    },
+      this.h("button", { onClick: this.closeLightbox, "aria-label": "Fermer", style: { position: "absolute", top: "22px", right: "26px", width: "40px", height: "40px", borderRadius: "50%", border: "none", background: "rgba(255,255,255,.14)", color: "#fff", cursor: "pointer", fontSize: "20px", lineHeight: 1, zIndex: 3 } }, "\u00D7"),
+      lbItems ? lbArrow("left") : null,
+      lbItems ? lbArrow("right") : null,
+      lbInner,
+      this.h("div", { style: { marginTop: "16px", maxWidth: "min(860px, 92vw)", textAlign: "center", color: "#fff", fontFamily: "var(--font-sans)", cursor: "default" } },
+        lbItems ? this.h("p", { style: { fontSize: "12px", letterSpacing: ".08em", fontWeight: 700, margin: "0 0 7px", color: "rgba(255,255,255,.66)" } }, (lbIdx + 1) + " / " + lbItems.length) : null,
+        lbCaption ? this.h("p", { style: { fontSize: "17px", lineHeight: 1.4, margin: 0, fontWeight: 600 } }, lbCaption) : null,
+        lbCredit ? this.h("p", { style: { fontSize: "11px", lineHeight: 1.4, margin: "8px 0 0", color: "rgba(255,255,255,.62)" } }, "\u00A9 " + lbCredit) : null)
+    ) : null;
+
+    return {
+      breadcrumbItems: [
+        { label: "Accueil", href: "#" },
+        { label: "Assainissement", href: "#" },
+        { label: "Toilettes", href: "#" },
+        { label: "Toilettes à Litière Biomaîtrisée (TLB)" },
+      ],
+      variantes, legende, astuces, comparRows, fabricants,
+      livres, guidesPdf, articlesLies, videosAssociees, systemesLies,
+      lightboxEl, openLightbox: this.openLightbox,
+      fabricantsDisplay: fabricants.length >= 1 ? "block" : "none",
+      livresDisplay: livres.length ? "block" : "none",
+      guidesPdfDisplay: guidesPdf.length ? "block" : "none",
+      articlesLiesDisplay: articlesLies.length ? "block" : "none",
+      videosAssocieesDisplay: videosAssociees.length ? "block" : "none",
+      systemesLiesDisplay: systemesLies.length ? "block" : "none",
+
+      deviceMaxWidth: mobile ? "412px" : "100%",
+      deviceOuterMax: mobile ? "414px" : "100%",
+      deviceOuterMargin: mobile ? "26px auto 44px" : "0 auto",
+      deviceFrameBg: mobile ? "#0F1512" : "transparent",
+      deviceFramePad: mobile ? "12px" : "0px",
+      deviceFrameRadius: mobile ? "52px" : "0px",
+      deviceFrameShadow: mobile ? "0 30px 70px rgba(15,36,20,.30)" : "none",
+      notchDisplay: mobile ? "block" : "none",
+      screenPosition: mobile ? "relative" : "static",
+      screenHeight: mobile ? "800px" : "auto",
+      screenOverflowY: mobile ? "auto" : "visible",
+      screenRadius: mobile ? "40px" : "0px",
+      engagePosition: mobile ? "sticky" : "fixed",
+      engageBottom: mobile ? "0" : "22px",
+      engageExtra: mobile ? "background:rgba(251,250,249,.92); box-shadow:0 -6px 20px rgba(15,36,20,.14); padding:12px 0; backdrop-filter:blur(6px);" : "",
+      h1Size: mobile ? "var(--fs-h3)" : "var(--fs-h1)",
+      chapoSize: mobile ? "18px" : "20px",
+      gridPrinciple: mobile ? "1fr" : "1fr 0.9fr",
+      gridCards2: mobile ? "1fr" : "1fr 1fr",
+      gridCost: mobile ? "1fr" : "1.15fr 0.85fr",
+      gridConvLight: mobile ? "1fr" : "1fr auto",
+      gridFlux: mobile ? "1fr" : "1fr 1fr 1fr",
+      gridForm: mobile ? "1fr" : "1fr 1fr",
+
+      bgDesktop: !mobile ? active.bg : inactive.bg, fgDesktop: !mobile ? active.fg : inactive.fg,
+      bgMobile: mobile ? active.bg : inactive.bg, fgMobile: mobile ? active.fg : inactive.fg,
+      bgPublic: profile === "public" ? active.bg : inactive.bg, fgPublic: profile === "public" ? active.fg : inactive.fg,
+      bgGratuit: profile === "gratuit" ? active.bg : inactive.bg, fgGratuit: profile === "gratuit" ? active.fg : inactive.fg,
+      bgPayant: profile === "payant" ? active.bg : inactive.bg, fgPayant: profile === "payant" ? active.fg : inactive.fg,
+
+      showACF, showAnnotations,
+      toggleACF: this.toggleACF, toggleAnnotations: this.toggleAnnotations,
+      setDesktop: this.setDesktop, setMobile: this.setMobile,
+      setPublic: this.setPublic, setGratuit: this.setGratuit, setPayant: this.setPayant,
+      viewedAsLabel,
+      acfDisplay: showACF ? "block" : "none",
+      annotationDisplay: showAnnotations ? "flex" : "none",
+      creditDisplay: showAnnotations ? "block" : "none",
+
+      annBadge, badgeFree, badgePaidRow,
+      badgeFreeOpen: this.badgeFreeOpen(), badgePaidInline: this.badgePaidInline(),
+      dotFree: this.dot("var(--green-100)", "var(--green-700)"),
+      dotPaid: this.dot("var(--green-900)", "var(--white)"),
+      pin1: this.pin(1), pin2: this.pin(2), pin3: this.pin(3), pin4: this.pin(4), pin5: this.pin(5), pin6: this.pin(6),
+
+      convUniqueDisplay: profile === "public" ? "block" : "none",
+      convLightDisplay: profile === "gratuit" ? "block" : "none",
+
+      a2Filter: gratuitUnlocked ? "none" : "blur(5px)",
+      a2Opacity: gratuitUnlocked ? 1 : 0.6,
+      a2PE: gratuitUnlocked ? "auto" : "none",
+      a2MaxHeight: gratuitUnlocked ? "none" : "96px",
+      a2Fade: gratuitUnlocked ? "none" : "block",
+    };
+  }
+}
+</script>
+</body>
+</html>

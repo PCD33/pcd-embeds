@@ -1,0 +1,63 @@
+/* ============================================================
+   Permaculture Design — Typography scale
+   Display = Recoleta/Fraunces serif. Body = Satoshi.
+   Heading sizes sampled from the Figma type sheet & live pages
+   (h1-big 118 / h1 55 / h2 50 / h3 40 / h4 32 / h5 24 / h6 20).
+   Body sizes: XL 24 / L 18 / M 16 (base) / S 14 / XS 12 / XXS 11.
+   ============================================================ */
+
+:root {
+  /* ---- Families (mirrored from fonts.css for convenience) -- */
+  --font-display: "Recoleta", "Fraunces", "Georgia", serif;
+  --font-sans: "Satoshi", "Satoshi Variable", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* ---- Weights ------------------------------------------- */
+  --fw-regular: 400; /* @kind font */
+  --fw-medium: 500; /* @kind font */
+  --fw-bold: 700; /* @kind font */
+  --fw-black: 900; /* @kind font */
+
+  /* ---- Display scale (Recoleta) -------------------------- */
+  --fs-display: 118px;
+  --fs-h1: 55px;
+  --fs-h2: 50px;
+  --fs-h3: 40px;
+  --fs-h4: 32px;
+  --fs-h5: 24px;
+  --fs-h6: 20px;
+
+  --lh-display: 1.0; /* @kind other */
+  --lh-heading: 1.1; /* @kind other */
+  --ls-display: -0.01em; /* @kind other */
+
+  /* ---- Body scale (Satoshi) ------------------------------ */
+  --fs-body-xl: 24px;
+  --fs-body-l: 18px;
+  --fs-body-m: 16px;   /* base reading size */
+  --fs-body-s: 14px;
+  --fs-body-xs: 12px;
+  --fs-body-xxs: 11px;
+
+  --lh-body: 1.4; /* @kind other */
+  --lh-body-tight: 1.2; /* @kind other */
+  --lh-body-loose: 1.6; /* @kind other */
+}
+
+/* ============================================================
+   Optional helper classes — components can use the variables
+   directly, but these match the Figma text styles 1:1.
+   ============================================================ */
+.pcd-display { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-display); line-height: var(--lh-display); letter-spacing: var(--ls-display); }
+.pcd-h1 { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-h1); line-height: var(--lh-heading); letter-spacing: var(--ls-display); }
+.pcd-h2 { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-h2); line-height: var(--lh-heading); }
+.pcd-h3 { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-h3); line-height: var(--lh-heading); }
+.pcd-h4 { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-h4); line-height: var(--lh-heading); }
+.pcd-h5 { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-h5); line-height: var(--lh-heading); }
+.pcd-h6 { font-family: var(--font-display); font-weight: var(--fw-medium); font-size: var(--fs-h6); line-height: var(--lh-heading); }
+
+.pcd-body-xl { font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body-xl); line-height: var(--lh-body-tight); }
+.pcd-body-l  { font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body-l); line-height: var(--lh-body); }
+.pcd-body-m  { font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body-m); line-height: var(--lh-body); }
+.pcd-body-s  { font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body-s); line-height: var(--lh-body); }
+.pcd-body-xs { font-family: var(--font-sans); font-weight: var(--fw-medium); font-size: var(--fs-body-xs); line-height: var(--lh-body); }
