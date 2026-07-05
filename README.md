@@ -20,6 +20,7 @@ ses images dans `assets/`.
 | Fiche plante — *Tomate* (3 colonnes) | https://pcd33.github.io/pcd-embeds/plante/ |
 | Vidéo (4 maquettes) | https://pcd33.github.io/pcd-embeds/video/ |
 | Toilette — *TLB* | https://pcd33.github.io/pcd-embeds/toilette/ |
+| Fiche variété — *Cœur de Bœuf* (côte à côte) | https://pcd33.github.io/pcd-embeds/variete/ |
 
 > ⚙️ Le **Glossaire** utilise le nouveau format « design system » de Claude design
 > (composants React chargés depuis le CDN unpkg au runtime). Il vit dans son propre
