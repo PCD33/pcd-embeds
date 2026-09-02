@@ -1,0 +1,329 @@
+/* =========================================================================
+   PCD — Palette couleur & texte
+   Source : Figma « SPCD - Amélioration 2026 » (fichier IGaibaknDiC16Z4uo2ptkf)
+   Collections : Colors — Brand, Colors — Swatch, Colors, Fonts, Spaces, Strokes
+   Extrait le 02/09/2026.
+
+   Usage : <link rel="stylesheet" href="pcd-tokens.css"> puis var(--pcd-…)
+   ========================================================================= */
+
+:root {
+
+  /* ── ÉCHELLES DE COULEUR (Colors — Swatch) ─────────────────────────── */
+
+  /* Primaire — Sea Green */
+  --pcd-green-50:  #F3FAF4;
+  --pcd-green-100: #E4F4E6;
+  --pcd-green-200: #CAE8CF;
+  --pcd-green-300: #A0D5AA;
+  --pcd-green-400: #6EBA7D;
+  --pcd-green-500: #438E52;
+  --pcd-green-600: #398047;
+  --pcd-green-700: #2F663B;
+  --pcd-green-800: #295232;
+  --pcd-green-900: #23442A;
+  --pcd-green-950: #0F2414;
+
+  /* Secondaire — Mustard */
+  --pcd-mustard-50:  #FFFBEB;
+  --pcd-mustard-100: #FFF5C6;
+  --pcd-mustard-200: #FFE988;
+  --pcd-mustard-300: #FFDE67;
+  --pcd-mustard-400: #FFC520;
+  --pcd-mustard-500: #F9A307;
+  --pcd-mustard-600: #DD7B02;
+  --pcd-mustard-700: #B75606;
+  --pcd-mustard-800: #94410C;
+  --pcd-mustard-900: #7A370D;
+  --pcd-mustard-950: #461B02;
+
+  /* Complémentaire — Lilac */
+  --pcd-lilac-50:  #F9F6F9;
+  --pcd-lilac-100: #F5EEF5;
+  --pcd-lilac-200: #ECDEEC;
+  --pcd-lilac-300: #DDC4DC;
+  --pcd-lilac-400: #CFABCC;
+  --pcd-lilac-500: #B480AE;
+  --pcd-lilac-600: #9E6495;
+  --pcd-lilac-700: #85517B;
+  --pcd-lilac-800: #6F4567;
+  --pcd-lilac-900: #5F3C58;
+  --pcd-lilac-950: #372032;
+
+  /* Rouge — Sunset Orange */
+  --pcd-sunset-50:  #FFF3F1;
+  --pcd-sunset-100: #FFE3DF;
+  --pcd-sunset-200: #FFCCC5;
+  --pcd-sunset-300: #FFA99D;
+  --pcd-sunset-400: #FF7664;
+  --pcd-sunset-500: #FF523B;
+  --pcd-sunset-600: #ED2E15;
+  --pcd-sunset-700: #C8230D;
+  --pcd-sunset-800: #A5210F;
+  --pcd-sunset-900: #882214;
+  --pcd-sunset-950: #4B0C04;
+
+  /* Fonds & bruns — Alabaster */
+  --pcd-alabaster-50:  #FBFAF9;
+  --pcd-alabaster-100: #EEEBE6;
+  --pcd-alabaster-200: #DCD4CC;
+  --pcd-alabaster-300: #C6B8AB;
+  --pcd-alabaster-400: #AF9888;
+  --pcd-alabaster-500: #9E8171;
+  --pcd-alabaster-600: #917265;
+  --pcd-alabaster-700: #795D55;
+  --pcd-alabaster-800: #644D48;
+  --pcd-alabaster-900: #52413C;
+  --pcd-alabaster-950: #2B211F;
+
+  /* Husk — réserve (aucun alias sémantique) */
+  --pcd-husk-50:  #F6F6F0;
+  --pcd-husk-100: #EAE9D7;
+  --pcd-husk-200: #D6D3B2;
+  --pcd-husk-300: #BEB786;
+  --pcd-husk-400: #A99D61;
+  --pcd-husk-500: #9C8D56;
+  --pcd-husk-600: #857449;
+  --pcd-husk-700: #6C5A3C;
+  --pcd-husk-800: #5C4C37;
+  --pcd-husk-900: #504233;
+  --pcd-husk-950: #2D241B;
+
+  /* Armadillo — collection « Colors », réserve */
+  --pcd-armadillo-50:  #F5F5F1;
+  --pcd-armadillo-100: #E5E5DC;
+  --pcd-armadillo-200: #CDCDBB;
+  --pcd-armadillo-300: #B0B094;
+  --pcd-armadillo-400: #999676;
+  --pcd-armadillo-500: #8B8767;
+  --pcd-armadillo-600: #767058;
+  --pcd-armadillo-700: #605948;
+  --pcd-armadillo-800: #534C40;
+  --pcd-armadillo-900: #4A443B;
+  --pcd-armadillo-950: #29241F;
+
+  /* Neutres — Black */
+  --pcd-gris-50:  #F6F6F6;
+  --pcd-gris-100: #E7E7E7;
+  --pcd-gris-200: #D1D1D1;
+  --pcd-gris-300: #B0B0B0;
+  --pcd-gris-400: #888888;
+  --pcd-gris-500: #6D6D6D;
+  --pcd-gris-600: #5D5D5D;
+  --pcd-gris-700: #4F4F4F;
+  --pcd-gris-800: #454545;
+  --pcd-gris-900: #3D3D3D;
+  --pcd-gris-950: #000000;
+
+  /* Transparences */
+  --pcd-noir-10: rgba(0,0,0,.10);
+  --pcd-noir-20: rgba(0,0,0,.20);
+  --pcd-noir-30: rgba(0,0,0,.30);
+  --pcd-noir-40: rgba(0,0,0,.40);
+  --pcd-blanc-10: rgba(255,255,255,.10);
+  --pcd-blanc-20: rgba(255,255,255,.20);
+  --pcd-blanc-30: rgba(255,255,255,.30);
+  --pcd-blanc-40: rgba(255,255,255,.40);
+
+  /* ── COULEURS DE MARQUE (Colors — Brand) ───────────────────────────── */
+
+  --pcd-primaire:            var(--pcd-green-500);      /* #438E52 */
+  --pcd-primaire-fonce:      var(--pcd-green-700);      /* #2F663B */
+  --pcd-primaire-5:          rgba(67,142,82,.05);
+  --pcd-secondaire:          var(--pcd-mustard-300);    /* #FFDE67 */
+  --pcd-secondaire-fonce:    var(--pcd-mustard-500);    /* #F9A307 */
+  --pcd-complementaire:      var(--pcd-lilac-400);      /* #CFABCC */
+  --pcd-complementaire-fonce:var(--pcd-lilac-600);      /* #9E6495 */
+  --pcd-rouge:               var(--pcd-sunset-500);     /* #FF523B */
+  --pcd-rouge-fonce:         var(--pcd-sunset-700);     /* #C8230D */
+
+  --pcd-background-clair:    var(--pcd-alabaster-50);   /* #FBFAF9 */
+  --pcd-text-clair:          var(--pcd-green-50);       /* #F3FAF4 */
+  --pcd-text-fonce:          var(--pcd-green-900);      /* #23442A */
+  --pcd-noir:                var(--pcd-gris-950);       /* #000000 */
+  --pcd-blanc:               #FFFFFF;
+
+  /* États */
+  --pcd-valide:      var(--pcd-green-300);              /* #A0D5AA */
+  --pcd-valide-10:   rgba(160,213,170,.10);
+  --pcd-alert:       #E0004D;
+  --pcd-alert-10:    rgba(224,0,77,.10);
+  --pcd-attention:   #E07400;
+  --pcd-attention-10:rgba(224,116,0,.10);
+
+  /* ── TYPOGRAPHIE (Fonts) ───────────────────────────────────────────── */
+
+  --pcd-font-titre: "Recoleta", Georgia, "Times New Roman", serif;
+  --pcd-font-texte: "Satoshi Variable", "Satoshi", -apple-system,
+                    BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+  --pcd-poids-moyen: 500;       /* Weight/Moyen — Medium */
+  --pcd-poids-moyen-fort: 600;  /* Weight/Moyen Fort — SemiBold */
+  --pcd-poids-fort: 700;        /* Weight/Fort — Bold */
+
+  /* Corps — mode Desktop */
+  --pcd-h1-big: 118px;
+  --pcd-h1: 72px;
+  --pcd-h2: 50px;
+  --pcd-h3: 40px;
+  --pcd-h4: 32px;
+  --pcd-h5: 24px;
+  --pcd-h6: 20px;
+  --pcd-titre-s: 16px;
+  --pcd-text-xl: 24px;
+  --pcd-text-l: 20px;
+  --pcd-text-m: 18px;
+  --pcd-text-s: 16px;
+  --pcd-text-xs: 14px;
+  --pcd-text-xxs: 12px;
+
+  /* Interlignages */
+  --pcd-lh-titre-serre: 1;      /* h1 big, h1 */
+  --pcd-lh-h2: 1.06;
+  --pcd-lh-titre: 1.16;         /* h3 → h6 */
+  --pcd-lh-titre-s: 1.4;
+  --pcd-lh-texte: 1.2;          /* XL, L, M, XXS */
+  --pcd-lh-lecture: 1.55;       /* S — texte courant */
+  --pcd-lh-bold: 1.4;           /* variantes Bold */
+
+  /* ── ESPACEMENTS (Spaces) — mode Desktop ───────────────────────────── */
+
+  --pcd-gap-tiny: 4px;
+  --pcd-gap-xxs: 8px;
+  --pcd-gap-xs: 12px;
+  --pcd-gap-s: 16px;
+  --pcd-gap-s20: 20px;
+  --pcd-gap-m: 24px;
+  --pcd-gap-l: 32px;
+  --pcd-gap-xl: 40px;
+  --pcd-gap-xxl: 48px;
+  --pcd-gap-huge: 64px;
+  --pcd-marges-layout: 48px;
+  --pcd-marges-contenu-texte: 120px;
+  --pcd-section: 112px;
+  --pcd-titre-bottom: var(--pcd-gap-m);
+  --pcd-titre-sous-titre: var(--pcd-gap-s);
+
+  /* Rayons */
+  --pcd-radius-zero: 0px;
+  --pcd-radius-xs: 4px;
+  --pcd-radius-s: 8px;
+  --pcd-radius-m: 12px;
+  --pcd-radius-l: 16px;
+  --pcd-radius-xl: 20px;
+  --pcd-radius-xxl: 24px;
+  --pcd-radius-huge: 32px;
+  --pcd-radius-round: 8px;
+
+  /* Traits (Strokes) */
+  --pcd-trait-moyen: 1.5px;
+  --pcd-trait-epais: 2px;
+}
+
+/* ── Mode Mobile ─────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  :root {
+    --pcd-h1-big: 84px;
+    --pcd-h1: 49px;
+    --pcd-h2: 39px;
+    --pcd-h3: 28px;
+    --pcd-h4: 23px;
+    --pcd-h5: 17px;
+    --pcd-h6: 15px;
+    /* Titre S et les corps de texte ne changent pas en mobile */
+
+    --pcd-gap-tiny: 2px;
+    --pcd-gap-xxs: 4px;
+    --pcd-gap-xs: 8px;
+    --pcd-gap-s: 10px;
+    --pcd-gap-s20: 12px;
+    --pcd-gap-m: 14px;
+    --pcd-gap-l: 16px;
+    --pcd-gap-xl: 20px;
+    --pcd-gap-xxl: 24px;
+    --pcd-gap-huge: 32px;
+    --pcd-marges-layout: 20px;
+    --pcd-marges-contenu-texte: 20px;
+    --pcd-section: 48px;
+
+    --pcd-radius-s: 6px;
+    --pcd-radius-m: 10px;
+    --pcd-radius-l: 14px;
+    --pcd-radius-xl: 18px;
+    --pcd-radius-xxl: 20px;
+    --pcd-radius-huge: 24px;
+
+    --pcd-trait-moyen: 1px;
+  }
+}
+
+/* ── Mode Print (en mm/pt : valeurs Figma exprimées en pt) ───────────── */
+@media print {
+  :root {
+    --pcd-h1-big: 24pt;
+    --pcd-h1: 18pt;
+    --pcd-h2: 16pt;
+    --pcd-h3: 12pt;
+    --pcd-h4: 10pt;
+    --pcd-h5: 8pt;
+    --pcd-h6: 7pt;
+    --pcd-titre-s: 8pt;
+    --pcd-text-xl: 11pt;
+    --pcd-text-l: 10pt;
+    --pcd-text-m: 9pt;
+    --pcd-text-s: 8pt;
+    --pcd-text-xs: 7pt;
+    --pcd-text-xxs: 6pt;
+  }
+}
+
+/* =========================================================================
+   STYLES DE TEXTE — équivalents des styles Figma
+   ========================================================================= */
+
+.pcd-h1-big, .pcd-h1, .pcd-h2, .pcd-h3, .pcd-h4, .pcd-h5, .pcd-h6, .pcd-titre-s {
+  font-family: var(--pcd-font-titre);
+  font-weight: var(--pcd-poids-moyen);
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+.pcd-h1-big { font-size: var(--pcd-h1-big); line-height: var(--pcd-lh-titre-serre); letter-spacing: -.01em; }
+.pcd-h1     { font-size: var(--pcd-h1);     line-height: var(--pcd-lh-titre-serre); }
+.pcd-h2     { font-size: var(--pcd-h2);     line-height: var(--pcd-lh-h2); }
+.pcd-h3     { font-size: var(--pcd-h3);     line-height: var(--pcd-lh-titre); }
+.pcd-h4     { font-size: var(--pcd-h4);     line-height: var(--pcd-lh-titre); }
+.pcd-h5     { font-size: var(--pcd-h5);     line-height: var(--pcd-lh-titre); }
+.pcd-h6     { font-size: var(--pcd-h6);     line-height: var(--pcd-lh-titre); }
+.pcd-titre-s{ font-size: var(--pcd-titre-s);line-height: var(--pcd-lh-titre-s); }
+
+.pcd-xl, .pcd-l, .pcd-m, .pcd-s, .pcd-xs, .pcd-xxs,
+.pcd-xl-bold, .pcd-l-bold, .pcd-m-bold, .pcd-s-bold, .pcd-xs-bold, .pcd-xxs-bold {
+  font-family: var(--pcd-font-texte);
+}
+.pcd-xl  { font-size: var(--pcd-text-xl);  font-weight: var(--pcd-poids-moyen); line-height: var(--pcd-lh-texte); }
+.pcd-l   { font-size: var(--pcd-text-l);   font-weight: var(--pcd-poids-moyen); line-height: var(--pcd-lh-texte); }
+.pcd-m   { font-size: var(--pcd-text-m);   font-weight: var(--pcd-poids-moyen); line-height: var(--pcd-lh-texte); }
+.pcd-s   { font-size: var(--pcd-text-s);   font-weight: var(--pcd-poids-moyen); line-height: var(--pcd-lh-lecture); }
+.pcd-xs  { font-size: var(--pcd-text-xs);  font-weight: var(--pcd-poids-moyen); line-height: 1.5; }
+.pcd-xxs { font-size: var(--pcd-text-xxs); font-weight: var(--pcd-poids-moyen); line-height: var(--pcd-lh-texte); }
+
+.pcd-xl-bold  { font-size: var(--pcd-text-xl);  font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-bold); }
+.pcd-l-bold   { font-size: var(--pcd-text-l);   font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-bold); }
+.pcd-m-bold   { font-size: var(--pcd-text-m);   font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-bold); }
+.pcd-s-bold   { font-size: var(--pcd-text-s);   font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-lecture); }
+.pcd-xs-bold  { font-size: var(--pcd-text-xs);  font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-bold); }
+.pcd-xxs-bold { font-size: var(--pcd-text-xxs); font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-bold); }
+
+/* Variantes serrées de S, présentes dans Figma pour les blocs compacts */
+.pcd-s.is-compact,      .pcd-s-bold.is-compact      { line-height: 1.15; }
+.pcd-s-bold.is-tres-compact                          { line-height: 1.10; }
+
+/* Base de page conseillée */
+.pcd-page {
+  background: var(--pcd-background-clair);
+  color: var(--pcd-text-fonce);
+  font-family: var(--pcd-font-texte);
+  font-size: var(--pcd-text-s);
+  font-weight: var(--pcd-poids-moyen);
+  line-height: var(--pcd-lh-lecture);
+}

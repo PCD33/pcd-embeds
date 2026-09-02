@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Palette de couleurs et styles de texte Permaculture Design, extraits du Figma SPCD — Amélioration 2026.">
+<style>
+  html { color-scheme: light dark; }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Palette PCD 2026</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+</head>
+<body>
+<style>
+:root{
+  --ground:#FBFAF9; --surface:#FFFFFF; --surface-2:#F3FAF4;
+  --ink:#23442A; --ink-soft:#5A6D5F; --ink-faint:#8A9A8E;
+  --line:#E2E8E1; --line-strong:#CFDACE;
+  --accent:#438E52; --accent-soft:#E4F4E6; --gold:#FFDE67;
+  --code-bg:#F4F6F2;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F2414; --surface:#17311E; --surface-2:#1C3A24;
+    --ink:#F3FAF4; --ink-soft:#A8BFAE; --ink-faint:#7C9583;
+    --line:#2A4A32; --line-strong:#38603F;
+    --accent:#6EBA7D; --accent-soft:#23442A; --gold:#FFDE67;
+    --code-bg:#12291A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F2414; --surface:#17311E; --surface-2:#1C3A24;
+  --ink:#F3FAF4; --ink-soft:#A8BFAE; --ink-faint:#7C9583;
+  --line:#2A4A32; --line-strong:#38603F;
+  --accent:#6EBA7D; --accent-soft:#23442A; --gold:#FFDE67;
+  --code-bg:#12291A;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--body);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px 96px}
+@media (max-width:560px){.wrap{padding:0 16px 64px}}
+
+/* ---------- en-tête ---------- */
+header.top{padding:72px 0 40px;border-bottom:1px solid var(--line)}
+@media (max-width:560px){header.top{padding:44px 0 28px}}
+.eyebrow{
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-faint);margin:0 0 18px;
+}
+h1.title{
+  font-family:var(--display);font-weight:600;font-size:clamp(40px,7vw,72px);
+  line-height:1.02;letter-spacing:-.015em;margin:0 0 20px;text-wrap:balance;
+}
+.lede{font-size:clamp(16px,2.2vw,19px);color:var(--ink-soft);max-width:60ch;margin:0 0 28px}
+.lede strong{color:var(--ink);font-weight:600}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.tag{
+  font-family:var(--mono);font-size:12px;padding:5px 10px;border-radius:999px;
+  border:1px solid var(--line-strong);color:var(--ink-soft);white-space:nowrap;
+}
+
+/* ---------- sections ---------- */
+section{padding-top:64px}
+@media (max-width:560px){section{padding-top:44px}}
+h2.sec{
+  font-family:var(--display);font-weight:500;font-size:clamp(26px,4vw,38px);
+  line-height:1.16;margin:0 0 6px;letter-spacing:-.01em;
+}
+.sec-note{color:var(--ink-soft);font-size:15px;margin:0 0 28px;max-width:62ch}
+h3.sub{
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-faint);margin:36px 0 14px;font-weight:500;
+}
+
+/* ---------- cartes de marque ---------- */
+.brand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(226px,1fr));gap:14px}
+@media (max-width:560px){.brand-grid{grid-template-columns:1fr}}
+.bcard{
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);
+  display:flex;flex-direction:column;
+}
+.bcard .chip{height:86px;display:flex;align-items:flex-end;padding:10px 12px}
+.bcard .chip span{font-family:var(--mono);font-size:11px;opacity:.85}
+.bcard .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:3px}
+.bcard .nm{font-weight:600;font-size:15px}
+.bcard .hx{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft)}
+.bcard .al{font-size:12.5px;color:var(--ink-faint)}
+
+/* ---------- échelles ---------- */
+.ramp{margin-bottom:26px}
+.ramp-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px;margin-bottom:8px}
+.ramp-name{font-weight:600;font-size:15px}
+.ramp-role{font-size:13px;color:var(--ink-faint)}
+.ramp-strip{display:grid;grid-template-columns:repeat(11,1fr);border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+@media (max-width:760px){.ramp-strip{grid-template-columns:repeat(6,1fr)}}
+@media (max-width:420px){.ramp-strip{grid-template-columns:repeat(4,1fr)}}
+.step{
+  border:0;padding:0;cursor:pointer;font:inherit;text-align:left;
+  aspect-ratio:1/1.15;display:flex;flex-direction:column;justify-content:flex-end;
+  gap:2px;padding:8px 7px;transition:transform .12s ease;
+}
+.step:hover{transform:translateY(-2px)}
+.step:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.step b{font-family:var(--mono);font-size:11px;font-weight:500;opacity:.9}
+.step i{font-family:var(--mono);font-size:9.5px;font-style:normal;opacity:.62;letter-spacing:-.02em}
+.step.on-dark{color:#fff}
+.step.on-light{color:#111}
+
+/* ---------- typographie ---------- */
+.spec{border-top:1px solid var(--line)}
+.row{
+  display:grid;grid-template-columns:1fr 260px;gap:20px;align-items:center;
+  padding:20px 0;border-bottom:1px solid var(--line);
+}
+@media (max-width:720px){.row{grid-template-columns:1fr;gap:10px}}
+.sample{overflow-x:auto;max-width:100%;min-width:0}
+.sample p{margin:0;white-space:nowrap;font-weight:500}
+.sample.wrapok p{white-space:normal;max-width:62ch}
+.dt{font-family:var(--mono);font-size:12px;color:var(--ink-soft);line-height:1.7;min-width:0}
+.dt b{color:var(--ink);font-weight:500}
+.dt .sep{color:var(--ink-faint);padding:0 5px}
+
+/* familles */
+.fam{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
+@media (max-width:640px){.fam{grid-template-columns:1fr}}
+.fam-card{border:1px solid var(--line);border-radius:12px;padding:20px 22px;background:var(--surface)}
+.fam-card .big{font-size:44px;line-height:1.1;margin:0 0 10px}
+.fam-card .who{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 12px}
+.fam-card .desc{font-size:14px;color:var(--ink-soft);margin:0}
+
+/* ---------- tableaux ---------- */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:420px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:14px}
+th{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-faint);font-weight:500;background:var(--surface-2);
+}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+tr:last-child td{border-bottom:0}
+
+/* ---------- bloc code ---------- */
+.codehead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.btn{
+  font-family:var(--mono);font-size:12.5px;padding:8px 14px;border-radius:8px;cursor:pointer;
+  border:1px solid var(--accent);background:transparent;color:var(--accent);
+}
+.btn:hover{background:var(--accent-soft)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+pre.code{
+  margin:0;background:var(--code-bg);border:1px solid var(--line);border-radius:12px;
+  padding:18px;overflow:auto;max-height:60vh;
+  font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--ink-soft);
+  -webkit-overflow-scrolling:touch;
+}
+
+/* ---------- divers ---------- */
+.callout{
+  border-left:3px solid var(--gold);background:var(--surface);border-radius:0 10px 10px 0;
+  padding:14px 18px;font-size:14.5px;color:var(--ink-soft);margin-top:24px;
+}
+.callout b{color:var(--ink)}
+#toast{
+  position:fixed;left:50%;bottom:28px;transform:translate(-50%,16px);
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:12.5px;
+  padding:9px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:.2s ease;z-index:9;
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+footer{margin-top:72px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-faint)}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">Design system — Permaculture Design</p>
+  <h1 class="title">Palette PCD 2026</h1>
+  <p class="lede">Les couleurs et les styles de texte extraits du fichier Figma <strong>SPCD — Amélioration 2026</strong>, réunis en un jeu de tokens CSS unique à réutiliser dans toutes les autres créations : pages web, embeds Notion, documents imprimés.</p>
+  <div class="meta">
+    <span class="tag">7 collections de variables</span>
+    <span class="tag">23 styles de texte</span>
+    <span class="tag">Recoleta + Satoshi</span>
+    <span class="tag">Desktop / Mobile / Print</span>
+  </div>
+</header>
+
+<section id="marque">
+  <h2 class="sec">Couleurs de marque</h2>
+  <p class="sec-note">Ce sont les seuls noms à employer dans une maquette. Chacun pointe vers un cran d'une échelle : changer l'échelle met tout à jour d'un coup. Cliquez une pastille pour copier son hexadécimal.</p>
+
+  <h3 class="sub">Identité</h3>
+  <div class="brand-grid" id="brand-identite"></div>
+
+  <h3 class="sub">Fonds et textes</h3>
+  <div class="brand-grid" id="brand-fonds"></div>
+
+  <h3 class="sub">États</h3>
+  <div class="brand-grid" id="brand-etats"></div>
+
+  <div class="callout"><b>Attention :</b> le violet de la vignette du fichier Figma (#625FFF) est la couleur de couverture par défaut de Figma, pas une couleur PCD. Ne l'utilisez nulle part.</div>
+</section>
+
+<section id="echelles">
+  <h2 class="sec">Échelles</h2>
+  <p class="sec-note">Onze crans par teinte, du 50 (le plus clair) au 950. Les couleurs de marque ci-dessus piochent dedans ; les crans restants servent aux survols, aux fonds de blocs et aux bordures.</p>
+  <div id="ramps"></div>
+</section>
+
+<section id="typo">
+  <h2 class="sec">Typographie</h2>
+  <p class="sec-note">Deux familles, trois graisses. Les titres sont toujours en Recoleta Medium, le texte courant en Satoshi. Les tailles changent selon le mode : Desktop, Mobile ou Print.</p>
+
+  <div class="fam">
+    <div class="fam-card">
+      <p class="who">Family / TITLE Font</p>
+      <p class="big" style="font-family:var(--display);font-weight:500">Recoleta</p>
+      <p class="desc">Tous les niveaux de titre, en graisse Medium (500). Serif contemporaine, chaleureuse — c'est elle qui donne le ton PCD.</p>
+    </div>
+    <div class="fam-card">
+      <p class="who">Family / Text font</p>
+      <p class="big" style="font-family:var(--body);font-weight:600">Satoshi Variable</p>
+      <p class="desc">Tout le reste : texte courant, légendes, boutons, interface. Trois graisses — Medium&nbsp;500, SemiBold&nbsp;600, Bold&nbsp;700.</p>
+    </div>
+  </div>
+  <p class="sec-note" style="margin-top:16px">Recoleta et Satoshi ne sont pas sur Google Fonts : cette page les remplace par Fraunces et Plus&nbsp;Jakarta&nbsp;Sans pour l'aperçu. Les tailles, interlignages et graisses affichés sont ceux du fichier Figma.</p>
+
+  <h3 class="sub">Titres — Recoleta Medium</h3>
+  <div class="spec" id="spec-titres"></div>
+
+  <h3 class="sub">Textes — Satoshi</h3>
+  <div class="spec" id="spec-textes"></div>
+
+  <h3 class="sub">Toutes les tailles, par mode</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Token</th><th>Desktop</th><th>Mobile</th><th>Print</th></tr></thead>
+      <tbody id="tbl-sizes"></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="espaces">
+  <h2 class="sec">Espacements, rayons, traits</h2>
+  <p class="sec-note">Deux modes seulement, Desktop et Mobile. Les marges de section fondent de moitié ou plus sur petit écran — c'est ce qui garde les pages respirables sur téléphone.</p>
+
+  <h3 class="sub">Gap et padding</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Token</th><th>Desktop</th><th>Mobile</th></tr></thead>
+      <tbody id="tbl-gaps"></tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Rayons et traits</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Token</th><th>Desktop</th><th>Mobile</th></tr></thead>
+      <tbody id="tbl-radius"></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="css">
+  <h2 class="sec">Le fichier de tokens</h2>
+  <p class="sec-note">À enregistrer en <code style="font-family:var(--mono);font-size:13px">pcd-tokens.css</code> et à lier au début de chaque création. Tout est en variables CSS : les modes Mobile et Print s'appliquent tout seuls.</p>
+  <div class="codehead">
+    <span class="tag">pcd-tokens.css</span>
+    <button class="btn" id="copycss" type="button">Copier le fichier</button>
+  </div>
+  <pre class="code" id="csscode">
+/* =========================================================================
+   PCD — Palette couleur &amp; texte
+   Source : Figma « SPCD - Amélioration 2026 » (fichier IGaibaknDiC16Z4uo2ptkf)
+   Collections : Colors — Brand, Colors — Swatch, Colors, Fonts, Spaces, Strokes
+   Extrait le 02/09/2026.
+
+   Usage : &lt;link rel="stylesheet" href="pcd-tokens.css"&gt; puis var(--pcd-…)
+   ========================================================================= */
+
+:root {
+
+  /* ── ÉCHELLES DE COULEUR (Colors — Swatch) ─────────────────────────── */
+
+  /* Primaire — Sea Green */
+  --pcd-green-50:  #F3FAF4;
+  --pcd-green-100: #E4F4E6;
+  --pcd-green-200: #CAE8CF;
+  --pcd-green-300: #A0D5AA;
+  --pcd-green-400: #6EBA7D;
+  --pcd-green-500: #438E52;
+  --pcd-green-600: #398047;
+  --pcd-green-700: #2F663B;
+  --pcd-green-800: #295232;
+  --pcd-green-900: #23442A;
+  --pcd-green-950: #0F2414;
+
+  /* Secondaire — Mustard */
+  --pcd-mustard-50:  #FFFBEB;
+  --pcd-mustard-100: #FFF5C6;
+  --pcd-mustard-200: #FFE988;
+  --pcd-mustard-300: #FFDE67;
+  --pcd-mustard-400: #FFC520;
+  --pcd-mustard-500: #F9A307;
+  --pcd-mustard-600: #DD7B02;
+  --pcd-mustard-700: #B75606;
+  --pcd-mustard-800: #94410C;
+  --pcd-mustard-900: #7A370D;
+  --pcd-mustard-950: #461B02;
+
+  /* Complémentaire — Lilac */
+  --pcd-lilac-50:  #F9F6F9;
+  --pcd-lilac-100: #F5EEF5;
+  --pcd-lilac-200: #ECDEEC;
+  --pcd-lilac-300: #DDC4DC;
+  --pcd-lilac-400: #CFABCC;
+  --pcd-lilac-500: #B480AE;
+  --pcd-lilac-600: #9E6495;
+  --pcd-lilac-700: #85517B;
+  --pcd-lilac-800: #6F4567;
+  --pcd-lilac-900: #5F3C58;
+  --pcd-lilac-950: #372032;
+
+  /* Rouge — Sunset Orange */
+  --pcd-sunset-50:  #FFF3F1;
+  --pcd-sunset-100: #FFE3DF;
+  --pcd-sunset-200: #FFCCC5;
+  --pcd-sunset-300: #FFA99D;
+  --pcd-sunset-400: #FF7664;
+  --pcd-sunset-500: #FF523B;
+  --pcd-sunset-600: #ED2E15;
+  --pcd-sunset-700: #C8230D;
+  --pcd-sunset-800: #A5210F;
+  --pcd-sunset-900: #882214;
+  --pcd-sunset-950: #4B0C04;
+
+  /* Fonds &amp; bruns — Alabaster */
+  --pcd-alabaster-50:  #FBFAF9;
+  --pcd-alabaster-100: #EEEBE6;
+  --pcd-alabaster-200: #DCD4CC;
+  --pcd-alabaster-300: #C6B8AB;
+  --pcd-alabaster-400: #AF9888;
+  --pcd-alabaster-500: #9E8171;
+  --pcd-alabaster-600: #917265;
+  --pcd-alabaster-700: #795D55;
+  --pcd-alabaster-800: #644D48;
+  --pcd-alabaster-900: #52413C;
+  --pcd-alabaster-950: #2B211F;
+
+  /* Husk — réserve (aucun alias sémantique) */
+  --pcd-husk-50:  #F6F6F0;
+  --pcd-husk-100: #EAE9D7;
+  --pcd-husk-200: #D6D3B2;
+  --pcd-husk-300: #BEB786;
+  --pcd-husk-400: #A99D61;
+  --pcd-husk-500: #9C8D56;
+  --pcd-husk-600: #857449;
+  --pcd-husk-700: #6C5A3C;
+  --pcd-husk-800: #5C4C37;
+  --pcd-husk-900: #504233;
+  --pcd-husk-950: #2D241B;
+
+  /* Armadillo — collection « Colors », réserve */
+  --pcd-armadillo-50:  #F5F5F1;
+  --pcd-armadillo-100: #E5E5DC;
+  --pcd-armadillo-200: #CDCDBB;
+  --pcd-armadillo-300: #B0B094;
+  --pcd-armadillo-400: #999676;
+  --pcd-armadillo-500: #8B8767;
+  --pcd-armadillo-600: #767058;
+  --pcd-armadillo-700: #605948;
+  --pcd-armadillo-800: #534C40;
+  --pcd-armadillo-900: #4A443B;
+  --pcd-armadillo-950: #29241F;
+
+  /* Neutres — Black */
+  --pcd-gris-50:  #F6F6F6;
+  --pcd-gris-100: #E7E7E7;
+  --pcd-gris-200: #D1D1D1;
+  --pcd-gris-300: #B0B0B0;
+  --pcd-gris-400: #888888;
+  --pcd-gris-500: #6D6D6D;
+  --pcd-gris-600: #5D5D5D;
+  --pcd-gris-700: #4F4F4F;
+  --pcd-gris-800: #454545;
+  --pcd-gris-900: #3D3D3D;
+  --pcd-gris-950: #000000;
+
+  /* Transparences */
+  --pcd-noir-10: rgba(0,0,0,.10);
+  --pcd-noir-20: rgba(0,0,0,.20);
+  --pcd-noir-30: rgba(0,0,0,.30);
+  --pcd-noir-40: rgba(0,0,0,.40);
+  --pcd-blanc-10: rgba(255,255,255,.10);
+  --pcd-blanc-20: rgba(255,255,255,.20);
+  --pcd-blanc-30: rgba(255,255,255,.30);
+  --pcd-blanc-40: rgba(255,255,255,.40);
+
+  /* ── COULEURS DE MARQUE (Colors — Brand) ───────────────────────────── */
+
+  --pcd-primaire:            var(--pcd-green-500);      /* #438E52 */
+  --pcd-primaire-fonce:      var(--pcd-green-700);      /* #2F663B */
+  --pcd-primaire-5:          rgba(67,142,82,.05);
+  --pcd-secondaire:          var(--pcd-mustard-300);    /* #FFDE67 */
+  --pcd-secondaire-fonce:    var(--pcd-mustard-500);    /* #F9A307 */
+  --pcd-complementaire:      var(--pcd-lilac-400);      /* #CFABCC */
+  --pcd-complementaire-fonce:var(--pcd-lilac-600);      /* #9E6495 */
+  --pcd-rouge:               var(--pcd-sunset-500);     /* #FF523B */
+  --pcd-rouge-fonce:         var(--pcd-sunset-700);     /* #C8230D */
+
+  --pcd-background-clair:    var(--pcd-alabaster-50);   /* #FBFAF9 */
+  --pcd-text-clair:          var(--pcd-green-50);       /* #F3FAF4 */
+  --pcd-text-fonce:          var(--pcd-green-900);      /* #23442A */
+  --pcd-noir:                var(--pcd-gris-950);       /* #000000 */
+  --pcd-blanc:               #FFFFFF;
+
+  /* États */
+  --pcd-valide:      var(--pcd-green-300);              /* #A0D5AA */
+  --pcd-valide-10:   rgba(160,213,170,.10);
+  --pcd-alert:       #E0004D;
+  --pcd-alert-10:    rgba(224,0,77,.10);
+  --pcd-attention:   #E07400;
+  --pcd-attention-10:rgba(224,116,0,.10);
+
+  /* ── TYPOGRAPHIE (Fonts) ───────────────────────────────────────────── */
+
+  --pcd-font-titre: "Recoleta", Georgia, "Times New Roman", serif;
+  --pcd-font-texte: "Satoshi Variable", "Satoshi", -apple-system,
+                    BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+  --pcd-poids-moyen: 500;       /* Weight/Moyen — Medium */
+  --pcd-poids-moyen-fort: 600;  /* Weight/Moyen Fort — SemiBold */
+  --pcd-poids-fort: 700;        /* Weight/Fort — Bold */
+
+  /* Corps — mode Desktop */
+  --pcd-h1-big: 118px;
+  --pcd-h1: 72px;
+  --pcd-h2: 50px;
+  --pcd-h3: 40px;
+  --pcd-h4: 32px;
+  --pcd-h5: 24px;
+  --pcd-h6: 20px;
+  --pcd-titre-s: 16px;
+  --pcd-text-xl: 24px;
+  --pcd-text-l: 20px;
+  --pcd-text-m: 18px;
+  --pcd-text-s: 16px;
+  --pcd-text-xs: 14px;
+  --pcd-text-xxs: 12px;
+
+  /* Interlignages */
+  --pcd-lh-titre-serre: 1;      /* h1 big, h1 */
+  --pcd-lh-h2: 1.06;
+  --pcd-lh-titre: 1.16;         /* h3 → h6 */
+  --pcd-lh-titre-s: 1.4;
+  --pcd-lh-texte: 1.2;          /* XL, L, M, XXS */
+  --pcd-lh-lecture: 1.55;       /* S — texte courant */
+  --pcd-lh-bold: 1.4;           /* variantes Bold */
+
+  /* ── ESPACEMENTS (Spaces) — mode Desktop ───────────────────────────── */
+
+  --pcd-gap-tiny: 4px;
+  --pcd-gap-xxs: 8px;
+  --pcd-gap-xs: 12px;
+  --pcd-gap-s: 16px;
+  --pcd-gap-s20: 20px;
+  --pcd-gap-m: 24px;
+  --pcd-gap-l: 32px;
+  --pcd-gap-xl: 40px;
+  --pcd-gap-xxl: 48px;
+  --pcd-gap-huge: 64px;
+  --pcd-marges-layout: 48px;
+  --pcd-marges-contenu-texte: 120px;
+  --pcd-section: 112px;
+  --pcd-titre-bottom: var(--pcd-gap-m);
+  --pcd-titre-sous-titre: var(--pcd-gap-s);
+
+  /* Rayons */
+  --pcd-radius-zero: 0px;
+  --pcd-radius-xs: 4px;
+  --pcd-radius-s: 8px;
+  --pcd-radius-m: 12px;
+  --pcd-radius-l: 16px;
+  --pcd-radius-xl: 20px;
+  --pcd-radius-xxl: 24px;
+  --pcd-radius-huge: 32px;
+  --pcd-radius-round: 8px;
+
+  /* Traits (Strokes) */
+  --pcd-trait-moyen: 1.5px;
+  --pcd-trait-epais: 2px;
+}
+
+/* ── Mode Mobile ─────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  :root {
+    --pcd-h1-big: 84px;
+    --pcd-h1: 49px;
+    --pcd-h2: 39px;
+    --pcd-h3: 28px;
+    --pcd-h4: 23px;
+    --pcd-h5: 17px;
+    --pcd-h6: 15px;
+    /* Titre S et les corps de texte ne changent pas en mobile */
+
+    --pcd-gap-tiny: 2px;
+    --pcd-gap-xxs: 4px;
+    --pcd-gap-xs: 8px;
+    --pcd-gap-s: 10px;
+    --pcd-gap-s20: 12px;
+    --pcd-gap-m: 14px;
+    --pcd-gap-l: 16px;
+    --pcd-gap-xl: 20px;
+    --pcd-gap-xxl: 24px;
+    --pcd-gap-huge: 32px;
+    --pcd-marges-layout: 20px;
+    --pcd-marges-contenu-texte: 20px;
+    --pcd-section: 48px;
+
+    --pcd-radius-s: 6px;
+    --pcd-radius-m: 10px;
+    --pcd-radius-l: 14px;
+    --pcd-radius-xl: 18px;
+    --pcd-radius-xxl: 20px;
+    --pcd-radius-huge: 24px;
+
+    --pcd-trait-moyen: 1px;
+  }
+}
+
+/* ── Mode Print (en mm/pt : valeurs Figma exprimées en pt) ───────────── */
+@media print {
+  :root {
+    --pcd-h1-big: 24pt;
+    --pcd-h1: 18pt;
+    --pcd-h2: 16pt;
+    --pcd-h3: 12pt;
+    --pcd-h4: 10pt;
+    --pcd-h5: 8pt;
+    --pcd-h6: 7pt;
+    --pcd-titre-s: 8pt;
+    --pcd-text-xl: 11pt;
+    --pcd-text-l: 10pt;
+    --pcd-text-m: 9pt;
+    --pcd-text-s: 8pt;
+    --pcd-text-xs: 7pt;
+    --pcd-text-xxs: 6pt;
+  }
+}
+
+/* =========================================================================
+   STYLES DE TEXTE — équivalents des styles Figma
+   ========================================================================= */
+
+.pcd-h1-big, .pcd-h1, .pcd-h2, .pcd-h3, .pcd-h4, .pcd-h5, .pcd-h6, .pcd-titre-s {
+  font-family: var(--pcd-font-titre);
+  font-weight: var(--pcd-poids-moyen);
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+.pcd-h1-big { font-size: var(--pcd-h1-big); line-height: var(--pcd-lh-titre-serre); letter-spacing: -.01em; }
+.pcd-h1     { font-size: var(--pcd-h1);     line-height: var(--pcd-lh-titre-serre); }
+.pcd-h2     { font-size: var(--pcd-h2);     line-height: var(--pcd-lh-h2); }
+.pcd-h3     { font-size: var(--pcd-h3);     line-height: var(--pcd-lh-titre); }
+.pcd-h4     { font-size: var(--pcd-h4);     line-height: var(--pcd-lh-titre); }
+.pcd-h5     { font-size: var(--pcd-h5);     line-height: var(--pcd-lh-titre); }
+.pcd-h6     { font-size: var(--pcd-h6);     line-height: var(--pcd-lh-titre); }
+.pcd-titre-s{ font-size: var(--pcd-titre-s);line-height: var(--pcd-lh-titre-s); }
+
+.pcd-xl, .pcd-l, .pcd-m, .pcd-s, .pcd-xs, .pcd-xxs,
+.pcd-xl-bold, .pcd-l-bold, .pcd-m-bold, .pcd-s-bold, .pcd-xs-bold, .pcd-xxs-bold {
+  font-family: var(--pcd-font-texte);
+}
+.pcd-xl  { font-size: var(--pcd-text-xl);  font-weight: var(--pcd-poids-moyen); line-height: var(--pcd-lh-texte); }
+.pcd-l   { font-size: var(--pcd-text-l);   font-weight: var(--pcd-poids-moyen); line-height: var(--pcd-lh-texte); }
+.pcd-m   { font-size: var(--pcd-text-m);   font-weight: var(--pcd-poids-moyen); line-height: var(--pcd-lh-texte); }
+.pcd-s   { font-size: var(--pcd-text-s);   font-weight: var(--pcd-poids-moyen); line-height: var(--pcd-lh-lecture); }
+.pcd-xs  { font-size: var(--pcd-text-xs);  font-weight: var(--pcd-poids-moyen); line-height: 1.5; }
+.pcd-xxs { font-size: var(--pcd-text-xxs); font-weight: var(--pcd-poids-moyen); line-height: var(--pcd-lh-texte); }
+
+.pcd-xl-bold  { font-size: var(--pcd-text-xl);  font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-bold); }
+.pcd-l-bold   { font-size: var(--pcd-text-l);   font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-bold); }
+.pcd-m-bold   { font-size: var(--pcd-text-m);   font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-bold); }
+.pcd-s-bold   { font-size: var(--pcd-text-s);   font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-lecture); }
+.pcd-xs-bold  { font-size: var(--pcd-text-xs);  font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-bold); }
+.pcd-xxs-bold { font-size: var(--pcd-text-xxs); font-weight: var(--pcd-poids-fort); line-height: var(--pcd-lh-bold); }
+
+/* Variantes serrées de S, présentes dans Figma pour les blocs compacts */
+.pcd-s.is-compact,      .pcd-s-bold.is-compact      { line-height: 1.15; }
+.pcd-s-bold.is-tres-compact                          { line-height: 1.10; }
+
+/* Base de page conseillée */
+.pcd-page {
+  background: var(--pcd-background-clair);
+  color: var(--pcd-text-fonce);
+  font-family: var(--pcd-font-texte);
+  font-size: var(--pcd-text-s);
+  font-weight: var(--pcd-poids-moyen);
+  line-height: var(--pcd-lh-lecture);
+}
+</pre>
+</section>
+
+<footer>
+  Extrait le 2 septembre 2026 du fichier Figma « SPCD — Amélioration 2026 » (collections Colors&nbsp;— Brand, Colors&nbsp;— Swatch, Colors, Fonts, Spaces, Strokes et les 23 styles de texte du fichier).
+</footer>
+
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const RAMPS = [
+  {key:"green", nom:"Primaire (Sea Green)", role:"Vert PCD — identité, liens, validation",
+   v:["#F3FAF4","#E4F4E6","#CAE8CF","#A0D5AA","#6EBA7D","#438E52","#398047","#2F663B","#295232","#23442A","#0F2414"]},
+  {key:"mustard", nom:"Mustard", role:"Secondaire — accents chauds, mises en avant",
+   v:["#FFFBEB","#FFF5C6","#FFE988","#FFDE67","#FFC520","#F9A307","#DD7B02","#B75606","#94410C","#7A370D","#461B02"]},
+  {key:"lilac", nom:"Lilac", role:"Complémentaire — catégories, illustrations",
+   v:["#F9F6F9","#F5EEF5","#ECDEEC","#DDC4DC","#CFABCC","#B480AE","#9E6495","#85517B","#6F4567","#5F3C58","#372032"]},
+  {key:"sunset", nom:"Sunset Orange", role:"Rouge — alertes fortes, suppressions",
+   v:["#FFF3F1","#FFE3DF","#FFCCC5","#FFA99D","#FF7664","#FF523B","#ED2E15","#C8230D","#A5210F","#882214","#4B0C04"]},
+  {key:"alabaster", nom:"Alabaster", role:"Fonds clairs et bruns doux",
+   v:["#FBFAF9","#EEEBE6","#DCD4CC","#C6B8AB","#AF9888","#9E8171","#917265","#795D55","#644D48","#52413C","#2B211F"]},
+  {key:"gris", nom:"Black", role:"Neutres — bordures, textes secondaires",
+   v:["#F6F6F6","#E7E7E7","#D1D1D1","#B0B0B0","#888888","#6D6D6D","#5D5D5D","#4F4F4F","#454545","#3D3D3D","#000000"]},
+  {key:"husk", nom:"Husk", role:"Réserve — aucun alias de marque à ce jour",
+   v:["#F6F6F0","#EAE9D7","#D6D3B2","#BEB786","#A99D61","#9C8D56","#857449","#6C5A3C","#5C4C37","#504233","#2D241B"]},
+  {key:"armadillo", nom:"Armadillo", role:"Réserve — collection « Colors », ajoutée après coup",
+   v:["#F5F5F1","#E5E5DC","#CDCDBB","#B0B094","#999676","#8B8767","#767058","#605948","#534C40","#4A443B","#29241F"]}
+];
+const STEPS = [50,100,200,300,400,500,600,700,800,900,950];
+
+const BRAND = {
+  identite:[
+    {nom:"Primaire", hex:"#438E52", alias:"Sea Green / 500"},
+    {nom:"Primaire foncé", hex:"#2F663B", alias:"Sea Green / 700"},
+    {nom:"Primaire 5 %", hex:"rgba(67,142,82,.05)", alias:"#438E52 à 5 % — fonds de blocs"},
+    {nom:"Secondaire", hex:"#FFDE67", alias:"Mustard / 300"},
+    {nom:"Secondaire foncé", hex:"#F9A307", alias:"Mustard / 500"},
+    {nom:"Complémentaire", hex:"#CFABCC", alias:"Lilac / 400"},
+    {nom:"Complémentaire foncé", hex:"#9E6495", alias:"Lilac / 600"},
+    {nom:"Rouge", hex:"#FF523B", alias:"Sunset Orange / 500"},
+    {nom:"Rouge foncé", hex:"#C8230D", alias:"Sunset Orange / 700"}
+  ],
+  fonds:[
+    {nom:"Background clair", hex:"#FBFAF9", alias:"Alabaster / 50 — fond de page"},
+    {nom:"Blanc", hex:"#FFFFFF", alias:"White / Blanc — cartes, surfaces"},
+    {nom:"Text clair", hex:"#F3FAF4", alias:"Sea Green / 50 — texte sur fond foncé"},
+    {nom:"Text foncé", hex:"#23442A", alias:"Sea Green / 900 — texte courant"},
+    {nom:"Noir", hex:"#000000", alias:"Black / 950"}
+  ],
+  etats:[
+    {nom:"Validé", hex:"#A0D5AA", alias:"Sea Green / 300 — succès"},
+    {nom:"Attention", hex:"#E07400", alias:"valeur directe — avertissement"},
+    {nom:"Alert", hex:"#E0004D", alias:"valeur directe — erreur"}
+  ]
+};
+
+const TITRES = [
+  {n:"h1 big", t:"2026", px:118, lh:"100 %", ls:"-1 %", m:84, p:24},
+  {n:"h1", t:"Permaculture", px:72, lh:"100 %", ls:"0", m:49, p:18},
+  {n:"h2", t:"Concevoir un lieu de vie", px:50, lh:"106 %", ls:"0", m:39, p:16},
+  {n:"h3", t:"Concevoir un lieu de vie", px:40, lh:"116 %", ls:"0", m:28, p:12},
+  {n:"h4", t:"Le jardin-forêt", px:32, lh:"116 %", ls:"0", m:23, p:10},
+  {n:"h5", t:"Le jardin-forêt", px:24, lh:"116 %", ls:"0", m:17, p:8},
+  {n:"h6", t:"Le jardin-forêt", px:20, lh:"116 %", ls:"0", m:15, p:7},
+  {n:"Titre S", t:"En bref", px:16, lh:"140 %", ls:"0", m:16, p:8}
+];
+
+const TEXTES = [
+  {n:"XL", px:24, w:500, lh:"120 %", m:24, p:11},
+  {n:"XL Bold", px:24, w:700, lh:"140 %", m:24, p:11},
+  {n:"L", px:20, w:500, lh:"120 %", m:20, p:10},
+  {n:"L Bold", px:20, w:700, lh:"140 %", m:20, p:10},
+  {n:"M", px:18, w:500, lh:"120 %", m:18, p:9},
+  {n:"M Bold", px:18, w:700, lh:"140 %", m:18, p:9},
+  {n:"S", px:16, w:500, lh:"155 %", m:16, p:8, note:"texte courant"},
+  {n:"S Bold", px:16, w:700, lh:"155 %", m:16, p:8},
+  {n:"XS", px:14, w:500, lh:"150 %", m:14, p:7},
+  {n:"XS Bold", px:14, w:700, lh:"140 %", m:14, p:7},
+  {n:"XXS", px:12, w:500, lh:"120 %", m:12, p:6},
+  {n:"XXS Bold", px:12, w:700, lh:"140 %", m:12, p:6}
+];
+const PHRASE = "La permaculture conçoit des lieux de vie qui prennent soin de la terre et des humains.";
+
+const GAPS = [
+  ["Tiny","4 px","2 px"],["XXSmall","8 px","4 px"],["XSmall","12 px","8 px"],
+  ["Small","16 px","10 px"],["Small 20","20 px","12 px"],["Medium","24 px","14 px"],
+  ["Large","32 px","16 px"],["XLarge","40 px","20 px"],["XXLarge","48 px","24 px"],
+  ["Huge 2","64 px","32 px"],["Marges layout","48 px","20 px"],
+  ["Marges content texte","120 px","20 px"],["Section","112 px","48 px"],
+  ["Title bottom","= Medium","= Medium"],["Title Subtitle","= Small","= Small"]
+];
+const RADIUS = [
+  ["Radius / Zero","0","0"],["Radius / XS","4 px","4 px"],["Radius / S","8 px","6 px"],
+  ["Radius / M","12 px","10 px"],["Radius / L","16 px","14 px"],["Radius / XL","20 px","18 px"],
+  ["Radius / XXL","24 px","20 px"],["Radius / Huge","32 px","24 px"],["Radius / Round","8 px","8 px"],
+  ["Trait moyen","1,5 px","1 px (mode Petit)"],["Trait épais","2 px","2 px"]
+];
+
+/* --- utilitaires --- */
+function lum(hex){
+  const h = hex.replace("#","");
+  const f = h.length === 3 ? h.split("").map(c=>c+c).join("") : h;
+  const c = [0,2,4].map(i=>parseInt(f.substr(i,2),16)/255)
+    .map(v=>v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4));
+  return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];
+}
+function textOn(hex){ return lum(hex) > 0.45 ? "on-light" : "on-dark"; }
+
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove("show"), 1600);
+}
+function copy(txt, msg){
+  const done = ()=>toast(msg);
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(txt).then(done).catch(()=>fallback(txt,done));
+  } else { fallback(txt, done); }
+}
+function fallback(txt, done){
+  const ta = document.createElement("textarea");
+  ta.value = txt; ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); done(); }
+  catch(e){ toast("Copie impossible — sélectionnez le texte"); }
+  document.body.removeChild(ta);
+}
+
+/* --- rendu : cartes de marque --- */
+function brandCards(list, hostId){
+  const host = document.getElementById(hostId);
+  list.forEach(c=>{
+    const solid = c.hex.startsWith("#") ? c.hex : "#438E52";
+    const el = document.createElement("div");
+    el.className = "bcard";
+    const chipCls = c.hex.startsWith("#") ? textOn(c.hex) : "on-light";
+    el.innerHTML =
+      '<div class="chip ' + chipCls + '" style="background:' + c.hex + (c.hex.startsWith("rgba") ? ";box-shadow:inset 0 0 0 1px var(--line)" : "") + '"><span>' + c.nom + '</span></div>' +
+      '<div class="body"><span class="nm">' + c.nom + '</span>' +
+      '<span class="hx">' + c.hex + '</span>' +
+      '<span class="al">' + c.alias + '</span></div>';
+    el.querySelector(".chip").style.color = chipCls === "on-light" ? "#111" : "#fff";
+    el.style.cursor = "pointer";
+    el.tabIndex = 0;
+    const act = ()=>copy(c.hex, c.nom + " — " + c.hex + " copié");
+    el.addEventListener("click", act);
+    el.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+    host.appendChild(el);
+  });
+}
+brandCards(BRAND.identite,"brand-identite");
+brandCards(BRAND.fonds,"brand-fonds");
+brandCards(BRAND.etats,"brand-etats");
+
+/* --- rendu : échelles --- */
+const rampHost = document.getElementById("ramps");
+RAMPS.forEach(r=>{
+  const wrap = document.createElement("div");
+  wrap.className = "ramp";
+  const head = document.createElement("div");
+  head.className = "ramp-head";
+  head.innerHTML = '<span class="ramp-name">' + r.nom + '</span><span class="ramp-role">' + r.role + '</span>';
+  const strip = document.createElement("div");
+  strip.className = "ramp-strip";
+  r.v.forEach((hex,i)=>{
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "step " + textOn(hex);
+    b.style.background = hex;
+    b.innerHTML = '<b>' + STEPS[i] + '</b><i>' + hex + '</i>';
+    b.title = r.nom + " / " + STEPS[i] + " — " + hex;
+    b.addEventListener("click", ()=>copy(hex, r.nom + " / " + STEPS[i] + " — " + hex + " copié"));
+    strip.appendChild(b);
+  });
+  wrap.appendChild(head); wrap.appendChild(strip);
+  rampHost.appendChild(wrap);
+});
+
+/* --- rendu : spécimens de titres --- */
+const st = document.getElementById("spec-titres");
+TITRES.forEach(t=>{
+  const row = document.createElement("div");
+  row.className = "row";
+  row.innerHTML =
+    '<div class="sample"><p style="font-family:var(--display);font-weight:500;font-size:' + t.px + 'px;line-height:' + (parseFloat(t.lh)/100) + ';letter-spacing:' + (t.ls === "-1 %" ? "-.01em" : "0") + '">' + t.t + '</p></div>' +
+    '<div class="dt"><b>' + t.n + '</b><br>Recoleta Medium<span class="sep">·</span>' + t.lh + '<span class="sep">·</span>' + t.ls +
+    '<br>D ' + t.px + '<span class="sep">/</span>M ' + t.m + '<span class="sep">/</span>P ' + t.p + '</div>';
+  st.appendChild(row);
+});
+
+/* --- rendu : spécimens de textes --- */
+const sx = document.getElementById("spec-textes");
+TEXTES.forEach(t=>{
+  const row = document.createElement("div");
+  row.className = "row";
+  row.innerHTML =
+    '<div class="sample wrapok"><p style="font-family:var(--body);font-weight:' + t.w + ';font-size:' + t.px + 'px;line-height:' + (parseFloat(t.lh)/100) + '">' + PHRASE + '</p></div>' +
+    '<div class="dt"><b>' + t.n + '</b>' + (t.note ? '<span class="sep">·</span>' + t.note : '') + '<br>Satoshi ' + (t.w === 700 ? "Bold" : "Medium") + '<span class="sep">·</span>' + t.lh +
+    '<br>D ' + t.px + '<span class="sep">/</span>M ' + t.m + '<span class="sep">/</span>P ' + t.p + '</div>';
+  sx.appendChild(row);
+});
+
+/* --- rendu : tableaux --- */
+const sizes = [];
+TITRES.forEach(t=>sizes.push([t.n, t.px, t.m, t.p]));
+TEXTES.filter(t=>t.w===500).forEach(t=>sizes.push([t.n, t.px, t.m, t.p]));
+const tb = document.getElementById("tbl-sizes");
+sizes.forEach(r=>{
+  const tr = document.createElement("tr");
+  tr.innerHTML = '<td>' + r[0] + '</td><td class="num">' + r[1] + ' px</td><td class="num">' + r[2] + ' px</td><td class="num">' + r[3] + ' pt</td>';
+  tb.appendChild(tr);
+});
+function fillTable(id, rows){
+  const host = document.getElementById(id);
+  rows.forEach(r=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = '<td>' + r[0] + '</td><td class="num">' + r[1] + '</td><td class="num">' + r[2] + '</td>';
+    host.appendChild(tr);
+  });
+}
+fillTable("tbl-gaps", GAPS);
+fillTable("tbl-radius", RADIUS);
+
+/* --- copie du CSS --- */
+document.getElementById("copycss").addEventListener("click", ()=>{
+  copy(document.getElementById("csscode").textContent.trim(), "pcd-tokens.css copié");
+});
+</script>
+
+</body>
+</html>
